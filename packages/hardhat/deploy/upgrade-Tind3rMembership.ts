@@ -18,9 +18,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log("upgrading...");
     const newProxy = await upgrades.upgradeProxy(proxy.address, Tind3rMembership);
     console.log("Tind3rMembership proxy:", newProxy.address);
+    await newProxy.deployed();
     const newLogicAddress = await upgrades.erc1967.getImplementationAddress(newProxy.address);
     console.log("Tind3rMembership logic:", newLogicAddress);
-    console.log(proxy.address === newProxy.address ? "success!" : "error!");
+    if (proxy.address === newProxy.address) {
+        console.log("success!");
+    }
+    else {
+        console.log("error!");
+        return;
+    }
 
     // save proxy artifact
     const proxyArtifact = await hre.deployments.getArtifact('Tind3rMembership');
@@ -33,7 +40,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // save logic artifact for verification
     const logicArtifact = await hre.deployments.getExtendedArtifact('Tind3rMembership');
     const logicDeployments = {
-        address: logicAddress,
+        address: newLogicAddress,
         ...logicArtifact
     };
     await save('Tind3rMembershipLogic', logicDeployments);

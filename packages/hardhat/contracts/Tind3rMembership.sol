@@ -9,6 +9,10 @@ import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 
+error ExistingProfile();
+
+error CanNotTransferAndBurn();
+
 contract Tind3rMembership is
     Initializable,
     UUPSUpgradeable,
@@ -34,7 +38,7 @@ contract Tind3rMembership is
         uint64 dateOfBirth;
         uint8 gender;
         uint8 sexOrientation;
-        uint128 insteretVector;
+        uint64 insteretVector;
     }
 
     // Emit profile data (to be caught by TheGraph indexers)
@@ -46,7 +50,7 @@ contract Tind3rMembership is
         uint64 dateOfBirth,
         uint8 indexed gender,
         uint8 indexed sexOrientation,
-        uint128 insteretVector
+        uint64 insteretVector
     );
 
     /**
@@ -104,6 +108,8 @@ contract Tind3rMembership is
         public
         returns (uint256)
     {
+        address msgSender = _msgSenderERC721A();
+        if (balanceOf(msgSender) > 0) revert ExistingProfile();
         uint256 newTokenId = totalSupply();
 
         _tableland.runSQL(
@@ -121,7 +127,7 @@ contract Tind3rMembership is
                 ")"
             )
         );
-        _safeMint(msg.sender, 1, "");
+        _safeMint(msgSender, 1, "");
         emit NewProfile(
             newTokenId,
             userProfile.name,
@@ -154,10 +160,7 @@ contract Tind3rMembership is
         override
         returns (string memory)
     {
-        require(
-            _exists(tokenId),
-            "ERC721URIStorage: URI query for nonexistent token"
-        );
+        if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
         string memory baseURI = _baseURI();
 
         if (bytes(baseURI).length == 0) {
@@ -166,21 +169,14 @@ contract Tind3rMembership is
 
         /* SELECT json_object('id',id,name,'name','image',image) FROM {tablename} WHERE id = */
         string memory query = string.concat(
-            "select+",
+            "SELECT+",
             "json_object%28%27id%27%2Cid%2Cname%2C%27name%27%2C%27image%27%2Cimage%29+",
             "from+",
             _metadataTable,
-            "+where+id+%3D"
+            "+WHERE+id%3D",
+            tokenId.toString()
         );
-        return string.concat(baseURI, query, tokenId.toString());
-    }
-
-    /**
-     * @dev Override baseURI
-     */
-    function metadataURI() public view returns (string memory) {
-        string memory baseURI = _baseURI();
-        return string.concat(baseURI, "select+*+from+", _metadataTable);
+        return string.concat(baseURI, query);
     }
 
     /**
@@ -191,11 +187,24 @@ contract Tind3rMembership is
     }
 
     /**
-     * @dev Override authorize
+     * @dev Override _authorizeUpgrade to upgrade only by owner
      */
     function _authorizeUpgrade(address newImplementation)
         internal
         override
         onlyOwner
     {}
+
+    /**
+     * @dev Override _beforeTokenTransfers to be soulbound
+     */
+    function _beforeTokenTransfers(
+        address from,
+        address to,
+        uint256 startTokenId,
+        uint256 quantity
+    ) internal override {
+        if (from != address(0)) revert CanNotTransferAndBurn();
+        super._beforeTokenTransfers(from, to, startTokenId, quantity);
+    }
 }
