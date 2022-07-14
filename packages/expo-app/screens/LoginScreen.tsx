@@ -3,12 +3,31 @@ import React, { useEffect } from 'react'
 import { color } from '../constant/color'
 import { useNavigation } from '@react-navigation/native';
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
-
+import {
+    useFonts,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    Poppins_800ExtraBold,
+    Poppins_900Black,
+  } from '@expo-google-fonts/poppins'
+import AppLoading from 'expo-app-loading'
 
 type Props = {}
 
 const LoginScreen = (props: Props) => {
     const connector = useWalletConnect();
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_500Medium,
+        Poppins_600SemiBold,
+        Poppins_700Bold,
+        Poppins_800ExtraBold,
+        Poppins_900Black,
+    })
+
+    
 
     const connectWallet = React.useCallback(() => {
         return connector.connect();
@@ -26,6 +45,11 @@ const LoginScreen = (props: Props) => {
             navigation.replace("Main")
         }
     }, [connector])
+
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
+
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.none} />
@@ -82,11 +106,11 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: color.white,
-        fontWeight: '700'
+        fontFamily: 'Poppins_700Bold',
     },
     desc: {
         color: color.white,
-        fontWeight: '700',
+        fontFamily: 'Poppins_700Bold',
         marginBottom: 30,
         textAlign: 'center',
         paddingLeft: 40,
@@ -95,7 +119,7 @@ const styles = StyleSheet.create({
     },
     welcome: {
         color: color.white,
-        fontWeight: '700',
+        fontFamily: 'Poppins_700Bold',
         fontSize: 18,
         textAlign: 'center',
         marginBottom: 60

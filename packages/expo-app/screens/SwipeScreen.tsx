@@ -5,6 +5,16 @@ import Swiper from 'react-native-deck-swiper'
 import { AntDesign, Ionicons, Entypo } from '@expo/vector-icons'
 import { color } from '../constant/color'
 import { LinearGradient } from 'expo-linear-gradient'
+import {
+    useFonts,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    Poppins_800ExtraBold,
+    Poppins_900Black,
+  } from '@expo-google-fonts/poppins'
+import AppLoading from 'expo-app-loading'
 
 type Props = {}
 const user_list = [
@@ -38,6 +48,19 @@ const user_list = [
     }
 ]
 const SwipeScreen = (props: Props) => {
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_500Medium,
+        Poppins_600SemiBold,
+        Poppins_700Bold,
+        Poppins_800ExtraBold,
+        Poppins_900Black,
+    })
+
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
+    
     return (
         <View style={styles.body}>
             <Header />
@@ -58,9 +81,9 @@ const SwipeScreen = (props: Props) => {
                                   style={[styles.imageLayout2, styles.cardMask]}
                                 >
                                     <View style={styles.contentBox1}>
-                                        <Text style={{ color: color.white, fontSize: 28 }}>{card.name} <Text style={{ fontSize: 24 }}>{card.age}</Text></Text>
+                                        <Text style={{ color: color.white, fontSize: 28, fontFamily: 'Poppins_600SemiBold' }}>{card.name} <Text style={{ fontSize: 24, fontFamily: 'Poppins_500Medium' }}>{card.age}</Text></Text>
                                         <View style={styles.infoBox}>
-                                            <Text style={{ color: color.white, fontSize: 18, width: 250 }}>{card.bio}</Text>
+                                            <Text style={{ color: color.white, fontSize: 18, width: 250, fontFamily: 'Poppins_400Regular' }}>{card.bio}</Text>
                                             <Ionicons name='information-circle' size={36} color={color.white} />
                                         </View>
 
