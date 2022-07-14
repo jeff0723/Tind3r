@@ -1,12 +1,10 @@
 import * as dotenv from "dotenv";
 
 import { HardhatUserConfig, task } from "hardhat/config";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
+import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-contract-sizer";
 import "hardhat-deploy";
+import '@openzeppelin/hardhat-upgrades';
 
 dotenv.config();
 
@@ -20,62 +18,71 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
-
 const config: HardhatUserConfig = {
   solidity: {
-    compilers: [
-      {
-        version: "0.8.0",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 50,
-          },
-        },
+    version: "0.8.12",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
       },
-    ],
-  },
-  networks: {
-    hardhat: {
-      accounts: {
-        mnemonic: "test test test test test test test test test test test junk",
-      },
-      chainId: 1337,
-    },
-    rinkeby: {
-      url: process.env.RINKEBY_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
-    mumbai: {
-      url: process.env.MUMBAI_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
-    matic: {
-      url: process.env.MATIC_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
   },
-  typechain: {
-    outDir: "../frontend/src/typechain",
-  },
-  paths: {
-    deployments: "../frontend/src/deployments",
-  },
-  namedAccounts: {
-    deployer: 0,
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: false,
+    strict: true,
+    only: [],
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.POLYSCAN_API_KEY,
+  },
+  namedAccounts: {
+    deployer: 0,
+  },
+  networks: {
+    // mainnets
+    polygon: {
+      url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.POLYGON_API_KEY ?? ""
+        }`,
+      accounts:
+        process.env.POLYGON_PRIVATE_KEY !== undefined
+          ? [process.env.POLYGON_PRIVATE_KEY]
+          : [],
+    },
+    // testnets
+    mumbai: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.POLYGON_MUMBAI_API_KEY ?? ""
+        }`,
+      accounts:
+        process.env.POLYGON_MUMBAI_PRIVATE_KEY !== undefined
+          ? [process.env.POLYGON_MUMBAI_PRIVATE_KEY]
+          : [],
+    },
+    // devnets
+    hardhat: {
+      mining: {
+        auto: !(process.env.HARDHAT_DISABLE_AUTO_MINING === "true"),
+        interval: [100, 3000],
+      },
+    },
   },
 };
+
+interface TablelandNetworkConfig {
+  // mainnets
+  polygon: string;
+
+  // testnets
+  mumbai: string;
+
+  // devnets
+  localhost: string;
+}
 
 export default config;
