@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Swiper from 'react-native-deck-swiper'
 import { AntDesign, Ionicons, Entypo } from '@expo/vector-icons'
 import { color } from '../constant/color'
+import { LinearGradient } from 'expo-linear-gradient'
 
 type Props = {}
 const user_list = [
@@ -52,7 +53,10 @@ const SwipeScreen = (props: Props) => {
                             <ImageBackground style={styles.cardImage} imageStyle={{ borderRadius: 24 }} source={{ uri: card.url }}>
                                 <View style={styles.imageLayout1}>
                                 </View>
-                                <View style={[styles.imageLayout2, styles.cardMask]}>
+                                <LinearGradient 
+                                  colors={['transparent', 'rgba(0, 0, 0, 1)']}
+                                  style={[styles.imageLayout2, styles.cardMask]}
+                                >
                                     <View style={styles.contentBox1}>
                                         <Text style={{ color: color.white, fontSize: 28 }}>{card.name} <Text style={{ fontSize: 24 }}>{card.age}</Text></Text>
                                         <View style={styles.infoBox}>
@@ -74,7 +78,7 @@ const SwipeScreen = (props: Props) => {
                                             </TouchableOpacity>
                                         </View>
                                     </View>
-                                </View>
+                                </LinearGradient>
                             </ImageBackground>
                         </View>
                     )}
@@ -108,8 +112,8 @@ const styles = StyleSheet.create({
     cardMask: {
         width: '100%',
         borderBottomLeftRadius: 24,
-        borderBottomRightRadius: 24,
-        background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%)',
+        borderBottomRightRadius: 24
+        // background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%)',
     },
     contentBox1: {
         paddingHorizontal: 24,
