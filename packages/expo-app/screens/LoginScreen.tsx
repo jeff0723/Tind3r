@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, View, SafeAreaView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, Image, View, SafeAreaView, TouchableOpacity, Button } from 'react-native'
 import React from 'react'
 import { color } from '../constant/color'
 
@@ -13,8 +13,9 @@ const LoginScreen = (props: Props) => {
             <View style={styles.info}>
                 <Text style={styles.welcome}>Welcome</Text>
                 <Text style={styles.desc}>By tapping Log In, you are going to create indentities in different services. </Text>
-                <TouchableOpacity style={styles.signupButton} activeOpacity={0.7}>
-                    <Text style={styles.buttonText}>Signup</Text>
+
+                <TouchableOpacity style={styles.signupButton} activeOpacity={0.7} >
+                    <Text style={styles.buttonText}>SIGN UP</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
