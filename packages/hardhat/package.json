@@ -1,5 +1,5 @@
 {
-  "name": "tind3r-contract",
+  "name": "@tind3r-monorepo/hardhat",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
