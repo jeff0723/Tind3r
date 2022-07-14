@@ -2,6 +2,7 @@
   "expo": {
     "name": "@tind3r-monorepo/expo-app",
     "slug": "expo-app",
+    "scheme": "tind3r",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

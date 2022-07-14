@@ -1,16 +1,31 @@
 import { StyleSheet, Text, Image, View, SafeAreaView, TouchableOpacity, Button } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { color } from '../constant/color'
 import { useNavigation } from '@react-navigation/native';
+import { useWalletConnect } from "@walletconnect/react-native-dapp";
 
 
 type Props = {}
 
 const LoginScreen = (props: Props) => {
+    const connector = useWalletConnect();
+
+    const connectWallet = React.useCallback(() => {
+        return connector.connect();
+    }, [connector]);
+
+    const killSession = React.useCallback(() => {
+        return connector.killSession();
+    }, [connector]);
     const navigation = useNavigation<any>()
     const handleNavigate = () => {
         navigation.navigate("Main")
     }
+    useEffect(() => {
+        if (connector.connected) {
+            navigation.replace("Main")
+        }
+    }, [connector])
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.none} />
@@ -18,10 +33,15 @@ const LoginScreen = (props: Props) => {
             <View style={styles.info}>
                 <Text style={styles.welcome}>Welcome</Text>
                 <Text style={styles.desc}>By tapping Log In, you are going to create indentities in different services. </Text>
+                {!connector.connected ? (
+                    <TouchableOpacity style={styles.signupButton} activeOpacity={0.7} onPress={connectWallet}>
+                        <Text style={styles.buttonText}>SIGN UP</Text>
+                    </TouchableOpacity>) :
+                    <TouchableOpacity style={styles.signupButton} activeOpacity={0.7} onPress={handleNavigate}>
+                        <Text style={styles.buttonText}>LOGIN</Text>
+                    </TouchableOpacity>}
 
-                <TouchableOpacity style={styles.signupButton} activeOpacity={0.7} onPress={handleNavigate}>
-                    <Text style={styles.buttonText}>SIGN UP</Text>
-                </TouchableOpacity>
+
             </View>
         </SafeAreaView>
     )
