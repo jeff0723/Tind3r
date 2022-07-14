@@ -1,20 +1,25 @@
 import { StyleSheet, Text, Image, View, SafeAreaView, TouchableOpacity, Button } from 'react-native'
 import React from 'react'
 import { color } from '../constant/color'
+import { useNavigation } from '@react-navigation/native';
 
 
 type Props = {}
 
 const LoginScreen = (props: Props) => {
+    const navigation = useNavigation<any>()
+    const handleNavigate = () => {
+        navigation.navigate("Main")
+    }
     return (
         <SafeAreaView style={styles.body}>
             <View style={styles.none} />
-            <Image source={require('../assets/logo-white.png')} />
+            <Image style={styles.logo} source={require('../assets/logo-white.png')} />
             <View style={styles.info}>
                 <Text style={styles.welcome}>Welcome</Text>
                 <Text style={styles.desc}>By tapping Log In, you are going to create indentities in different services. </Text>
 
-                <TouchableOpacity style={styles.signupButton} activeOpacity={0.7} >
+                <TouchableOpacity style={styles.signupButton} activeOpacity={0.7} onPress={handleNavigate}>
                     <Text style={styles.buttonText}>SIGN UP</Text>
                 </TouchableOpacity>
             </View>
@@ -36,6 +41,10 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         justifyContent: 'flex-end',
         paddingBottom: 100
+    },
+    logo: {
+        width: 241,
+        height: 51
     },
     none: {
         flexBasis: '33%',
