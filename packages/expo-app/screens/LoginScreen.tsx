@@ -33,9 +33,7 @@ const LoginScreen = (props: Props) => {
         return connector.connect();
     }, [connector]);
 
-    const killSession = React.useCallback(() => {
-        return connector.killSession();
-    }, [connector]);
+
     const navigation = useNavigation<any>()
     const handleNavigate = () => {
         navigation.navigate("Main")
