@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Image, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { AntDesign, Ionicons, Entypo } from '@expo/vector-icons'
-import { color } from '../constant/color'
+import { color } from '../../constant/color'
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,27 +12,18 @@ const user = {
     image: "https://images-ssl.gotinder.com/5ee799d5922dd40100af4bc5/640x800_75_5be828f1-d5d5-4ba4-9b78-dbeaab399ab3.webp"
 }
 const Header = (props: Props) => {
-    const connector = useWalletConnect();
     const navigation = useNavigation<any>()
-    const killSession = React.useCallback(() => {
-        return connector.killSession();
-    }, [connector]);
-    useEffect(() => {
-        if (!connector.connected) {
-            navigation.replace("Login")
-        }
-    }, [connector])
+    const handleProfileClick = () => {
+        navigation.navigate('Profile')
+    }
     return (
         <SafeAreaView>
             <View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleProfileClick}>
                     <Image style={styles.profileLogo} source={{ uri: user.image }} />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Image style={styles.logo} source={require('../assets/logo-blue.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logout} onPress={killSession}>
-                    <Ionicons name="log-out" size={35} color={color.grey} />
+                    <Image style={styles.logo} source={require('../../assets/logo-blue.png')} />
                 </TouchableOpacity>
             </View>
 

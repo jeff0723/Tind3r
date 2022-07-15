@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity } from 'react-native'
 import React from 'react'
-import Header from '../components/Header'
+import Header from '../components/UI/Header'
 import Swiper from 'react-native-deck-swiper'
 import { AntDesign, Ionicons, Entypo } from '@expo/vector-icons'
 import { color } from '../constant/color'

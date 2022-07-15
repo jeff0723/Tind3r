@@ -14,6 +14,8 @@ import { Platform } from "react-native";
 
 import LoginScreen from './screens/LoginScreen';
 import MainScreen from './screens/MainScreen';
+import ProfileScreen from "./screens/ProfileScreen";
+import ErrorBoundary from "./providers/ErrorBoundary";
 const SCHEME_FROM_APP_JSON = "tind3r";
 
 const Stack = createNativeStackNavigator();
@@ -39,6 +41,8 @@ export default function App() {
           initialRouteName='Login'>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Main" component={MainScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </WalletConnectProvider>
@@ -46,6 +50,14 @@ export default function App() {
   );
 }
 
+// export default function AppWithProvider() {
+//   return (
+//     // <ErrorBoundary>
+//     /* </ErrorBoundary> */
+//     <App />
+//   )
+
+// }
 const styles = StyleSheet.create({
   container: {
     flex: 1,

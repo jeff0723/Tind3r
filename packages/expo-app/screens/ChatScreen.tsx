@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Header from '../components/Header'
+import Header from '../components/UI/Header'
 type Props = {}
 
 const ChatScreen = (props: Props) => {
