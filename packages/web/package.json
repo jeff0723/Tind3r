@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@tind3r-monorepo/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^0.4.2",
+    "@walletconnect/web3-provider": "^1.7.8",
+    "@xmtp/xmtp-js": "^4.4.1",
+    "ethers": "^5.6.9",
     "next": "12.2.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "wagmi": "^0.5.9",
+    "walletlink": "^2.5.0",
+    "web3modal": "^1.9.8"
   },
   "devDependencies": {
     "@types/node": "18.0.5",
