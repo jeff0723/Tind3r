@@ -9,7 +9,7 @@ import useXmtp from 'hooks/useXmtp';
 import useCeramic from 'hooks/useCeramic';
 
 const Home: NextPage = () => {
-  const { ceramic, idx } = useCeramic()
+  const { ceramic, idx, signIn } = useCeramic()
   const {
     connect: connectXmtp,
     disconnect: disconnectXmtp,
@@ -18,6 +18,7 @@ const Home: NextPage = () => {
   } = useXmtp()
   const router = useRouter()
   const {
+    provider,
     signer,
     connect: connectWallet,
     disconnect: disconnectWallet,
@@ -32,7 +33,8 @@ const Home: NextPage = () => {
   const handleConnect = useCallback(async () => {
     await connectWallet()
   }, [connectWallet])
-
+  const [name, setName] = useState('')
+  const [userName, setUserName] = useState("")
   const usePrevious = <T,>(value: T): T | undefined => {
     const ref = useRef<T>()
     useEffect(() => {
@@ -55,15 +57,57 @@ const Home: NextPage = () => {
     }
     connect()
   }, [signer, prevSigner, connectXmtp, disconnectXmtp])
+
+  const handleCeramicSignIn = () => {
+    signIn()
+  }
+  const getProfile = async () => {
+    const data = await idx?.get("basicProfile", `${walletAddress}@eip155:1`)
+    //@ts-ignore
+    if (data) {
+      //@ts-ignore
+      setUserName(data.name)
+    }
+  }
+  useEffect(() => {
+    getProfile()
+  }, [walletAddress])
+
+
+  const handleUpdateData = async () => {
+
+    if (name && idx) {
+      if (idx.authenticated) {
+        await idx.set('basicProfile', {
+          name,
+        })
+        getProfile()
+      } else {
+        console.log("not authenticated")
+      }
+
+    }
+  }
   console.log("xtmp client: ", client)
   console.log("ceramic client: ", ceramic)
   console.log("idx: ", idx)
+  console.log("is Authenticated: ", idx?.authenticated)
+  console.log("ceramic did:", ceramic?.did)
+  console.log("wallet provider: ", provider)
+
+
 
   return (
     <div>
+      <h1>{userName ? `Hello ${userName}` : ""}</h1>
       <button onClick={handleConnect}>Connect</button>
       <button onClick={handleDisconnect}>Disconnect </button>
+      <button onClick={handleCeramicSignIn}>Ceramic Sign In</button>
+      <input placeholder='name' onChange={(e) => { setName(e.target.value) }}></input>
+      <p>{name}</p>
+      <button onClick={handleUpdateData}> Update</button>
       <div>You address {walletAddress}</div>
+      <div>sign in status: {idx?.authenticated ? "True" : "False"}</div>
     </div>
   )
 }

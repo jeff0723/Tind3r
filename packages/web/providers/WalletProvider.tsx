@@ -110,6 +110,7 @@ export const WalletProvider = ({
       const { chainId } = await provider.getNetwork()
       setChainId(chainId)
       setSigner(signer)
+      setProvider(provider)
       setAddress(await signer.getAddress())
       return signer
     } catch (e) {
@@ -170,6 +171,7 @@ export const WalletProvider = ({
       if (!cachedProviderJson) return
       const cachedProviderName = JSON.parse(cachedProviderJson)
       const instance = await web3Modal.connectTo(cachedProviderName)
+
       if (!instance) return
       instance.on('accountsChanged', handleAccountsChanged)
       const provider = new ethers.providers.Web3Provider(instance, 'any')
