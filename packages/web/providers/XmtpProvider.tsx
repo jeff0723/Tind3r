@@ -52,9 +52,13 @@ export const XmtpProvider: FunctionComponent<{
     const initClient = async () => {
       console.log("init client")
       console.log("wallet: ", wallet)
-      if (!wallet) return
+      // I change this line, may be it's not the right way to do it
+      if (!wallet || client != undefined) return
       console.log("init client with wallet")
-      setClient(await Client.create(wallet))
+      const _client = await Client.create(wallet)
+      setClient(_client)
+      //@ts-ignore debug purpose should remove
+      window.xmtp = _client
     }
     initClient()
   }, [wallet])
