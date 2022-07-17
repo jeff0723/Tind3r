@@ -6,8 +6,10 @@ import { useRouter } from 'next/router'
 import MiniXmtpContext from '../contexts/miniXmtp';
 import XmtpContext from '../contexts/xmtp';
 import useXmtp from 'hooks/useXmtp';
+import useCeramic from 'hooks/useCeramic';
 
 const Home: NextPage = () => {
+  const { ceramic, idx } = useCeramic()
   const {
     connect: connectXmtp,
     disconnect: disconnectXmtp,
@@ -54,6 +56,9 @@ const Home: NextPage = () => {
     connect()
   }, [signer, prevSigner, connectXmtp, disconnectXmtp])
   console.log("xtmp client: ", client)
+  console.log("ceramic client: ", ceramic)
+  console.log("idx: ", idx)
+
   return (
     <div>
       <button onClick={handleConnect}>Connect</button>

@@ -1,3 +1,4 @@
+import CeramicProvider from "providers/CeramicProvider"
 import MiniXtmpProvider from "providers/MiniXtmpProvider"
 import { WalletProvider } from "providers/WalletProvider"
 import XmtpProvider from "providers/XmtpProvider"
@@ -11,7 +12,9 @@ function App({ children }: AppProps) {
     return (
         <WalletProvider>
             <XmtpProvider>
-                {children}
+                <CeramicProvider>
+                    {children}
+                </CeramicProvider>
             </XmtpProvider>
         </WalletProvider>
 
