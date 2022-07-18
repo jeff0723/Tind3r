@@ -1,11 +1,10 @@
 import type { NextPage } from 'next'
-import Layout from '../../components/Layout'
 import Link from 'next/link'
 
 const MessagePage: NextPage = () => {
 
   return (
-    <Layout>
+    <div style={{ height: '100%' }}>
         <div style={{ display: 'flex', height: '100%'}}>
           <div style={{ flexGrow: 1, padding: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -18,9 +17,8 @@ const MessagePage: NextPage = () => {
           <div style={{ flexGrow: 0, width: '375px', borderLeft: 'solid 1px #000'}}>
             message target profile(data from redux state)
           </div>
-            
         </div>
-    </Layout>
+    </div>
   )
 }
 

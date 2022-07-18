@@ -6,7 +6,7 @@ type AppProps = {
 }
 
 
-function App({ children }: AppProps) {
+function Layout({ children }: AppProps) {
   return (
     <div className={styles.container}>
       <div className={styles['chat-app']}>
@@ -20,4 +20,4 @@ function App({ children }: AppProps) {
   )
 }
 
-export default App
+export default Layout
