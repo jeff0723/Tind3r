@@ -9,6 +9,7 @@ import useXmtp from 'hooks/useXmtp';
 import useCeramic from 'hooks/useCeramic';
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateUserName } from 'state/user/reducer';
+import Layout from '../components/Layout'
 
 const Home: NextPage = () => {
   const dispatch = useAppDispatch()
@@ -106,7 +107,7 @@ const Home: NextPage = () => {
   console.log("App user name: ", appUserName)
 
   return (
-    <div>
+    <Layout>
       <h1>{userName ? `Hello ${userName}` : ""}</h1>
       <button onClick={handleConnect}>Connect</button>
       <button onClick={handleDisconnect}>Disconnect </button>
@@ -116,7 +117,7 @@ const Home: NextPage = () => {
       <button onClick={handleUpdateData}> Update</button>
       <div>You address {address}</div>
       <div>sign in status: {idx?.authenticated ? "True" : "False"}</div>
-    </div>
+    </Layout>
   )
 }
 

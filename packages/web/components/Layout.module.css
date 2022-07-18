@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.chat-app {
+  flex: 0 0 400px;
+}
+
+.content {
+  flex: 1 0 auto;
+  background-color: #F0F0F0;
+}
