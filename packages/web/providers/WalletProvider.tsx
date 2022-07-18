@@ -23,7 +23,7 @@ export const WalletProvider = ({
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [address, setAddress] = useState<string>()
   const [chainId, setChainId] = useState<number>()
-
+  const { ethereum } = window
   const resolveName = useCallback(
     async (name: string) => {
       if (cachedResolveName.has(name)) {
@@ -84,6 +84,7 @@ export const WalletProvider = ({
       if (address && accounts.indexOf(address) < 0) {
         await disconnect()
       }
+      setAddress(accounts[0])
     },
     [address, disconnect]
   )
@@ -185,6 +186,8 @@ export const WalletProvider = ({
     }
     initCached()
   }, [web3Modal, handleAccountsChanged, handleChainChanged])
+  ethereum.on('chainChanged', handleChainChanged)
+  ethereum.on('accountsChanged', handleAccountsChanged)
 
   return (
     <WalletContext.Provider
