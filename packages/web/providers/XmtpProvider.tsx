@@ -4,10 +4,12 @@ import { Client } from '@xmtp/xmtp-js'
 import { Signer } from 'ethers'
 import { XmtpContext, XmtpContextType } from '../contexts/xmtp'
 import useMessageStore from '../hooks/useMessageStore'
+import useCeramic from 'hooks/useCeramic'
 
 export const XmtpProvider: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const { isAuthenticated } = useCeramic()
   const [wallet, setWallet] = useState<Signer>()
   const [walletAddress, setWalletAddress] = useState<string>()
   const [client, setClient] = useState<Client>()
@@ -53,7 +55,7 @@ export const XmtpProvider: FunctionComponent<{
       console.log("init client")
       console.log("wallet: ", wallet)
       // I change this line, may be it's not the right way to do it
-      if (!wallet || client != undefined) return
+      if (!wallet || client != undefined || !isAuthenticated) return
       console.log("init client with wallet")
       const _client = await Client.create(wallet)
       setClient(_client)
@@ -61,7 +63,7 @@ export const XmtpProvider: FunctionComponent<{
       window.xmtp = _client
     }
     initClient()
-  }, [wallet])
+  }, [wallet, isAuthenticated])
 
   useEffect(() => {
     const listConversations = async () => {

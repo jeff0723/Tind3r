@@ -7,8 +7,12 @@ import MiniXmtpContext from '../contexts/miniXmtp';
 import XmtpContext from '../contexts/xmtp';
 import useXmtp from 'hooks/useXmtp';
 import useCeramic from 'hooks/useCeramic';
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { updateUserName } from 'state/user/reducer';
 
 const Home: NextPage = () => {
+  const dispatch = useAppDispatch()
+  const appUserName = useAppSelector((state) => state.user.userName)
   const { ceramic, idx, signIn } = useCeramic()
   const {
     connect: connectXmtp,
@@ -20,6 +24,7 @@ const Home: NextPage = () => {
   const {
     provider,
     signer,
+    address,
     connect: connectWallet,
     disconnect: disconnectWallet,
   } = useWallet()
@@ -62,16 +67,19 @@ const Home: NextPage = () => {
     signIn()
   }
   const getProfile = async () => {
-    const data = await idx?.get("basicProfile", `${walletAddress}@eip155:1`)
-    //@ts-ignore
-    if (data) {
-      //@ts-ignore
-      setUserName(data.name)
-    }
+    await idx?.get("basicProfile", `${address}@eip155:1`)
+      .then(res => {
+        console.log("getProfile: ", res)
+        //@ts-ignore
+        setUserName(res.name)
+        //@ts-ignore
+        dispatch(updateUserName({ userName: res.name }))
+      })
+      .catch(err => console.log(err))
   }
   useEffect(() => {
     getProfile()
-  }, [walletAddress])
+  }, [address])
 
 
   const handleUpdateData = async () => {
@@ -94,8 +102,8 @@ const Home: NextPage = () => {
   console.log("is Authenticated: ", idx?.authenticated)
   console.log("ceramic did:", ceramic?.did)
   console.log("wallet provider: ", provider)
-
-
+  console.log(address)
+  console.log("App user name: ", appUserName)
 
   return (
     <div>
@@ -106,7 +114,7 @@ const Home: NextPage = () => {
       <input placeholder='name' onChange={(e) => { setName(e.target.value) }}></input>
       <p>{name}</p>
       <button onClick={handleUpdateData}> Update</button>
-      <div>You address {walletAddress}</div>
+      <div>You address {address}</div>
       <div>sign in status: {idx?.authenticated ? "True" : "False"}</div>
     </div>
   )

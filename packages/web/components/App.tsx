@@ -2,6 +2,8 @@ import CeramicProvider from "providers/CeramicProvider"
 import MiniXtmpProvider from "providers/MiniXtmpProvider"
 import { WalletProvider } from "providers/WalletProvider"
 import XmtpProvider from "providers/XmtpProvider"
+import { Provider } from 'react-redux'
+import store from "state"
 
 type AppProps = {
     children?: React.ReactNode
@@ -11,11 +13,13 @@ type AppProps = {
 function App({ children }: AppProps) {
     return (
         <WalletProvider>
-            <XmtpProvider>
-                <CeramicProvider>
-                    {children}
-                </CeramicProvider>
-            </XmtpProvider>
+            <CeramicProvider>
+                <XmtpProvider>
+                    <Provider store={store}>
+                        {children}
+                    </Provider>
+                </XmtpProvider>
+            </CeramicProvider>
         </WalletProvider>
 
     )
