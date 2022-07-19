@@ -8,6 +8,7 @@ import { IDX } from "@ceramicstudio/idx";
 import { ThreeIdConnect, EthereumAuthProvider } from '@3id/connect'
 import { DID } from 'dids'
 import { getResolver } from '@ceramicnetwork/3id-did-resolver'
+import { useWeb3React } from '@web3-react/core';
 
 type Props = {
   children?: React.ReactNode
@@ -15,7 +16,8 @@ type Props = {
 const apiHost = "https://ceramic-clay.3boxlabs.com" || "http://localhost:7007"
 
 const CeramicProvider = ({ children }: Props) => {
-  const { provider, address } = useWallet()
+  const { provider, account } = useWeb3React()
+  // const { provider, address } = useWallet()
   const [ceramic, setCeramic] = useState<CeramicClient>()
   const [idx, setIdx] = useState<IDX>()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -35,11 +37,11 @@ const CeramicProvider = ({ children }: Props) => {
   }, [])
   const signIn = useCallback(async () => {
     console.log("signing in")
-    console.log("provider and address: ", provider, address)
-    if (provider && address && ceramic) {
+    console.log("provider and address: ", provider, account)
+    if (provider && account && ceramic) {
       console.log("provider and address detected")
       const threeIdConnect = new ThreeIdConnect()
-      const ethProvider = new EthereumAuthProvider(window.ethereum, address)
+      const ethProvider = new EthereumAuthProvider(window.ethereum, account)
 
       await threeIdConnect.connect(ethProvider)
       const did = new DID({
@@ -61,7 +63,7 @@ const CeramicProvider = ({ children }: Props) => {
       }
 
     }
-  }, [provider, address])
+  }, [provider, account])
 
   const [providerState, setProviderState] = useState<CermaicContextType>({
     ceramic,
@@ -72,11 +74,11 @@ const CeramicProvider = ({ children }: Props) => {
 
   useEffect(() => {
     console.log("check signing in")
-    if (!isAuthenticated && provider && address) {
+    if (provider && account) {
       console.log('signing in')
       signIn()
     }
-  }, [isAuthenticated, address, provider])
+  }, [account, provider])
 
   useEffect(() => {
     setProviderState({
