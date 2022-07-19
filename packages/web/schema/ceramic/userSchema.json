@@ -1,86 +1,76 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "title": "Tind3rUsers",
+    "title": "Tind3rUserProfle",
     "required": [
-        "counts",
         "name",
-        "description"
+        "birthday",
+        "gender"
     ],
     "additionalProperties": false,
     "properties": {
-        "counts": {
-            "type": "integer",
-            "description": "The total appliers of Tind3r",
-            "default": 0
-        },
         "name": {
             "type": "string",
-            "description": "User name",
-            "default": ""
-        },
-        "description": {
-            "type": "string",
-            "description": "Bio",
-            "default": ""
-        },
-        "wallets": {
-            "type": "array",
-            "description": "Collection of the contacts wallet addresses and respective networks",
-            "default": [],
-            "items": {
-                "type": "object",
-                "default": {},
-                "required": [
-                    "walletAddress",
-                    "network"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "walletAddress": {
-                        "type": "string",
-                        "default": ""
-                    },
-                    "network": {
-                        "type": "string",
-                        "default": ""
-                    }
-                }
-            }
-        },
-        "avatar": {
-            "type": "string",
-            "description": "URI of user avatar",
+            "description": "User name of Tind3r",
             "default": ""
         },
         "birthday": {
             "type": "string",
-            "description": "birthday",
+            "description": "User's birthday ",
+            "default": ""
+        },
+        "bio": {
+            "type": "string",
+            "description": "Bio",
             "default": ""
         },
         "gender": {
-            "type": "string",
-            "description": "gender",
-            "default": ""
+            "type": "number",
+            "description": "gender -> 0 - women, 1 - men, 2 - non-binary",
+            "default": 0
         },
         "sexOrientation": {
-            "type": "string",
-            "description": "sex orientation",
-            "default": ""
+            "type": "number",
+            "description": "sex orientation  -> 0 - women, 1 - men, 2 - non-binary",
+            "default": 0
         },
-        "tags": {
+        "showMe": {
+            "type": "number",
+            "description": "show me which gender  -> 0 - women, 1 - men, 2 - non-binary",
+            "default": 0
+        },
+        "showMyGenderOnProfile": {
+            "type": "boolean",
+            "description": "whether to show my gender on my profile",
+            "default": false
+        },
+        "importNFT": {
+            "type": "boolean",
+            "description": "whether to import nft",
+            "default": false
+        },
+        "addOnChainActivity": {
+            "type": "boolean",
+            "description": "whether to import onChain activity",
+            "default": false
+        },
+        "organizations": {
             "type": "array",
-            "description": "Optional tags for the user",
+            "description": "Organizations of user",
             "items": {
                 "type": "string"
             },
-            "minItems": 1,
+            "minItems": 0,
             "uniqueItems": true
         },
-        "data": {
-            "type": "object",
-            "description": "Fields to include optional arbitrary data",
-            "properties": {}
+        "tags": {
+            "type": "array",
+            "description": "Organizations of user",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 0,
+            "uniqueItems": true
         }
     }
 }

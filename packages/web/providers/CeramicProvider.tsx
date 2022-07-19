@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react'
 
 import useWallet from 'hooks/useWallet'
 import { CeramicContext, CermaicContextType } from 'contexts/ceramic'
-import config from "ceramic-config.json"
+import aliases from "schema/ceramic/model.json"
 import Ceramic, { CeramicClient, CeramicClientConfig } from "@ceramicnetwork/http-client";
 import { IDX } from "@ceramicstudio/idx";
 import { ThreeIdConnect, EthereumAuthProvider } from '@3id/connect'
@@ -26,7 +26,7 @@ const CeramicProvider = ({ children }: Props) => {
     console.log('set ceramic and idx')
     const _ceramic = new CeramicClient(apiHost)
     //@ts-ignore
-    const _idx = new IDX({ ceramic: _ceramic })
+    const _idx = new IDX({ ceramic: _ceramic, aliases: aliases })
     setCeramic(_ceramic)
     setIdx(_idx)
     //@ts-ignore

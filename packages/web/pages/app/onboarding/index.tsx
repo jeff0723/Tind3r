@@ -9,9 +9,16 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { UserProfile } from 'schema/ceramic/user';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { constants } from 'buffer';
+import { useTind3rMembershipContract } from 'hooks/useContract';
+import { openNotificationWithIcon } from 'utils/notification';
+
 
 type Props = {}
-
+type Tind3rMembership = {
+    name: string,
+    description: string,
+    image: string,
+}
 const Header = styled.div`
     display: flex;
     flex-direction: row;
@@ -121,6 +128,7 @@ const genderMap = [
     "EVERYONE"
 ]
 const index = (props: Props) => {
+    const tind3rMembershipContract = useTind3rMembershipContract()
     const [photoList, setPhotoList] = useState<UploadFile[]>([
         {
             uid: '-1',
@@ -133,13 +141,14 @@ const index = (props: Props) => {
     const [onBoardingInfo, setOnBoardingInfo] = useState<UserProfile>({
         name: "",
         birthday: 0,
+        bio: "",
         gender: 0, //0 women 1 men 2 everyone
         showMe: 0, //0 women 1 men 2 everyone 
         showMyGenderOnProfile: false,
         importNFT: false,
         addOnChainActivity: false,
         organizations: [],
-        passion: []
+        tags: []
     })
 
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
@@ -184,8 +193,24 @@ const index = (props: Props) => {
         } as UserProfile
         );
     }
-    const handleConfirm = () => {
+
+    const validateInput = (input: UserProfile) => {
+        if (!input.name || !input.gender || !input.birthday || !input.showMe) return false
+        return true
+    }
+    const handleConfirm = async () => {
         console.log(onBoardingInfo)
+        if (!validateInput(onBoardingInfo) || !tind3rMembershipContract) return
+
+        const _memberShipInput: Tind3rMembership = {
+            name: onBoardingInfo.name,
+            description: "Tind3r Membership",
+            image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP"
+        }
+
+        const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+        tx?.wait()
+
     }
     console.log(photoList)
     return (
