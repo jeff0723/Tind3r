@@ -5,7 +5,7 @@ import { useTind3rMembershipContract } from 'hooks/useContract'
 import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { updateIsCeramicProfileExists, updateMembershipCreated } from './reducer'
+import { updateIsCeramicProfileExists, updateMembershipCreated, updateUserProfile } from './reducer'
 import config from 'schema/ceramic/model.json';
 
 const UserProfileDefinitionId = config.definitions.UserProfile
@@ -22,6 +22,7 @@ export default function Updater(): null {
             const res = await idx.get(UserProfileDefinitionId, `${account}@eip155:1`)
             if (res) {
                 dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: true }))
+                dispatch(updateUserProfile({ userProfile: res }))
             } else {
                 dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: false }))
             }

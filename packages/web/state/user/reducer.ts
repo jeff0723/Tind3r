@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ConnectionType } from 'connection'
+import { UserProfile } from 'schema/ceramic/user'
 
 export interface UserState {
     userName: string
+    userProfile: UserProfile
     selectedWalletBackfilled: boolean
     selectedWallet?: ConnectionType
     isProfileExists: boolean
@@ -14,6 +16,21 @@ export interface UserState {
 export const initialState: UserState = {
     userName: '',
     selectedWalletBackfilled: false,
+    userProfile: {
+        name: '',
+        birthday: '',
+        bio: '',
+        gender: 0, //0 women 1 men 2 everyone
+        showMe: 0, //0 women 1 men 2 everyone 
+        showMyGenderOnProfile: false,
+        importNFT: false,
+        addOnChainActivity: false,
+        organizations: [],
+        tags: [],
+        profileBaseUri: "",
+        profilePictureCounts: 0,
+        selectedProfileIndex: 0
+    },
     selectedWallet: undefined,
     isProfileExists: false,
     isCeramicProfileExists: false,
@@ -48,6 +65,9 @@ const userSlice = createSlice({
         },
         updateMembershipCreated(state, { payload: { isMembershipCreated } }) {
             state.isMembershipCreated = isMembershipCreated
+        },
+        updateUserProfile(state, { payload: { userProfile } }) {
+            state.userProfile = userProfile
         }
     }
 })
@@ -59,6 +79,7 @@ export const {
     updateXmtpAuthentication,
     updateIsProfileExists,
     updateIsCeramicProfileExists,
-    updateMembershipCreated
+    updateMembershipCreated,
+    updateUserProfile
 } = userSlice.actions
 export default userSlice.reducer

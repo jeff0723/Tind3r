@@ -150,7 +150,7 @@ const index = (props: Props) => {
 
     const [onBoardingInfo, setOnBoardingInfo] = useState<UserProfile>({
         name: "",
-        birthday: 0,
+        birthday: "",
         bio: "",
         gender: 0, //0 women 1 men 2 everyone
         showMe: 0, //0 women 1 men 2 everyone 
@@ -246,7 +246,7 @@ const index = (props: Props) => {
         if (isAuthenticated) {
             const res = await idx?.set(UserProfileDefinitionId, {
                 ...onBoardingInfo,
-                profileBaseUri: `https://ipfs.io/ipfs/${cid}`,
+                profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,
                 profilePictureCounts: imageCount,
                 selectedProfileIndex: 0,
             })

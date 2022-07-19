@@ -15,7 +15,7 @@ const Home: NextPage = () => {
   const [name, setName] = useState("")
   const dispatch = useAppDispatch()
   const userName = useAppSelector(state => state.user.userName)
-
+  const userProfile = useAppSelector(state => state.user.userProfile)
   const handleConnect = async () => {
     console.log('connect clicked')
 
@@ -26,7 +26,6 @@ const Home: NextPage = () => {
     if (idx && account && isAuthenticated) {
       const res = await idx.get("basicProfile", `${account}@eip155:1`) as BasicProfile
       if (res) {
-        dispatch(updateIsProfileExists(true))
         dispatch(updateUserName({ userName: res.name }))
       }
     }
@@ -47,7 +46,7 @@ const Home: NextPage = () => {
 
   }
   console.log(idx?.authenticated)
-
+  console.log("User Profile:", userProfile)
   return (
     <Layout>
 

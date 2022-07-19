@@ -4,8 +4,8 @@ export type BasicProfile = {
 }
 export type UserProfile = {
     name: string;
-    birthday: number;
-    bio: string;
+    birthday: string;
+    bio?: string;
     gender: number; //0 women 1 men 2 everyone
     showMe: number; //0 women 1 men 2 everyone 
     showMyGenderOnProfile?: boolean;
@@ -13,4 +13,7 @@ export type UserProfile = {
     addOnChainActivity?: boolean;
     organizations?: string[];
     tags?: string[];
+    profileBaseUri?: string;
+    profilePictureCounts?: number;
+    selectedProfileIndex?: number;
 }
