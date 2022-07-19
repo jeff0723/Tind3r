@@ -1,10 +1,11 @@
 import { Checkbox } from 'antd'
-import Image from 'next/image'
-import React from 'react'
+import NextImage from 'next/image'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-
+import ImgCrop from 'antd-img-crop';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 type Props = {}
 
 const Header = styled.div`
@@ -111,10 +112,41 @@ const UploadButton = (
 );
 
 const index = (props: Props) => {
+    const [photoList, setPhotoList] = useState<UploadFile[]>([
+        {
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+    ]);
+    const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        setPhotoList(newFileList);
+    };
+
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src) {
+            src = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as RcFile);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+    const uploadAction = (file: RcFile) => {
+        console.log(file)
+        return 'hi'
+    }
+    console.log(photoList)
     return (
         <div>
             <Header>
-                <Image src='/images/logo-with-word-mix.png' width={176} height={55} />
+                <NextImage src='/images/logo-with-word-mix.png' width={176} height={55} />
             </Header>
             <Content>
                 <TitleBox>
@@ -129,9 +161,7 @@ const index = (props: Props) => {
                         <InfoBox>
                             <Heading>Birthday</Heading>
                             <InputBox>
-                                <input placeholder='MM' />
-                                <input placeholder='DD' />
-                                <input placeholder='YY' />
+                                <input placeholder='MM' type={'date'} />
                             </InputBox>
 
                         </InfoBox>
@@ -158,31 +188,11 @@ const index = (props: Props) => {
                                 <Checkbox>Add onchain activity</Checkbox>
                             </div>
                         </InfoBox>
-                    </RequiredLeftColumn>
-                    <RequiredRightColumn>
-                        <InfoBox>
-                            <Heading>Profile</Heading>
-                            <InputBox>
-                                <Upload>{UploadButton}</Upload>
-                                <Upload>{UploadButton}</Upload>
-                                <Upload>{UploadButton}</Upload>
-                            </InputBox>
-                            <InputBox>
-                                <Upload>{UploadButton}</Upload>
-                                <Upload>{UploadButton}</Upload>
-                                <Upload>{UploadButton}</Upload>
-                            </InputBox>
-                        </InfoBox>
-
-                    </RequiredRightColumn>
-                </RequiredInfoBox>
-                <OptionalHeader>
-                    <Line />
-                    <span>Optional</span>
-                    <Line />
-                </OptionalHeader>
-                <OptionalContainer>
-                    <OptionalContentBox>
+                        <OptionalHeader>
+                            <Line />
+                            <span>Optional</span>
+                            <Line />
+                        </OptionalHeader>
                         <InfoBox>
                             <Heading>My Organization</Heading>
                             <button>Add</button>
@@ -191,8 +201,26 @@ const index = (props: Props) => {
                             <Heading>Passion</Heading>
                             <button>Add</button>
                         </InfoBox>
-                    </OptionalContentBox>
-                </OptionalContainer>
+                    </RequiredLeftColumn>
+                    <RequiredRightColumn>
+                        <InfoBox>
+                            <Heading>Profile</Heading>
+                            <InputBox>
+                                <ImgCrop rotate>
+                                    <Upload
+                                        listType="picture-card"
+                                        fileList={photoList}
+                                        onChange={onChange}
+                                        onPreview={onPreview}
+                                    >
+                                        {photoList.length < 5 && '+ Upload'}
+                                    </Upload>
+                                </ImgCrop>
+                            </InputBox>
+                        </InfoBox>
+
+                    </RequiredRightColumn>
+                </RequiredInfoBox>
                 <ConfirmBox>
                     <button>Confirm</button>
                 </ConfirmBox>
