@@ -11,8 +11,7 @@ import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 
 error ExistentProfile(uint64);
 error NonExistentProfile();
-error CanNotTransferOrBurn();
-error NotTheOwner(address);
+error CanNotTransfer();
 
 contract Tind3rMembership is
     Initializable,
@@ -36,10 +35,6 @@ contract Tind3rMembership is
         string name;
         string description;
         string image;
-        uint64 dateOfBirth;
-        uint8 gender;
-        uint8 sexOrientation;
-        uint64 insteretVector;
     }
 
     // Emit profile data (to be caught by TheGraph indexers)
@@ -47,12 +42,11 @@ contract Tind3rMembership is
         uint256 indexed tokenId,
         string name,
         string description,
-        string image,
-        uint64 dateOfBirth,
-        uint8 indexed gender,
-        uint8 indexed sexOrientation,
-        uint64 insteretVector
+        string image
     );
+
+    // Emit user address and ID when delete
+    event DeleteProfile(uint256 indexed tokenId);
 
     /**
      * @dev initialization function for upgradeable contract
@@ -105,14 +99,13 @@ contract Tind3rMembership is
     /**
      * @dev create Tind3r profile with name and image
      */
-    function createProfile(
-        string calldata name,
-        string calldata description,
-        string calldata image
-    ) public returns (uint256) {
+    function createProfile(Tind3rProfile calldata userProfile)
+        public
+        returns (uint256)
+    {
         address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) > 0)
-            revert ExistentProfile(_getAux(msgSender));
+        // if (balanceOf(msgSender) > 0)
+        //     revert ExistentProfile(_getAux(msgSender));
         uint256 newTokenId = _nextTokenId();
 
         _tableland.runSQL(
@@ -124,29 +117,34 @@ contract Tind3rMembership is
                 " (id, name, description, image) VALUES (",
                 newTokenId.toString(),
                 ", '",
-                name,
+                userProfile.name,
                 "', '",
-                description,
+                userProfile.description,
                 "', '",
-                image,
+                userProfile.image,
                 "');"
             )
         );
         _safeMint(msgSender, 1, "");
         _setAux(msgSender, uint64(newTokenId));
+        emit NewProfile(
+            newTokenId,
+            userProfile.name,
+            userProfile.description,
+            userProfile.image
+        );
         return newTokenId;
     }
 
     /**
      * @dev update Tind3r profile with name and image
      */
-    function updateProfile(
-        string calldata name,
-        string calldata description,
-        string calldata image
-    ) public returns (uint256) {
+    function updateProfile(Tind3rProfile calldata newProfile)
+        public
+        returns (uint256)
+    {
         address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) != 1) revert NonExistentProfile();
+        if (balanceOf(msgSender) < 1) revert NonExistentProfile();
         uint256 ownerTokenId = _getAux(msgSender);
 
         _tableland.runSQL(
@@ -156,15 +154,21 @@ contract Tind3rMembership is
                 "UPDATE ",
                 _metadataTable,
                 " SET name='",
-                name,
+                newProfile.name,
                 "', description='",
-                description,
+                newProfile.description,
                 "', image='",
-                image,
+                newProfile.image,
                 "' WHERE id=",
                 ownerTokenId.toString(),
                 ";"
             )
+        );
+        emit NewProfile(
+            ownerTokenId,
+            newProfile.name,
+            newProfile.description,
+            newProfile.image
         );
         return ownerTokenId;
     }
@@ -188,6 +192,7 @@ contract Tind3rMembership is
             )
         );
         _burn(tokenId);
+        emit DeleteProfile(tokenId);
     }
 
     /**
@@ -298,9 +303,7 @@ contract Tind3rMembership is
         uint256 startTokenId,
         uint256 quantity
     ) internal override {
-        address msgSender = _msgSenderERC721A();
-        if (from != address(0) && msgSender != owner())
-            revert CanNotTransferOrBurn();
+        if (from != address(0) || to != address(0)) revert CanNotTransfer();
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
     }
 }
