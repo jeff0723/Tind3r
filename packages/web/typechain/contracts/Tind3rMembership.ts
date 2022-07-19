@@ -28,11 +28,25 @@ import type {
   PromiseOrValue,
 } from "../common";
 
+export declare namespace Tind3rMembership {
+  export type Tind3rProfileStruct = {
+    name: PromiseOrValue<string>;
+    description: PromiseOrValue<string>;
+    image: PromiseOrValue<string>;
+  };
+
+  export type Tind3rProfileStructOutput = [string, string, string] & {
+    name: string;
+    description: string;
+    image: string;
+  };
+}
+
 export interface Tind3rMembershipInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "createProfile(string,string,string)": FunctionFragment;
+    "createProfile((string,string,string))": FunctionFragment;
     "deleteProfile()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getUserId(address)": FunctionFragment;
@@ -55,7 +69,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "updateProfile(string,string,string)": FunctionFragment;
+    "updateProfile((string,string,string))": FunctionFragment;
     "upgradeTo(address)": FunctionFragment;
     "upgradeToAndCall(address,bytes)": FunctionFragment;
   };
@@ -102,11 +116,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createProfile",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
-    ]
+    values: [Tind3rMembership.Tind3rProfileStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "deleteProfile",
@@ -202,11 +212,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateProfile",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
-    ]
+    values: [Tind3rMembership.Tind3rProfileStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "upgradeTo",
@@ -303,8 +309,9 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "ApprovalForAll(address,address,bool)": EventFragment;
     "BeaconUpgraded(address)": EventFragment;
     "ConsecutiveTransfer(uint256,uint256,address,address)": EventFragment;
+    "DeleteProfile(uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
-    "NewProfile(uint256,string,string,string,uint64,uint8,uint8,uint64)": EventFragment;
+    "NewProfile(uint256,string,string,string)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "Upgraded(address)": EventFragment;
@@ -315,6 +322,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ConsecutiveTransfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DeleteProfile"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewProfile"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
@@ -381,6 +389,16 @@ export type ConsecutiveTransferEvent = TypedEvent<
 export type ConsecutiveTransferEventFilter =
   TypedEventFilter<ConsecutiveTransferEvent>;
 
+export interface DeleteProfileEventObject {
+  tokenId: BigNumber;
+}
+export type DeleteProfileEvent = TypedEvent<
+  [BigNumber],
+  DeleteProfileEventObject
+>;
+
+export type DeleteProfileEventFilter = TypedEventFilter<DeleteProfileEvent>;
+
 export interface InitializedEventObject {
   version: number;
 }
@@ -393,13 +411,9 @@ export interface NewProfileEventObject {
   name: string;
   description: string;
   image: string;
-  dateOfBirth: BigNumber;
-  gender: number;
-  sexOrientation: number;
-  insteretVector: BigNumber;
 }
 export type NewProfileEvent = TypedEvent<
-  [BigNumber, string, string, string, BigNumber, number, number, BigNumber],
+  [BigNumber, string, string, string],
   NewProfileEventObject
 >;
 
@@ -475,9 +489,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<[BigNumber]>;
 
     createProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      userProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -581,9 +593,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<ContractTransaction>;
 
     updateProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      newProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -611,9 +621,7 @@ export interface Tind3rMembership extends BaseContract {
   ): Promise<BigNumber>;
 
   createProfile(
-    name: PromiseOrValue<string>,
-    description: PromiseOrValue<string>,
-    image: PromiseOrValue<string>,
+    userProfile: Tind3rMembership.Tind3rProfileStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -717,9 +725,7 @@ export interface Tind3rMembership extends BaseContract {
   ): Promise<ContractTransaction>;
 
   updateProfile(
-    name: PromiseOrValue<string>,
-    description: PromiseOrValue<string>,
-    image: PromiseOrValue<string>,
+    newProfile: Tind3rMembership.Tind3rProfileStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -747,9 +753,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<BigNumber>;
 
     createProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      userProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -849,9 +853,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<void>;
 
     updateProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      newProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -919,28 +921,27 @@ export interface Tind3rMembership extends BaseContract {
       to?: PromiseOrValue<string> | null
     ): ConsecutiveTransferEventFilter;
 
+    "DeleteProfile(uint256)"(
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): DeleteProfileEventFilter;
+    DeleteProfile(
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): DeleteProfileEventFilter;
+
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
-    "NewProfile(uint256,string,string,string,uint64,uint8,uint8,uint64)"(
+    "NewProfile(uint256,string,string,string)"(
       tokenId?: PromiseOrValue<BigNumberish> | null,
       name?: null,
       description?: null,
-      image?: null,
-      dateOfBirth?: null,
-      gender?: PromiseOrValue<BigNumberish> | null,
-      sexOrientation?: PromiseOrValue<BigNumberish> | null,
-      insteretVector?: null
+      image?: null
     ): NewProfileEventFilter;
     NewProfile(
       tokenId?: PromiseOrValue<BigNumberish> | null,
       name?: null,
       description?: null,
-      image?: null,
-      dateOfBirth?: null,
-      gender?: PromiseOrValue<BigNumberish> | null,
-      sexOrientation?: PromiseOrValue<BigNumberish> | null,
-      insteretVector?: null
+      image?: null
     ): NewProfileEventFilter;
 
     "OwnershipTransferred(address,address)"(
@@ -984,9 +985,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<BigNumber>;
 
     createProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      userProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1090,9 +1089,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<BigNumber>;
 
     updateProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      newProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1121,9 +1118,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     createProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      userProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1227,9 +1222,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     updateProfile(
-      name: PromiseOrValue<string>,
-      description: PromiseOrValue<string>,
-      image: PromiseOrValue<string>,
+      newProfile: Tind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
