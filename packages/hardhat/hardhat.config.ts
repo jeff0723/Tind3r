@@ -45,6 +45,9 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: 0,
   },
+  typechain: {
+    outDir: "../web/typechain",
+  },
   networks: {
     // mainnets
     polygon: {
