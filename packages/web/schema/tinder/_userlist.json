@@ -1,0 +1,104 @@
+{
+    "data": {
+        "results": [
+            {
+                "type": "string",
+                "user": {
+                    "_id": "string",
+                    "badges": [],
+                    "bio": "",
+                    "birth_date": "string",
+                    "name": "string",
+                    "photos": [
+                        {
+                            "id": "string",
+                            "crop_info": {
+                                "user": {
+                                    "width_pct": "number",
+                                    "x_offset_pct": "number",
+                                    "height_pct": "number",
+                                    "y_offset_pct": "number"
+                                },
+                                "algo": {
+                                    "width_pct": "number",
+                                    "x_offset_pct": "number",
+                                    "height_pct": "number",
+                                    "y_offset_pct": "number"
+                                },
+                                "processed_by_bullseye": "boolean",
+                                "user_customized": "boolean",
+                                "faces": [
+                                    {
+                                        "algo": {
+                                            "width_pct": "number",
+                                            "x_offset_pct": "number",
+                                            "height_pct": "number",
+                                            "y_offset_pct": "number"
+                                        },
+                                        "bounding_box_percentage": "number"
+                                    }
+                                ]
+                            },
+                            "url": "string",
+                            "processedFiles": [
+                                {
+                                    "url": "string",
+                                    "height": "number",
+                                    "width": "number"
+                                }
+                            ],
+                            "processedVideos": [],
+                            "fileName": "string",
+                            "extension": "jpg,webp",
+                            "assets": [],
+                            "media_type": "image"
+                        }
+                    ],
+                    "gender": "number",
+                    "jobs": [],
+                    "schools": [],
+                    "show_gender_on_profile": "boolean",
+                    "recently_active": "boolean",
+                    "online_now": "boolean"
+                },
+                "facebook": {
+                    "common_connections": [],
+                    "connection_count": "number",
+                    "common_interests": []
+                },
+                "spotify": {
+                    "spotify_connected": "boolean",
+                    "spotify_top_artists": []
+                },
+                "distance_mi": "number",
+                "content_hash": "string",
+                "s_number": "number",
+                "teaser": {
+                    "string": ""
+                },
+                "teasers": [],
+                "experiment_info": {
+                    "user_interests": {
+                        "selected_interests": [
+                            {
+                                "id": "string",
+                                "name": "string",
+                                "is_common": "boolean"
+                            }
+                        ]
+                    }
+                },
+                "is_superlike_upsell": "boolean",
+                "tappy_content": [
+                    {
+                        "content": [
+                            {
+                                "id": "string"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
