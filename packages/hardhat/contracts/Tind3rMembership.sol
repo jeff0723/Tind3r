@@ -9,9 +9,10 @@ import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 
-error ExistingProfile();
-
-error CanNotTransferAndBurn();
+error ExistentProfile(uint64);
+error NonExistentProfile();
+error CanNotTransferOrBurn();
+error NotTheOwner(address);
 
 contract Tind3rMembership is
     Initializable,
@@ -21,7 +22,7 @@ contract Tind3rMembership is
 {
     using StringsUpgradeable for uint256;
 
-    string private constant _tablePrefix = "tind3r";
+    string private constant TABLE_PREFIX = "tind3r_membership";
 
     ITablelandTables private _tableland;
     string private _metadataTable;
@@ -78,10 +79,10 @@ contract Tind3rMembership is
             address(this),
             string.concat(
                 "CREATE TABLE ",
-                _tablePrefix,
+                TABLE_PREFIX,
                 "_",
                 chainId,
-                " (id integer, name text, image text);"
+                " (id integer, name text, description text, image text);"
             )
         );
 
@@ -90,7 +91,7 @@ contract Tind3rMembership is
          * {prefix}_{chainid}_{tableid}
          */
         _metadataTable = string.concat(
-            _tablePrefix,
+            TABLE_PREFIX,
             "_",
             chainId,
             "_",
@@ -104,13 +105,15 @@ contract Tind3rMembership is
     /**
      * @dev create Tind3r profile with name and image
      */
-    function createProfile(Tind3rProfile calldata userProfile)
-        public
-        returns (uint256)
-    {
+    function createProfile(
+        string calldata name,
+        string calldata description,
+        string calldata image
+    ) public returns (uint256) {
         address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) > 0) revert ExistingProfile();
-        uint256 newTokenId = totalSupply();
+        if (balanceOf(msgSender) > 0)
+            revert ExistentProfile(_getAux(msgSender));
+        uint256 newTokenId = _nextTokenId();
 
         _tableland.runSQL(
             address(this),
@@ -118,34 +121,99 @@ contract Tind3rMembership is
             string.concat(
                 "INSERT INTO ",
                 _metadataTable,
-                " (id, name, image) VALUES (",
+                " (id, name, description, image) VALUES (",
                 newTokenId.toString(),
-                ", ",
-                userProfile.name,
-                ", ",
-                userProfile.image,
-                ")"
+                ", '",
+                name,
+                "', '",
+                description,
+                "', '",
+                image,
+                "');"
             )
         );
         _safeMint(msgSender, 1, "");
-        emit NewProfile(
-            newTokenId,
-            userProfile.name,
-            userProfile.description,
-            userProfile.image,
-            userProfile.dateOfBirth,
-            userProfile.gender,
-            userProfile.sexOrientation,
-            userProfile.insteretVector
-        );
+        _setAux(msgSender, uint64(newTokenId));
         return newTokenId;
     }
 
     /**
-     * @dev Update baseURI
+     * @dev update Tind3r profile with name and image
      */
-    function setBaseURI(string memory baseURI) external onlyOwner {
-        _baseURIString = baseURI;
+    function updateProfile(
+        string calldata name,
+        string calldata description,
+        string calldata image
+    ) public returns (uint256) {
+        address msgSender = _msgSenderERC721A();
+        if (balanceOf(msgSender) != 1) revert NonExistentProfile();
+        uint256 ownerTokenId = _getAux(msgSender);
+
+        _tableland.runSQL(
+            address(this),
+            _metadataTableId,
+            string.concat(
+                "UPDATE ",
+                _metadataTable,
+                " SET name='",
+                name,
+                "', description='",
+                description,
+                "', image='",
+                image,
+                "' WHERE id=",
+                ownerTokenId.toString(),
+                ";"
+            )
+        );
+        return ownerTokenId;
+    }
+
+    /**
+     * @dev delete tind3r profile
+     */
+    function deleteProfile() external {
+        address msgSender = _msgSenderERC721A();
+        if (balanceOf(msgSender) == 0) revert NonExistentProfile();
+        uint256 tokenId = _getAux(msgSender);
+        _tableland.runSQL(
+            address(this),
+            _metadataTableId,
+            string.concat(
+                "DELETE FROM ",
+                _metadataTable,
+                " WHERE id=",
+                tokenId.toString(),
+                ";"
+            )
+        );
+        _burn(tokenId);
+    }
+
+    /**
+     * @dev Set baseURI
+     */
+    function setBaseURI(string calldata newBaseURI) external onlyOwner {
+        _baseURIString = newBaseURI;
+    }
+
+    /**
+     * @dev Set controller
+     */
+    function setController(address newController) external onlyOwner {
+        _tableland.setController(
+            address(this),
+            _metadataTableId,
+            newController
+        );
+    }
+
+    /**
+     * @dev Get tokenId own by certain user
+     */
+    function getUserId(address user) public view returns (uint256) {
+        if (balanceOf(user) == 0) revert NonExistentProfile();
+        return _getAux(user);
     }
 
     /**
@@ -161,22 +229,48 @@ contract Tind3rMembership is
         returns (string memory)
     {
         if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
+
         string memory baseURI = _baseURI();
+        if (bytes(baseURI).length == 0) return "";
 
-        if (bytes(baseURI).length == 0) {
-            return "";
-        }
+        /* SELECT json_object(
+            'id',id,
+            'name',name,
+            'description',description,
+            'image',image
+        ) FROM {tablename} WHERE id={tokenId} */
+        return
+            string(
+                abi.encodePacked(
+                    baseURI,
+                    "SELECT+",
+                    "json_object%28",
+                    "%27id%27%2Cid%2C",
+                    "%27name%27%2Cname%2C",
+                    "%27description%27%2Cdescription%2C",
+                    "%27image%27%2Cimage%29+",
+                    "FROM+",
+                    _metadataTable,
+                    "+WHERE+id=",
+                    tokenId.toString(),
+                    "&mode=list"
+                )
+            );
+    }
 
-        /* SELECT json_object('id',id,name,'name','image',image) FROM {tablename} WHERE id = */
-        string memory query = string.concat(
-            "SELECT+",
-            "json_object%28%27id%27%2Cid%2Cname%2C%27name%27%2C%27image%27%2Cimage%29+",
-            "from+",
-            _metadataTable,
-            "+WHERE+id%3D",
-            tokenId.toString()
-        );
-        return string.concat(baseURI, query);
+    /**
+     * @dev get whole data of table
+     */
+    function metadataURI() public view returns (string memory) {
+        string memory baseURI = _baseURI();
+        if (bytes(baseURI).length == 0) return "";
+        return
+            string.concat(
+                baseURI,
+                "SELECT+*+FROM+",
+                _metadataTable,
+                "&mode=list"
+            );
     }
 
     /**
@@ -204,7 +298,9 @@ contract Tind3rMembership is
         uint256 startTokenId,
         uint256 quantity
     ) internal override {
-        if (from != address(0)) revert CanNotTransferAndBurn();
+        address msgSender = _msgSenderERC721A();
+        if (from != address(0) && msgSender != owner())
+            revert CanNotTransferOrBurn();
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
     }
 }
