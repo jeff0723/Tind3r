@@ -13,7 +13,10 @@ import { useTind3rMembershipContract } from 'hooks/useContract';
 import { openNotificationWithIcon } from 'utils/notification';
 import useCeramic from 'hooks/useCeramic';
 import { useWeb3React } from '@web3-react/core';
-
+import { useRouter } from 'next/router';
+import config from 'schema/ceramic/model.json';
+import { updateIsCeramicProfileExists, updateMembershipCreated } from 'state/user/reducer';
+import { useAppSelector } from 'state/hooks';
 
 type Props = {}
 type Tind3rMembership = {
@@ -124,12 +127,14 @@ const UploadButton = (
     </div>
 );
 
+const UserProfileDefinitionId = config.definitions.UserProfile
 const genderMap = [
     "WOMEN",
     "MEN",
     "EVERYONE"
 ]
 const index = (props: Props) => {
+    const router = useRouter()
     const { idx, isAuthenticated } = useCeramic()
     const { account } = useWeb3React()
     const tind3rMembershipContract = useTind3rMembershipContract()
@@ -154,6 +159,9 @@ const index = (props: Props) => {
         organizations: [],
         tags: []
     })
+
+    const isCeramicProfileExists = useAppSelector(state => state.user.isCeramicProfileExists)
+    const isMemberCreated = useAppSelector(state => state.user.isMembershipCreated)
 
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
         setPhotoList(newFileList);
@@ -201,7 +209,7 @@ const index = (props: Props) => {
     const getUserProfile = useCallback(async () => {
         if (isAuthenticated && idx) {
             console.log('getUserProfile')
-            const res = await idx.get('kjzl6cwe1jw14ajj5tznlxfp3mvuqavolsahxjmdo8mcue8a32cn0sz8x4zrfly', `${account}@eip155:1`)
+            const res = await idx.get(UserProfileDefinitionId, `${account}@eip155:1`) as UserProfile
             console.log("UserProfle:", res)
         }
     }, [isAuthenticated, idx])
@@ -219,7 +227,7 @@ const index = (props: Props) => {
             image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP"
         }
         if (isAuthenticated) {
-            const res = await idx?.set("kjzl6cwe1jw14ajj5tznlxfp3mvuqavolsahxjmdo8mcue8a32cn0sz8x4zrfly", {
+            const res = await idx?.set(UserProfileDefinitionId, {
                 name: onBoardingInfo.name,
                 birthday: onBoardingInfo.birthday,
                 gender: onBoardingInfo.gender
@@ -228,14 +236,12 @@ const index = (props: Props) => {
             getUserProfile()
         }
 
-        // const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
-        // const receipt = await tx?.wait()
-        // if (receipt.status) {
-        //     openNotificationWithIcon("success", "Success", "Profile created successfully")
-
-        // }
-        // console.log(receipt)
-
+        const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+        const receipt = await tx?.wait()
+        if (receipt.status) {
+            openNotificationWithIcon("success", "Success", "Profile created successfully")
+            router.push('/app')
+        }
 
     }
     useEffect(() => {
@@ -243,6 +249,8 @@ const index = (props: Props) => {
     }, [isAuthenticated, idx])
 
     console.log("IDX authenticated", idx?.authenticated)
+    console.log("Is Ceramic Profile Exists", isCeramicProfileExists)
+    console.log("Is Membership Created", isMemberCreated)
     return (
         <div>
             <Header>

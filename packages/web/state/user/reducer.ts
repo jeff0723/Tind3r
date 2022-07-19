@@ -6,16 +6,20 @@ export interface UserState {
     selectedWalletBackfilled: boolean
     selectedWallet?: ConnectionType
     isProfileExists: boolean
+    isCeramicProfileExists: boolean
     isCeramicAuthenticated: boolean
     isXmtpAuthenticated: boolean
+    isMembershipCreated: boolean
 }
 export const initialState: UserState = {
     userName: '',
     selectedWalletBackfilled: false,
     selectedWallet: undefined,
     isProfileExists: false,
+    isCeramicProfileExists: false,
     isCeramicAuthenticated: false,
     isXmtpAuthenticated: false,
+    isMembershipCreated: false
 
 }
 
@@ -38,6 +42,12 @@ const userSlice = createSlice({
         },
         updateIsProfileExists(state, { payload: { isProfileExists } }) {
             state.isProfileExists = isProfileExists
+        },
+        updateIsCeramicProfileExists(state, { payload: { isCeramicProfileExists } }) {
+            state.isCeramicProfileExists = isCeramicProfileExists
+        },
+        updateMembershipCreated(state, { payload: { isMembershipCreated } }) {
+            state.isMembershipCreated = isMembershipCreated
         }
     }
 })
@@ -47,6 +57,8 @@ export const {
     updateSelectedWallet,
     updateCeramicAuthentication,
     updateXmtpAuthentication,
-    updateIsProfileExists
+    updateIsProfileExists,
+    updateIsCeramicProfileExists,
+    updateMembershipCreated
 } = userSlice.actions
 export default userSlice.reducer
