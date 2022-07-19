@@ -2,17 +2,19 @@ import { Checkbox } from 'antd'
 import Image from 'next/image'
 import React from 'react'
 import styled from 'styled-components'
+import { Upload } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 type Props = {}
 
 const Header = styled.div`
-display: flex;
-flex-direction: row;
-align-items: flex-start;
-border-bottom: 1px solid #D9D9D9;
-width: 100%;
-height: 87px;
-padding: 16px 32px 16px 64px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    border-bottom: 1px solid #D9D9D9;
+    width: 100%;
+    height: 87px;
+    padding: 16px 32px 16px 64px;
 `
 const Content = styled.div`
     display: flex;
@@ -86,7 +88,7 @@ justify-content: center;
 align-items: center;
 padding: 0px;
 gap: 24px;
-width: 50%;
+
 `
 const OptionalContentBox = styled.div`
 display: flex;
@@ -95,6 +97,19 @@ align-items: flex-start;
 padding: 0px;
 gap: 10px;
 `
+const ConfirmBox = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+`
+const UploadButton = (
+    <div>
+        <PlusOutlined />
+        <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+);
+
 const index = (props: Props) => {
     return (
         <div>
@@ -145,7 +160,20 @@ const index = (props: Props) => {
                         </InfoBox>
                     </RequiredLeftColumn>
                     <RequiredRightColumn>
-                        b
+                        <InfoBox>
+                            <Heading>Profile</Heading>
+                            <InputBox>
+                                <Upload>{UploadButton}</Upload>
+                                <Upload>{UploadButton}</Upload>
+                                <Upload>{UploadButton}</Upload>
+                            </InputBox>
+                            <InputBox>
+                                <Upload>{UploadButton}</Upload>
+                                <Upload>{UploadButton}</Upload>
+                                <Upload>{UploadButton}</Upload>
+                            </InputBox>
+                        </InfoBox>
+
                     </RequiredRightColumn>
                 </RequiredInfoBox>
                 <OptionalHeader>
@@ -165,6 +193,9 @@ const index = (props: Props) => {
                         </InfoBox>
                     </OptionalContentBox>
                 </OptionalContainer>
+                <ConfirmBox>
+                    <button>Confirm</button>
+                </ConfirmBox>
             </Content>
         </div>
     )

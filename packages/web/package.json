@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@3id/connect": "^0.4.1",
+    "@ant-design/icons": "^4.7.0",
     "@ceramicnetwork/3id-did-resolver": "^2.1.3",
     "@ceramicnetwork/http-client": "^2.3.0",
     "@ceramicstudio/idx": "^0.12.2",

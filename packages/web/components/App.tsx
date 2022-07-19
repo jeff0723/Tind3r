@@ -15,11 +15,11 @@ function App({ children }: AppProps) {
     return (
         <Provider store={store}>
             <Web3Provider>
-                {/* <CeramicProvider> */}
-                {/* <XmtpProvider> */}
-                {children}
-                {/* </XmtpProvider> */}
-                {/* </CeramicProvider> */}
+                <CeramicProvider>
+                    {/* <XmtpProvider> */}
+                    {children}
+                    {/* </XmtpProvider> */}
+                </CeramicProvider>
             </Web3Provider>
         </Provider>
 
