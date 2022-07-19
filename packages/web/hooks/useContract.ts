@@ -3,7 +3,7 @@ import {
     TIND3R_MEMBER_ADDRESSES
 } from 'constants/addresses'
 import { useMemo } from 'react'
-import { Tind3rMembership__factory, Tind3rMembership } from 'typechain'
+import { Tind3rMembership__factory, Tind3rMembership } from 'typechain-types'
 import { getContract } from 'utils'
 import { useWeb3React } from '@web3-react/core'
 
