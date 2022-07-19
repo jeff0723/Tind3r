@@ -122,15 +122,15 @@ contract Tind3rMembership is
                 _metadataTable,
                 " (id, owner, name, description, image) VALUES (",
                 newTokenId.toString(),
-                ", ",
+                ", '",
                 msgSender.toHexString(),
-                ', "',
+                "', '",
                 userProfile.name,
-                '", "',
+                "', '",
                 userProfile.description,
-                '", "',
+                "', '",
                 userProfile.image,
-                '");'
+                "');"
             )
         );
         _safeMint(msgSender, 1);
@@ -161,13 +161,13 @@ contract Tind3rMembership is
             string.concat(
                 "UPDATE ",
                 _metadataTable,
-                ' SET name="',
+                " SET name='",
                 newProfile.name,
-                '", description="',
+                "', description='",
                 newProfile.description,
-                '", image="',
+                "', image='",
                 newProfile.image,
-                '" WHERE id=',
+                "' WHERE id=",
                 ownerTokenId.toString(),
                 ";"
             )
