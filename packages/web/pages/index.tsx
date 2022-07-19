@@ -1,75 +1,99 @@
-import type { NextPage } from 'next'
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import useWallet from '../hooks/useWallet';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React from 'react'
+
+import styled from 'styled-components'
+import Image from 'next/image'
+import { openNotificationWithIcon } from 'utils/notification'
+import { injectedConnection } from 'connection'
 import { useRouter } from 'next/router'
-import MiniXmtpContext from '../contexts/miniXmtp';
-import XmtpContext from '../contexts/xmtp';
-import useXmtp from 'hooks/useXmtp';
-import useCeramic from 'hooks/useCeramic';
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateUserName, updateIsProfileExists } from 'state/user/reducer';
-import { useWeb3React } from '@web3-react/core';
-import { injectedConnection } from 'connection';
-import { Signer } from 'ethers';
-import { Client } from '@xmtp/xmtp-js'
-import { is } from 'immer/dist/internal';
+type Props = {}
 
-const Home: NextPage = () => {
-  const { account } = useWeb3React()
-  const { client } = useXmtp()
-  const { idx, isAuthenticated } = useCeramic()
-  const [name, setName] = useState("")
-  const dispatch = useAppDispatch()
-  const userName = useAppSelector(state => state.user.userName)
+const ImageBackground = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url(https://tinder.com/static/build/379766df6d9620c8f7e0bcc39c6905e2.webp);
+`
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
 
-  const handleConnect = async () => {
-    console.log('connect clicked')
+`
+const LoginButton = styled.button`
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #18E3FF;
+    width: 138px;
+    height: 58px;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
 
-    await injectedConnection.connector.activate()
-  }
+`
 
-  const getProfile = async () => {
-    if (idx && account && isAuthenticated) {
-      const res = await idx.get("basicProfile", `${account}@eip155:1`)
-      console.log(res)
-      //@ts-ignore
-      if (res) {
-        dispatch(updateIsProfileExists(true))
-        //@ts-ignore)
-        dispatch(updateUserName({ userName: res.name }))
-      }
+const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 48px;
+    width: 100%;
+    height: 75vh;
+`
+
+const Title = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-weight: 600;
+    font-size: 108px;
+    line-height: 162px;
+    color: #FFFFFF;
+`
+
+const CTAButton = styled.button`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color:#fff;
+    width: 277px;
+    height: 65px;
+    border:none;
+    background: linear-gradient(90.27deg, #18E3FF 0.2%, #18FF90 97.79%);
+    border-radius: 32px;
+    font-size: 16px;
+`
+const index = (props: Props) => {
+    const router = useRouter()
+    const handleCTAButtonClick = async () => {
+        if (!window.ethereum) {
+            // This should be change to a modal
+            openNotificationWithIcon('info', 'Wallet not installed', 'Please install MetaMask')
+            return
+        }
+        await injectedConnection.connector.activate()
+        openNotificationWithIcon('success', 'Connected', 'You are now connected to the blockchain')
+        router.push('/app/onboarding')
     }
-  }
-  useEffect(() => {
-    getProfile()
-  }, [idx, account, isAuthenticated])
+    return (
+        <ImageBackground>
+            <Header>
+                <Image src='/images/logo-with-word-white.png' width={293} height={92} />
+                <LoginButton>Log In</LoginButton>
+            </Header>
+            <Content>
+                <Title>Tinder for web3</Title>
+                <CTAButton onClick={handleCTAButtonClick}>Create Account</CTAButton>
+            </Content>
+        </ImageBackground>
 
-  const handleUpdateName = async () => {
-    console.log('button clicked')
-    console.log(name)
-    if (!name || !isAuthenticated || !idx || !idx.authenticated) return
-    console.log('start to update')
-    const res = await idx?.set("basicProfile", { name })
-
-    console.log("respones", res)
-    getProfile()
-
-  }
-  console.log(idx?.authenticated)
-  return (
-    <div>
-
-      <button onClick={handleConnect}>Connect</button>
-      <h1>Hello: {userName}</h1>
-      <h1>Status:{account ? "connected" : "not connected"}</h1>
-      <h1>Address:{account}</h1>
-      <h1>XTMP Client : {client ? "connected" : "not connected"}</h1>
-      <h1>Ceramic Connect:{idx?.authenticated ? "True" : "False"}</h1>
-      <input placeholder='update your name' onChange={(e) => setName(e.target.value)}></input>
-      <button onClick={handleUpdateName}>Update</button>
-    </div>
-  )
+    )
 }
 
-export default Home
+export default index

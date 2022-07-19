@@ -9,3 +9,4 @@ interface Window {
     }
     web3?: Record<string, unknown>
 }
+

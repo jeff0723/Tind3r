@@ -15,7 +15,7 @@ function ChatApp() {
         <div className={styles.tab}>matches</div>
         <div className={styles.tab}>messages</div>
       </div>
-      <Link href="/message/123">
+      <Link href="/app/message/123">
         <div className={styles.message}>
           <div className={styles.avatar} />
           <div className={styles['message-content']}>
@@ -24,7 +24,7 @@ function ChatApp() {
           </div>
         </div>
       </Link>
-      <Link href="/message/456">
+      <Link href="/app/message/456">
         <div className={styles.message}>
           <div className={styles.avatar} />
           <div className={styles['message-content']}>

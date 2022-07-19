@@ -1,9 +1,11 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import App from '../components/App'
-import "@rainbow-me/rainbowkit/styles.css";
 import dynamic from 'next/dynamic'
-import Layout from '../components/Layout'
+import Layout from 'components/Layout';
+import "antd/dist/antd.css";
+
+
+
 
 const AppWithoutSSR = dynamic(() => import('../components/App'), {
   ssr: false,
@@ -11,11 +13,7 @@ const AppWithoutSSR = dynamic(() => import('../components/App'), {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AppWithoutSSR>
-      <App>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </App>
+      <Component {...pageProps} />
     </AppWithoutSSR>
   )
 }

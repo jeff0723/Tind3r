@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withImages = require('next-images')
+
+const nextConfig = withImages({
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config, { isServer }) => {
@@ -10,6 +12,9 @@ const nextConfig = {
     }
     return config
   },
-}
+  images: {
+    disableStaticImages: true
+  }
+})
 
 module.exports = nextConfig

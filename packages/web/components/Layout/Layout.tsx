@@ -1,5 +1,5 @@
+import ChatApp from 'components/Chat'
 import styles from './Layout.module.css'
-import ChatApp from './ChatApp'
 
 type AppProps = {
   children?: React.ReactNode
