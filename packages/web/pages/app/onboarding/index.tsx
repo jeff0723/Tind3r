@@ -185,7 +185,7 @@ const index = (props: Props) => {
     const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setOnBoardingInfo({
             ...onBoardingInfo,
-            [e.currentTarget.name as string]: e.currentTarget.value
+            [e.currentTarget.name as string]: +e.currentTarget.value
         } as UserProfile
         );
 
@@ -201,7 +201,7 @@ const index = (props: Props) => {
     const getUserProfile = useCallback(async () => {
         if (isAuthenticated && idx) {
             console.log('getUserProfile')
-            const res = await idx.get('UserProfile', `${account}@eip155:1`)
+            const res = await idx.get('kjzl6cwe1jw14ajj5tznlxfp3mvuqavolsahxjmdo8mcue8a32cn0sz8x4zrfly', `${account}@eip155:1`)
             console.log("UserProfle:", res)
         }
     }, [isAuthenticated, idx])
@@ -219,10 +219,13 @@ const index = (props: Props) => {
             image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP"
         }
         if (isAuthenticated) {
-            const res = idx?.merge("UserProfile", {
+            const res = await idx?.set("kjzl6cwe1jw14ajj5tznlxfp3mvuqavolsahxjmdo8mcue8a32cn0sz8x4zrfly", {
                 name: onBoardingInfo.name,
+                birthday: onBoardingInfo.birthday,
+                gender: onBoardingInfo.gender
             })
             console.log("set idx:", res)
+            getUserProfile()
         }
 
         // const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
