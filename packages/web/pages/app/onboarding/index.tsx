@@ -6,6 +6,10 @@ import { Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { UserProfile } from 'schema/ceramic/user';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { constants } from 'buffer';
+
 type Props = {}
 
 const Header = styled.div`
@@ -111,6 +115,11 @@ const UploadButton = (
     </div>
 );
 
+const genderMap = [
+    "WOMEN",
+    "MEN",
+    "EVERYONE"
+]
 const index = (props: Props) => {
     const [photoList, setPhotoList] = useState<UploadFile[]>([
         {
@@ -120,6 +129,19 @@ const index = (props: Props) => {
             url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         },
     ]);
+
+    const [onBoardingInfo, setOnBoardingInfo] = useState<UserProfile>({
+        name: "",
+        birthday: 0,
+        gender: 0, //0 women 1 men 2 everyone
+        showMe: 0, //0 women 1 men 2 everyone 
+        showMyGenderOnProfile: false,
+        importNFT: false,
+        addOnChainActivity: false,
+        organizations: [],
+        passion: []
+    })
+
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
         setPhotoList(newFileList);
     };
@@ -138,9 +160,32 @@ const index = (props: Props) => {
         const imgWindow = window.open(src);
         imgWindow?.document.write(image.outerHTML);
     };
-    const uploadAction = (file: RcFile) => {
-        console.log(file)
-        return 'hi'
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOnBoardingInfo({
+            ...onBoardingInfo,
+            [e.target.name as string]: e.target.value
+        } as UserProfile
+        );
+    }
+    const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setOnBoardingInfo({
+            ...onBoardingInfo,
+            [e.currentTarget.name as string]: e.currentTarget.value
+        } as UserProfile
+        );
+
+    }
+    const handleCheckBoxChange = (e: CheckboxChangeEvent) => {
+        setOnBoardingInfo({
+            ...onBoardingInfo,
+            [e.target.name as string]: e.target.checked
+        } as UserProfile
+        );
+    }
+    const handleConfirm = () => {
+        console.log(onBoardingInfo)
     }
     console.log(photoList)
     return (
@@ -156,36 +201,37 @@ const index = (props: Props) => {
                     <RequiredLeftColumn>
                         <InfoBox>
                             <Heading>First Name</Heading>
-                            <input placeholder='First Name' />
+                            <input placeholder='First Name' name='name' value={onBoardingInfo?.name} onChange={handleChange} />
                         </InfoBox>
                         <InfoBox>
                             <Heading>Birthday</Heading>
                             <InputBox>
-                                <input placeholder='MM' type={'date'} />
+                                <input placeholder='MM' type={'date'} onChange={handleChange} name='birthday' value={onBoardingInfo?.birthday} />
                             </InputBox>
 
                         </InfoBox>
                         <InfoBox>
                             <Heading>Gender</Heading>
                             <InputBox>
-                                <button>MEN</button>
-                                <button>WOMEN</button>
-                                <button>EVERYONE</button>
+                                {genderMap.map((item, index) => (
+                                    <button disabled={index == onBoardingInfo?.gender} key={index} name='gender' value={index} onClick={handleButtonClick}>{genderMap[index]}</button>
+                                ))}
+
                             </InputBox>
-                            <Checkbox> Show my gender on my profile</Checkbox>
+                            <Checkbox name='showMyGenderOnProfile' onChange={handleCheckBoxChange} checked={onBoardingInfo?.showMyGenderOnProfile}> Show my gender on my profile</Checkbox>
                         </InfoBox>
                         <InfoBox>
                             <Heading>Show me</Heading>
                             <InputBox>
-                                <button>MEN</button>
-                                <button>WOMEN</button>
-                                <button>EVERYONE</button>
+                                {genderMap.map((item, index) => (
+                                    <button disabled={index == onBoardingInfo?.showMe} key={index} name='showMe' value={index} onClick={handleButtonClick}>{genderMap[index]}</button>
+                                ))}
                             </InputBox>
                             <div>
-                                <Checkbox>Import NFT</Checkbox>
+                                <Checkbox name='importNFT' onChange={handleCheckBoxChange} checked={onBoardingInfo?.importNFT}>Import NFT</Checkbox>
                             </div>
                             <div>
-                                <Checkbox>Add onchain activity</Checkbox>
+                                <Checkbox name='addOnChainActivity' onChange={handleCheckBoxChange} checked={onBoardingInfo?.addOnChainActivity}>Add onchain activity</Checkbox>
                             </div>
                         </InfoBox>
                         <OptionalHeader>
@@ -221,7 +267,7 @@ const index = (props: Props) => {
 
                     </RequiredRightColumn>
                 </RequiredInfoBox>
-                <ConfirmBox>
+                <ConfirmBox onClick={handleConfirm}>
                     <button>Confirm</button>
                 </ConfirmBox>
             </Content>
