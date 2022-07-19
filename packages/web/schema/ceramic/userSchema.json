@@ -65,7 +65,7 @@
         },
         "tags": {
             "type": "array",
-            "description": "Organizations of user",
+            "description": "tags of user",
             "items": {
                 "type": "string"
             },

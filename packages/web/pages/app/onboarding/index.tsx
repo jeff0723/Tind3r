@@ -1,6 +1,6 @@
 import { Checkbox } from 'antd'
 import NextImage from 'next/image'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -11,6 +11,8 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { constants } from 'buffer';
 import { useTind3rMembershipContract } from 'hooks/useContract';
 import { openNotificationWithIcon } from 'utils/notification';
+import useCeramic from 'hooks/useCeramic';
+import { useWeb3React } from '@web3-react/core';
 
 
 type Props = {}
@@ -128,6 +130,8 @@ const genderMap = [
     "EVERYONE"
 ]
 const index = (props: Props) => {
+    const { idx, isAuthenticated } = useCeramic()
+    const { account } = useWeb3React()
     const tind3rMembershipContract = useTind3rMembershipContract()
     const [photoList, setPhotoList] = useState<UploadFile[]>([
         {
@@ -194,25 +198,48 @@ const index = (props: Props) => {
         );
     }
 
+    const getUserProfile = useCallback(async () => {
+        if (isAuthenticated && idx) {
+            console.log('getUserProfile')
+            const res = await idx.get('UserProfile', `${account}@eip155:1`)
+            console.log("UserProfle:", res)
+        }
+    }, [isAuthenticated, idx])
     const validateInput = (input: UserProfile) => {
-        if (!input.name || !input.gender || !input.birthday || !input.showMe) return false
+        if (!input.name || !input.gender || !input.birthday) return false
         return true
     }
     const handleConfirm = async () => {
         console.log(onBoardingInfo)
         if (!validateInput(onBoardingInfo) || !tind3rMembershipContract) return
-
+        console.log("start to create")
         const _memberShipInput: Tind3rMembership = {
             name: onBoardingInfo.name,
             description: "Tind3r Membership",
             image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP"
         }
+        if (isAuthenticated) {
+            const res = idx?.merge("UserProfile", {
+                name: onBoardingInfo.name,
+            })
+            console.log("set idx:", res)
+        }
 
-        const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
-        tx?.wait()
+        // const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+        // const receipt = await tx?.wait()
+        // if (receipt.status) {
+        //     openNotificationWithIcon("success", "Success", "Profile created successfully")
+
+        // }
+        // console.log(receipt)
+
 
     }
-    console.log(photoList)
+    useEffect(() => {
+        getUserProfile()
+    }, [isAuthenticated, idx])
+
+    console.log("IDX authenticated", idx?.authenticated)
     return (
         <div>
             <Header>
