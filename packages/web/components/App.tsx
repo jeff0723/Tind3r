@@ -1,6 +1,7 @@
 import CeramicProvider from "providers/CeramicProvider"
 import MiniXtmpProvider from "providers/MiniXtmpProvider"
 import { WalletProvider } from "providers/WalletProvider"
+import Web3Provider from "providers/Web3Provider"
 import XmtpProvider from "providers/XmtpProvider"
 import { Provider } from 'react-redux'
 import store from "state"
@@ -12,15 +13,15 @@ type AppProps = {
 
 function App({ children }: AppProps) {
     return (
-        <WalletProvider>
-            <CeramicProvider>
-                <XmtpProvider>
-                    <Provider store={store}>
+        <Provider store={store}>
+            <Web3Provider>
+                <CeramicProvider>
+                    <XmtpProvider>
                         {children}
-                    </Provider>
-                </XmtpProvider>
-            </CeramicProvider>
-        </WalletProvider>
+                    </XmtpProvider>
+                </CeramicProvider>
+            </Web3Provider>
+        </Provider>
 
     )
 }

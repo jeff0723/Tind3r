@@ -8,114 +8,66 @@ import XmtpContext from '../contexts/xmtp';
 import useXmtp from 'hooks/useXmtp';
 import useCeramic from 'hooks/useCeramic';
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateUserName } from 'state/user/reducer';
+import { updateUserName, updateIsProfileExists } from 'state/user/reducer';
+import { useWeb3React } from '@web3-react/core';
+import { injectedConnection } from 'connection';
+import { Signer } from 'ethers';
+import { Client } from '@xmtp/xmtp-js'
+import { is } from 'immer/dist/internal';
 
 const Home: NextPage = () => {
+  const { account } = useWeb3React()
+  const { client } = useXmtp()
+  const { idx, isAuthenticated } = useCeramic()
+  const [name, setName] = useState("")
   const dispatch = useAppDispatch()
-  const appUserName = useAppSelector((state) => state.user.userName)
-  const { ceramic, idx, signIn } = useCeramic()
-  const {
-    connect: connectXmtp,
-    disconnect: disconnectXmtp,
-    walletAddress,
-    client,
-  } = useXmtp()
-  const router = useRouter()
-  const {
-    provider,
-    signer,
-    address,
-    connect: connectWallet,
-    disconnect: disconnectWallet,
-  } = useWallet()
+  const userName = useAppSelector(state => state.user.userName)
 
-  const handleDisconnect = useCallback(async () => {
-    disconnectXmtp()
-    await disconnectWallet()
-    router.push('/')
-  }, [disconnectWallet, disconnectXmtp, router])
+  const handleConnect = async () => {
+    console.log('connect clicked')
 
-  const handleConnect = useCallback(async () => {
-    await connectWallet()
-  }, [connectWallet])
-  const [name, setName] = useState('')
-  const [userName, setUserName] = useState("")
-  const usePrevious = <T,>(value: T): T | undefined => {
-    const ref = useRef<T>()
-    useEffect(() => {
-      ref.current = value
-    })
-    return ref.current
+    await injectedConnection.connector.activate()
   }
-  const prevSigner = usePrevious(signer)
 
-  useEffect(() => {
-    // if (!signer && prevSigner) {
-    //   disconnectXmtp()
-    // }
-    if (!signer || signer === prevSigner) return
-    const connect = async () => {
-      const prevAddress = await prevSigner?.getAddress()
-      const address = await signer.getAddress()
-      if (address === prevAddress) return
-      connectXmtp(signer)
-    }
-    connect()
-  }, [signer, prevSigner, connectXmtp, disconnectXmtp])
-
-  const handleCeramicSignIn = () => {
-    signIn()
-  }
   const getProfile = async () => {
-    await idx?.get("basicProfile", `${address}@eip155:1`)
-      .then(res => {
-        console.log("getProfile: ", res)
-        //@ts-ignore
-        setUserName(res.name)
-        //@ts-ignore
+    if (idx && account && isAuthenticated) {
+      const res = await idx.get("basicProfile", `${account}@eip155:1`)
+      console.log(res)
+      //@ts-ignore
+      if (res) {
+        dispatch(updateIsProfileExists(true))
+        //@ts-ignore)
         dispatch(updateUserName({ userName: res.name }))
-      })
-      .catch(err => console.log(err))
+      }
+    }
   }
   useEffect(() => {
     getProfile()
-  }, [address])
+  }, [idx, account, isAuthenticated])
 
+  const handleUpdateName = async () => {
+    console.log('button clicked')
+    console.log(name)
+    if (!name || !isAuthenticated || !idx || !idx.authenticated) return
+    console.log('start to update')
+    const res = await idx?.set("basicProfile", { name })
 
-  const handleUpdateData = async () => {
+    console.log("respones", res)
+    getProfile()
 
-    if (name && idx) {
-      if (idx.authenticated) {
-        await idx.set('basicProfile', {
-          name,
-        })
-        getProfile()
-      } else {
-        console.log("not authenticated")
-      }
-
-    }
   }
-  console.log("xtmp client: ", client)
-  console.log("ceramic client: ", ceramic)
-  console.log("idx: ", idx)
-  console.log("is Authenticated: ", idx?.authenticated)
-  console.log("ceramic did:", ceramic?.did)
-  console.log("wallet provider: ", provider)
-  console.log(address)
-  console.log("App user name: ", appUserName)
-
+  console.log(idx?.authenticated)
   return (
     <div>
-      <h1>{userName ? `Hello ${userName}` : ""}</h1>
+
       <button onClick={handleConnect}>Connect</button>
-      <button onClick={handleDisconnect}>Disconnect </button>
-      <button onClick={handleCeramicSignIn}>Ceramic Sign In</button>
-      <input placeholder='name' onChange={(e) => { setName(e.target.value) }}></input>
-      <p>{name}</p>
-      <button onClick={handleUpdateData}> Update</button>
-      <div>You address {address}</div>
-      <div>sign in status: {idx?.authenticated ? "True" : "False"}</div>
+      <h1>Hello: {userName}</h1>
+      <h1>Status:{account ? "connected" : "not connected"}</h1>
+      <h1>Address:{account}</h1>
+      <h1>XTMP Client : {client ? "connected" : "not connected"}</h1>
+      <h1>Ceramic Connect:{idx?.authenticated ? "True" : "False"}</h1>
+      <input placeholder='update your name' onChange={(e) => setName(e.target.value)}></input>
+      <button onClick={handleUpdateName}>Update</button>
     </div>
   )
 }
