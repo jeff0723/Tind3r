@@ -1,0 +1,650 @@
+{
+    "data": {
+        "account": {
+            "account_phone_number": "string",
+            "apple_id_linked": "boolean",
+            "facebook_id_linked": "boolean",
+            "is_email_verified": "boolean",
+            "account_email": "string"
+        },
+        "available_descriptors": [
+            {
+                "descriptors": [
+                    {
+                        "id": "string",
+                        "name": "string",
+                        "prompt": "string",
+                        "type": "string",
+                        "choices": [
+                            {
+                                "id": "number",
+                                "name": "string"
+                            }
+                        ],
+                        "icon_url": "string",
+                        "icon_urls": [
+                            {
+                                "url": "string",
+                                "quality": "string",
+                                "width": "number",
+                                "height": "number"
+                            }
+                        ]
+                    }
+                ],
+                "section_name": "string"
+            }
+        ],
+        "boost": {
+            "duration": "number",
+            "allotment": "number",
+            "allotment_used": "number",
+            "allotment_remaining": "number",
+            "internal_remaining": "number",
+            "purchased_remaining": "number",
+            "remaining": "number",
+            "boost_refresh_amount": "number",
+            "boost_refresh_interval": "number",
+            "boost_refresh_interval_unit": "string",
+            "boost_ended": "boolean",
+            "result_viewed_at": "number",
+            "boost_id": "string",
+            "multiplier": "number",
+            "consumed_from": "number"
+        },
+        "bouncerbypass": {
+            "purchased_bouncer_bypass_remaining": "number",
+            "internal_bouncer_bypass_remaining": "number",
+            "allotment_bouncer_bypass_remaining": "number",
+            "total_bouncer_bypass_remaining": "number",
+            "user_is_bounced": "boolean"
+        },
+        "contact_cards": {
+            "populated_cards": [
+                {
+                    "contact_id": "string",
+                    "contact_type": "string",
+                    "default": "boolean"
+                }
+            ],
+            "available_cards": [
+                "string",
+                "string",
+                "string",
+                "string",
+                "string",
+                "string",
+                "string",
+                "string",
+                "string",
+                "string"
+            ]
+        },
+        "email_settings": {
+            "email": "string",
+            "email_settings": {
+                "promotions": "boolean",
+                "messages": "boolean",
+                "new_matches": "boolean"
+            }
+        },
+        "instagram": {},
+        "likes": {
+            "likes_remaining": "number"
+        },
+        "profile_meter": {
+            "percent_achieved": "number",
+            "incomplete_components": [
+                {
+                    "key": "string",
+                    "display_text": "string"
+                }
+            ]
+        },
+        "notifications": [],
+        "offerings": {
+            "plus": {
+                "purchase_type": "string",
+                "merchandising": {
+                    "data": {
+                        "hide_ads": {
+                            "type": "any"
+                        },
+                        "hide_age": {
+                            "type": "any"
+                        },
+                        "hide_distance": {
+                            "type": "any"
+                        },
+                        "like": {
+                            "type": "any"
+                        },
+                        "control_who_sees_you": {
+                            "type": "any"
+                        },
+                        "passport": {
+                            "type": "any"
+                        },
+                        "rewind": {
+                            "type": "any"
+                        },
+                        "superboost_alc_access": {
+                            "type": "any"
+                        },
+                        "control_who_you_see": {
+                            "type": "any"
+                        }
+                    },
+                    "ordering": {
+                        "carousel": [
+                            "string"
+                        ],
+                        "plus_screen": [
+                            "string"
+                        ]
+                    },
+                    "sub_page_data": {
+                        "cta": "string",
+                        "termed": "boolean",
+                        "sections": [
+                            {
+                                "type": "string",
+                                "heading": "string",
+                                "benefits": [
+                                    {
+                                        "key": "string",
+                                        "heading": "string",
+                                        "included": "boolean",
+                                        "deeplink": "string"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "gold": {
+                "purchase_type": "string",
+                "merchandising": {
+                    "data": {
+                        "superlike": {
+                            "type": "string",
+                            "renewal_data": {
+                                "balance": "number",
+                                "refresh_interval": "number",
+                                "refresh_interval_unit": "string"
+                            }
+                        },
+                        "boost": {
+                            "type": "string",
+                            "renewal_data": {
+                                "balance": "number",
+                                "refresh_interval": "number",
+                                "refresh_interval_unit": "string"
+                            }
+                        },
+                        "hide_ads": {
+                            "type": "any"
+                        },
+                        "hide_age": {
+                            "type": "any"
+                        },
+                        "hide_distance": {
+                            "type": "any"
+                        },
+                        "like": {
+                            "type": "any"
+                        },
+                        "control_who_sees_you": {
+                            "type": "any"
+                        },
+                        "passport": {
+                            "type": "any"
+                        },
+                        "rewind": {
+                            "type": "any"
+                        },
+                        "superboost_alc_access": {
+                            "type": "any"
+                        },
+                        "control_who_you_see": {
+                            "type": "any"
+                        },
+                        "toppicks": {
+                            "type": "string",
+                            "renewal_data": {
+                                "balance": "number",
+                                "refresh_interval": "number",
+                                "refresh_interval_unit": "string"
+                            }
+                        },
+                        "toppicks_alc_access": {
+                            "type": "any"
+                        },
+                        "likes_you": {
+                            "type": "any"
+                        }
+                    },
+                    "ordering": {
+                        "carousel": [
+                            "string"
+                        ],
+                        "plus_screen": [
+                            "string"
+                        ]
+                    },
+                    "sub_page_data": {
+                        "cta": "string",
+                        "termed": "boolean",
+                        "sections": [
+                            {
+                                "type": "string",
+                                "heading": "string",
+                                "benefits": [
+                                    {
+                                        "key": "string",
+                                        "heading": "string",
+                                        "included": "boolean",
+                                        "deeplink": "string"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "platinum": {
+                "purchase_type": "string",
+                "merchandising": {
+                    "data": {
+                        "superlike": {
+                            "type": "string",
+                            "renewal_data": {
+                                "balance": "number",
+                                "refresh_interval": "number",
+                                "refresh_interval_unit": "string"
+                            }
+                        },
+                        "boost": {
+                            "type": "string",
+                            "renewal_data": {
+                                "balance": "number",
+                                "refresh_interval": "number",
+                                "refresh_interval_unit": "string"
+                            }
+                        },
+                        "hide_ads": {
+                            "type": "any"
+                        },
+                        "hide_age": {
+                            "type": "any"
+                        },
+                        "hide_distance": {
+                            "type": "any"
+                        },
+                        "like": {
+                            "type": "any"
+                        },
+                        "control_who_sees_you": {
+                            "type": "any"
+                        },
+                        "passport": {
+                            "type": "any"
+                        },
+                        "rewind": {
+                            "type": "any"
+                        },
+                        "superboost_alc_access": {
+                            "type": "any"
+                        },
+                        "control_who_you_see": {
+                            "type": "any"
+                        },
+                        "toppicks": {
+                            "type": "RENEWABLE",
+                            "renewal_data": {
+                                "balance": "number",
+                                "refresh_interval": "number",
+                                "refresh_interval_unit": "string"
+                            }
+                        },
+                        "toppicks_alc_access": {
+                            "type": "any"
+                        },
+                        "likes_you": {
+                            "type": "any"
+                        },
+                        "superlike_attach_message": {
+                            "type": "any"
+                        },
+                        "my_likes_lookback": {
+                            "type": "any",
+                            "duration": "number"
+                        },
+                        "priority_likes": {
+                            "type": "any"
+                        }
+                    },
+                    "ordering": {
+                        "carousel": [
+                            "string"
+                        ],
+                        "plus_screen": [
+                            "string"
+                        ]
+                    },
+                    "sub_page_data": {
+                        "cta": "string",
+                        "termed": "boolean",
+                        "sections": [
+                            {
+                                "type": "string",
+                                "heading": "string",
+                                "benefits": [
+                                    {
+                                        "key": "string",
+                                        "heading": "string",
+                                        "included": "boolean",
+                                        "deeplink": "string"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "boost": {
+                "purchase_type": "string",
+                "merchandising": {
+                    "upsell": "string"
+                }
+            },
+            "readreceipt": {
+                "purchase_type": "string",
+                "merchandising": {}
+            },
+            "superboost": {
+                "purchase_type": "string",
+                "merchandising": {}
+            },
+            "superlike": {
+                "purchase_type": "string",
+                "merchandising": {
+                    "upsell": "string"
+                }
+            },
+            "coin": {
+                "purchase_type": "string",
+                "merchandising": {}
+            }
+        },
+        "plus_control": {},
+        "purchase": {
+            "purchases": [],
+            "subscription_expired": "boolean"
+        },
+        "readreceipts": {
+            "internal_remaining": "number",
+            "purchased_remaining": "number",
+            "remaining": "number"
+        },
+        "spotify": {
+            "spotify_connected": "boolean",
+            "spotify_username": "static",
+            "spotify_user_type": "string",
+            "spotify_last_updated_at": "number",
+            "spotify_theme_track": {
+                "id": "string",
+                "name": "string",
+                "album": {
+                    "id": "string",
+                    "name": "string",
+                    "images": [
+                        {
+                            "height": "number",
+                            "width": "number",
+                            "url": "string"
+                        }
+                    ]
+                },
+                "artists": [
+                    {
+                        "id": "string",
+                        "name": "string"
+                    }
+                ],
+                "preview_url": "string",
+                "uri": "string"
+            },
+            "spotify_top_artists": [
+                {
+                    "id": "string",
+                    "name": "string",
+                    "popularity": "number",
+                    "selected": "boolean",
+                    "top_track": {
+                        "id": "string",
+                        "name": "string",
+                        "album": {
+                            "id": "string",
+                            "name": "string",
+                            "images": [
+                                {
+                                    "height": "number",
+                                    "width": "number",
+                                    "url": "string"
+                                }
+                            ]
+                        },
+                        "artists": [
+                            {
+                                "id": "string",
+                                "name": "string"
+                            }
+                        ],
+                        "preview_url": "string",
+                        "uri": "string"
+                    }
+                }
+            ]
+        },
+        "super_likes": {
+            "remaining": "number",
+            "alc_remaining": "number",
+            "new_alc_remaining": "number",
+            "allotment": "number",
+            "superlike_refresh_amount": "number",
+            "superlike_refresh_interval": "number",
+            "superlike_refresh_interval_unit": "string",
+            "resets_at": "number"
+        },
+        "tinder_u": {
+            "status": "string",
+            "status_v2": "string",
+            "school": {
+                "school_id": "string"
+            }
+        },
+        "travel": {
+            "is_traveling": "boolean"
+        },
+        "tutorials": [
+            "string"
+        ],
+        "user": {
+            "_id": "string",
+            "age_filter_max": "number",
+            "age_filter_min": "number",
+            "bio": "string",
+            "birth_date": "string",
+            "create_date": "string",
+            "crm_id": "string",
+            "pos_info": {
+                "country": {
+                    "name": "string",
+                    "cc": "string",
+                    "alpha3": "string"
+                },
+                "timezone": "string"
+            },
+            "discoverable": "boolean",
+            "distance_filter": "number",
+            "global_mode": {
+                "is_enabled": "boolean",
+                "display_language": "string",
+                "language_preferences": [
+                    {
+                        "language": "string",
+                        "is_selected": "boolean"
+                    }
+                ]
+            },
+            "auto_expansion": {
+                "age_toggle": "boolean",
+                "distance_toggle": "boolean"
+            },
+            "gender": "number",
+            "gender_filter": "number",
+            "show_gender_on_profile": "boolean",
+            "name": "string",
+            "photos": [
+                {
+                    "id": "string",
+                    "crop_info": {
+                        "user": {
+                            "width_pct": "number",
+                            "x_offset_pct": "number",
+                            "height_pct": "number",
+                            "y_offset_pct": "number"
+                        },
+                        "algo": {
+                            "width_pct": "number",
+                            "x_offset_pct": "number",
+                            "height_pct": "number",
+                            "y_offset_pct": "number"
+                        },
+                        "processed_by_bullseye": "boolean",
+                        "user_customized": "boolean",
+                        "faces_count": "number"
+                    },
+                    "url": "string",
+                    "fbId": "string",
+                    "processedFiles": [
+                        {
+                            "url": "string",
+                            "height": "number",
+                            "width": "number"
+                        }
+                    ],
+                    "assets": [],
+                    "media_type": "image",
+                    "selfie_verified": "boolean"
+                }
+            ],
+            "photos_processing": "boolean",
+            "photo_optimizer_enabled": "boolean",
+            "ping_time": "string",
+            "jobs": [
+                {
+                    "company": {
+                        "displayed": "boolean",
+                        "name": "string"
+                    },
+                    "title": {
+                        "displayed": "boolean",
+                        "name": "string"
+                    }
+                }
+            ],
+            "schools": [
+                {
+                    "name": "string",
+                    "displayed": "boolean"
+                }
+            ],
+            "badges": [
+                {
+                    "type": "string"
+                }
+            ],
+            "phone_id": "string",
+            "interested_in": [
+                "number"
+            ],
+            "pos": {
+                "lat": "number",
+                "lon": "number"
+            },
+            "billing_info": {
+                "supported_payment_methods": [
+                    "string"
+                ]
+            },
+            "autoplay_video": "string",
+            "top_picks_discoverable": "boolean",
+            "photo_tagging_enabled": "boolean",
+            "city": {
+                "name": "string",
+                "region": "string"
+            },
+            "show_orientation_on_profile": "boolean",
+            "show_same_orientation_first": {
+                "checked": "boolean",
+                "should_show_option": "boolean"
+            },
+            "sexual_orientations": [
+                {
+                    "id": "string",
+                    "name": "string"
+                }
+            ],
+            "user_interests": {
+                "selected_interests": [
+                    {
+                        "id": "string",
+                        "name": "string"
+                    }
+                ],
+                "available_interests": [
+                    {
+                        "id": "string",
+                        "name": "string"
+                    }
+                ],
+                "min_interests": "number",
+                "max_interests": "number"
+            },
+            "recommended_sort_discoverable": "boolean",
+            "selfie_verification": "string",
+            "noonlight_protected": "boolean",
+            "sync_swipe_enabled": "boolean",
+            "selected_descriptors": [
+                {
+                    "id": "string",
+                    "name": "string",
+                    "type": "string",
+                    "visibility": "string",
+                    "icon_url": "string",
+                    "icon_urls": [
+                        {
+                            "url": "string",
+                            "quality": "string",
+                            "width": "number",
+                            "height": "number"
+                        }
+                    ]
+                }
+            ],
+            "preference_filters": {}
+        },
+        "misc_merchandising": {
+            "subscription_card_ordering": [
+                "string"
+            ],
+            "landing_card": "plus",
+            "controlla_carousel_ordering": [
+                "string"
+            ]
+        }
+    }
+}

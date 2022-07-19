@@ -1,0 +1,17 @@
+{
+    "data": {
+        "messages": [
+            {
+                "_id": "string",
+                "match_id": "string",
+                "sent_date": "number",
+                "message": "string",
+                "to": "string",
+                "from": "string",
+                "created_date": "number",
+                "timestamp": "number"
+            }
+        ],
+        "next_page_token": "string"
+    }
+}

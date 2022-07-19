@@ -1,0 +1,123 @@
+{
+    "data": {
+        "matches": [
+            {
+                "seen": {
+                    "match_seen": "boolean"
+                },
+                "_id": "string",
+                "id": "string",
+                "closed": "boolean",
+                "common_friend_count": "number",
+                "common_like_count": "number",
+                "created_date": "number",
+                "dead": "boolean",
+                "last_activity_date": "number",
+                "message_count": "number",
+                "messages": [
+                    {
+                        "_id": "string",
+                        "match_id": "string",
+                        "sent_date": "number",
+                        "message": "string",
+                        "to": "string",
+                        "from": "string",
+                        "timestamp": "number"
+                    }
+                ],
+                "participants": [
+                    "string"
+                ],
+                "pending": "boolean",
+                "is_super_like": "boolean",
+                "is_boost_match": "boolean",
+                "is_super_boost_match": "boolean",
+                "is_primetime_boost_match": "boolean",
+                "is_experiences_match": "boolean",
+                "is_fast_match": "boolean",
+                "is_opener": "boolean",
+                "person": {
+                    "_id": "string",
+                    "bio": "string",
+                    "birth_date": "string",
+                    "gender": 1,
+                    "name": "string",
+                    "ping_time": "string",
+                    "photos": [
+                        {
+                            "id": "string",
+                            "crop_info": {
+                                "user": {
+                                    "width_pct": "number",
+                                    "x_offset_pct": "number",
+                                    "height_pct": "number",
+                                    "y_offset_pct": "number"
+                                },
+                                "algo": {
+                                    "width_pct": "number",
+                                    "x_offset_pct": "number",
+                                    "height_pct": "number",
+                                    "y_offset_pct": "number"
+                                },
+                                "processed_by_bullseye": "boolean",
+                                "user_customized": "boolean",
+                                "faces": [
+                                    {
+                                        "algo": {
+                                            "width_pct": "number",
+                                            "x_offset_pct": "number",
+                                            "height_pct": "number",
+                                            "y_offset_pct": "number"
+                                        },
+                                        "bounding_box_percentage": "number"
+                                    }
+                                ]
+                            },
+                            "url": "string",
+                            "processedFiles": [
+                                {
+                                    "url": "string",
+                                    "height": "number",
+                                    "width": "number"
+                                },
+                                {
+                                    "url": "string",
+                                    "height": "number",
+                                    "width": "number"
+                                },
+                                {
+                                    "url": "string",
+                                    "height": "number",
+                                    "width": "number"
+                                },
+                                {
+                                    "url": "string",
+                                    "height": "number",
+                                    "width": "number"
+                                }
+                            ],
+                            "fileName": "string",
+                            "extension": "jpg,webp",
+                            "webp_qf": [
+                                "number"
+                            ],
+                            "rank": "number",
+                            "score": "number",
+                            "win_count": "number",
+                            "type": "image",
+                            "media_type": "image",
+                            "assets": "array"
+                        }
+                    ]
+                },
+                "following": "boolean",
+                "following_moments": "boolean",
+                "readreceipt": {
+                    "enabled": "boolean"
+                },
+                "is_archived": "boolean"
+            }
+        ],
+        "next_page_token": "string"
+    }
+}
