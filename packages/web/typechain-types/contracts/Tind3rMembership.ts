@@ -47,11 +47,11 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "createProfile((string,string,string))": FunctionFragment;
-    "deleteProfile()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getUserId(address)": FunctionFragment;
     "initialize(string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isTind3rMember(address)": FunctionFragment;
     "like(address)": FunctionFragment;
     "matchingContract()": FunctionFragment;
     "metadataURI()": FunctionFragment;
@@ -83,11 +83,11 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "approve"
       | "balanceOf"
       | "createProfile"
-      | "deleteProfile"
       | "getApproved"
       | "getUserId"
       | "initialize"
       | "isApprovedForAll"
+      | "isTind3rMember"
       | "like"
       | "matchingContract"
       | "metadataURI"
@@ -127,10 +127,6 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     values: [Tind3rMembership.Tind3rProfileStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "deleteProfile",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -145,6 +141,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isTind3rMember",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "like",
@@ -251,10 +251,6 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "deleteProfile",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
@@ -262,6 +258,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isTind3rMember",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "like", data: BytesLike): Result;
@@ -524,10 +524,6 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    deleteProfile(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -546,6 +542,11 @@ export interface Tind3rMembership extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -670,10 +671,6 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  deleteProfile(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -692,6 +689,11 @@ export interface Tind3rMembership extends BaseContract {
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isTind3rMember(
+    user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -816,8 +818,6 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    deleteProfile(overrides?: CallOverrides): Promise<void>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -836,6 +836,11 @@ export interface Tind3rMembership extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -1062,10 +1067,6 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    deleteProfile(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1084,6 +1085,11 @@ export interface Tind3rMembership extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1209,10 +1215,6 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    deleteProfile(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1231,6 +1233,11 @@ export interface Tind3rMembership extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

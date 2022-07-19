@@ -22,6 +22,7 @@ contract Tind3rMembership is
     OwnableUpgradeable
 {
     using StringsUpgradeable for uint256;
+    using StringsUpgradeable for address;
 
     string private constant TABLE_PREFIX = "tind3r_membership";
 
@@ -81,7 +82,7 @@ contract Tind3rMembership is
                 TABLE_PREFIX,
                 "_",
                 chainId,
-                " (id integer, name text, description text, image text);"
+                " (id integer, owner text, name text, description text, image text);"
             )
         );
 
@@ -109,8 +110,9 @@ contract Tind3rMembership is
         returns (uint256)
     {
         address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) > 0)
-            revert ExistentProfile(_getAux(msgSender));
+        // TODO: for testing
+        // if (balanceOf(msgSender) > 0)
+        //     revert ExistentProfile(_getAux(msgSender));
         uint256 newTokenId = _nextTokenId();
         _tableland.runSQL(
             address(this),
@@ -118,15 +120,17 @@ contract Tind3rMembership is
             string.concat(
                 "INSERT INTO ",
                 _metadataTable,
-                " (id, name, description, image) VALUES (",
+                " (id, owner, name, description, image) VALUES (",
                 newTokenId.toString(),
-                ", '",
+                ", ",
+                msgSender.toHexString(),
+                ', "',
                 userProfile.name,
-                "', '",
+                '", "',
                 userProfile.description,
-                "', '",
+                '", "',
                 userProfile.image,
-                "');"
+                '");'
             )
         );
         _safeMint(msgSender, 1);
@@ -157,13 +161,13 @@ contract Tind3rMembership is
             string.concat(
                 "UPDATE ",
                 _metadataTable,
-                " SET name='",
+                ' SET name="',
                 newProfile.name,
-                "', description='",
+                '", description="',
                 newProfile.description,
-                "', image='",
+                '", image="',
                 newProfile.image,
-                "' WHERE id=",
+                '" WHERE id=',
                 ownerTokenId.toString(),
                 ";"
             )
@@ -175,28 +179,6 @@ contract Tind3rMembership is
             newProfile.image
         );
         return ownerTokenId;
-    }
-
-    /**
-     * @dev delete tind3r profile
-     */
-    function deleteProfile() external {
-        address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) == 0) revert NonExistentProfile();
-        uint256 tokenId = _getAux(msgSender);
-        _tableland.runSQL(
-            address(this),
-            _metadataTableId,
-            string.concat(
-                "DELETE FROM ",
-                _metadataTable,
-                " WHERE id=",
-                tokenId.toString(),
-                ";"
-            )
-        );
-        _burn(tokenId);
-        emit DeleteProfile(tokenId);
     }
 
     function like(address target) external {
@@ -246,6 +228,13 @@ contract Tind3rMembership is
     function getUserId(address user) public view returns (uint256) {
         if (balanceOf(user) == 0) revert NonExistentProfile();
         return _getAux(user);
+    }
+
+    /**
+     * @dev Check if user of Tind3r
+     */
+    function isTind3rMember(address user) public view returns (bool) {
+        return balanceOf(user) > 0;
     }
 
     /**

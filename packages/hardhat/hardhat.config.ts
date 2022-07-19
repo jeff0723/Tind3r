@@ -46,7 +46,7 @@ const config: HardhatUserConfig = {
     deployer: 0,
   },
   typechain: {
-    outDir: "../web/typechain",
+    outDir: "../web/typechain-types",
   },
   networks: {
     // mainnets
