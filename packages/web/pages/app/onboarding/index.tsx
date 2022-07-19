@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import config from 'schema/ceramic/model.json';
 import { updateIsCeramicProfileExists, updateMembershipCreated } from 'state/user/reducer';
 import { useAppSelector } from 'state/hooks';
+import { makeStorageClient } from 'utils/web3-storage';
 
 type Props = {}
 type Tind3rMembership = {
@@ -139,12 +140,12 @@ const index = (props: Props) => {
     const { account } = useWeb3React()
     const tind3rMembershipContract = useTind3rMembershipContract()
     const [photoList, setPhotoList] = useState<UploadFile[]>([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
+        // {
+        //     uid: '-1',
+        //     name: 'image.png',
+        //     status: 'done',
+        //     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        // },
     ]);
 
     const [onBoardingInfo, setOnBoardingInfo] = useState<UserProfile>({
@@ -214,12 +215,28 @@ const index = (props: Props) => {
         }
     }, [isAuthenticated, idx])
     const validateInput = (input: UserProfile) => {
-        if (!input.name || !input.gender || !input.birthday) return false
+        if (!input.name || !input.gender || !input.birthday || !photoList.length) return false
         return true
     }
     const handleConfirm = async () => {
         console.log(onBoardingInfo)
-        if (!validateInput(onBoardingInfo) || !tind3rMembershipContract) return
+        if (!photoList.length) {
+            openNotificationWithIcon("info", "Please upload at least one profile photo", "")
+            return
+        }
+        if (!validateInput(onBoardingInfo)) {
+            openNotificationWithIcon("info", "Please fill in required field", "")
+            return
+        }
+        if (!tind3rMembershipContract) return
+        const files = photoList.map((item, index) => {
+            const newFile = new File([item.originFileObj as File], `${index}.png`, { type: 'image/png' });
+            return newFile
+        })
+        const imageCount = files.length
+        const client = makeStorageClient()
+        const cid = await client.put(files)
+
         console.log("start to create")
         const _memberShipInput: Tind3rMembership = {
             name: onBoardingInfo.name,
@@ -228,9 +245,10 @@ const index = (props: Props) => {
         }
         if (isAuthenticated) {
             const res = await idx?.set(UserProfileDefinitionId, {
-                name: onBoardingInfo.name,
-                birthday: onBoardingInfo.birthday,
-                gender: onBoardingInfo.gender
+                ...onBoardingInfo,
+                profileBaseUri: `https://ipfs.io/ipfs/${cid}`,
+                profilePictureCounts: imageCount,
+                selectedProfileIndex: 0,
             })
             console.log("set idx:", res)
             getUserProfile()
@@ -248,6 +266,7 @@ const index = (props: Props) => {
         getUserProfile()
     }, [isAuthenticated, idx])
 
+    console.log("Photolist", photoList)
     console.log("IDX authenticated", idx?.authenticated)
     console.log("Is Ceramic Profile Exists", isCeramicProfileExists)
     console.log("Is Membership Created", isMemberCreated)

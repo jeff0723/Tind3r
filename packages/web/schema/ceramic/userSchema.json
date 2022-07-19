@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "title": "Tind3rUserProfle",
+    "title": "Tind3rUserProfile",
     "required": [
         "name",
         "birthday",
@@ -61,7 +61,8 @@
                 "type": "string"
             },
             "minItems": 0,
-            "uniqueItems": true
+            "uniqueItems": true,
+            "default": []
         },
         "tags": {
             "type": "array",
@@ -70,7 +71,23 @@
                 "type": "string"
             },
             "minItems": 0,
-            "uniqueItems": true
+            "uniqueItems": true,
+            "default": []
+        },
+        "profileBaseUri": {
+            "type": "string",
+            "description": "profiel picture base uri",
+            "default": ""
+        },
+        "profilePictureCounts": {
+            "type": "number",
+            "description": "profile picture count",
+            "default": 0
+        },
+        "selectedProfileIndex": {
+            "type": "number",
+            "description": "selected profile picture index",
+            "default": 0
         }
     }
 }
