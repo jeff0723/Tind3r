@@ -7,7 +7,7 @@ import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'state/hooks';
 import { updateIsProfileExists, updateUserName } from 'state/user/reducer';
-
+import { BasicProfile } from 'schema/ceramic/user';
 const Home: NextPage = () => {
   const { account } = useWeb3React()
   const { client } = useXmtp()
@@ -24,12 +24,9 @@ const Home: NextPage = () => {
 
   const getProfile = async () => {
     if (idx && account && isAuthenticated) {
-      const res = await idx.get("basicProfile", `${account}@eip155:1`)
-      console.log(res)
-      //@ts-ignore
+      const res = await idx.get("basicProfile", `${account}@eip155:1`) as BasicProfile
       if (res) {
         dispatch(updateIsProfileExists(true))
-        //@ts-ignore)
         dispatch(updateUserName({ userName: res.name }))
       }
     }
