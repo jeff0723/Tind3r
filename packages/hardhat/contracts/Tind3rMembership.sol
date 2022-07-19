@@ -8,10 +8,12 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
+import "./Tind3rMatching.sol";
 
 error ExistentProfile(uint64);
 error NonExistentProfile();
 error CanNotTransfer();
+error AlreadyLike();
 
 contract Tind3rMembership is
     Initializable,
@@ -27,8 +29,11 @@ contract Tind3rMembership is
     string private _metadataTable;
     uint256 private _metadataTableId;
 
-    // Our will be pulled from the network
     string private _baseURIString;
+
+    Tind3rMatching public matchingContract;
+
+    mapping(uint256 => uint256) private _likeMap;
 
     // Profile data struct
     struct Tind3rProfile {
@@ -104,10 +109,9 @@ contract Tind3rMembership is
         returns (uint256)
     {
         address msgSender = _msgSenderERC721A();
-        // if (balanceOf(msgSender) > 0)
-        //     revert ExistentProfile(_getAux(msgSender));
+        if (balanceOf(msgSender) > 0)
+            revert ExistentProfile(_getAux(msgSender));
         uint256 newTokenId = _nextTokenId();
-
         _tableland.runSQL(
             address(this),
             _metadataTableId,
@@ -125,7 +129,7 @@ contract Tind3rMembership is
                 "');"
             )
         );
-        _safeMint(msgSender, 1, "");
+        _safeMint(msgSender, 1);
         _setAux(msgSender, uint64(newTokenId));
         emit NewProfile(
             newTokenId,
@@ -195,6 +199,19 @@ contract Tind3rMembership is
         emit DeleteProfile(tokenId);
     }
 
+    function like(address target) external {
+        address msgSender = _msgSenderERC721A();
+        _setALikeB(msgSender, target);
+        if (_isALikeB(target, msgSender)) {
+            matchingContract.mint(
+                msgSender,
+                getUserId(msgSender),
+                target,
+                getUserId(target)
+            );
+        }
+    }
+
     /**
      * @dev Set baseURI
      */
@@ -211,6 +228,16 @@ contract Tind3rMembership is
             _metadataTableId,
             newController
         );
+    }
+
+    /**
+     * @dev Set matching contract
+     */
+    function setMatchingContract(Tind3rMatching _matchingContract)
+        external
+        onlyOwner
+    {
+        matchingContract = _matchingContract;
     }
 
     /**
@@ -235,9 +262,18 @@ contract Tind3rMembership is
     {
         if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
 
+        string memory _prefixURI = prefixURI();
+        if (bytes(_prefixURI).length == 0) return "";
+
+        return string.concat(_prefixURI, tokenId.toString());
+    }
+
+    /**
+     * @dev get whole data of table
+     */
+    function prefixURI() public view returns (string memory) {
         string memory baseURI = _baseURI();
         if (bytes(baseURI).length == 0) return "";
-
         /* SELECT json_object(
             'id',id,
             'name',name,
@@ -245,21 +281,18 @@ contract Tind3rMembership is
             'image',image
         ) FROM {tablename} WHERE id={tokenId} */
         return
-            string(
-                abi.encodePacked(
-                    baseURI,
-                    "SELECT+",
-                    "json_object%28",
-                    "%27id%27%2Cid%2C",
-                    "%27name%27%2Cname%2C",
-                    "%27description%27%2Cdescription%2C",
-                    "%27image%27%2Cimage%29+",
-                    "FROM+",
-                    _metadataTable,
-                    "+WHERE+id=",
-                    tokenId.toString(),
-                    "&mode=list"
-                )
+            string.concat(
+                baseURI,
+                "mode=list&",
+                "s=SELECT+",
+                "json_object%28",
+                "%27id%27%2Cid%2C",
+                "%27name%27%2Cname%2C",
+                "%27description%27%2Cdescription%2C",
+                "%27image%27%2Cimage%29+",
+                "FROM+",
+                _metadataTable,
+                "+WHERE+id="
             );
     }
 
@@ -272,9 +305,9 @@ contract Tind3rMembership is
         return
             string.concat(
                 baseURI,
-                "SELECT+*+FROM+",
-                _metadataTable,
-                "&mode=list"
+                "mode=list&"
+                "s=SELECT+*+FROM+",
+                _metadataTable
             );
     }
 
@@ -303,7 +336,25 @@ contract Tind3rMembership is
         uint256 startTokenId,
         uint256 quantity
     ) internal override {
-        if (from != address(0) || to != address(0)) revert CanNotTransfer();
+        if (from != address(0) && to != address(0)) revert CanNotTransfer();
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
+    }
+
+    function _isALikeB(address userA, address userB)
+        private
+        view
+        returns (bool)
+    {
+        uint256 userIdA = getUserId(userA);
+        uint256 userIdB = getUserId(userB);
+        return _likeMap[(userIdA << 64) + userIdB] > 0;
+    }
+
+    function _setALikeB(address userA, address userB) private {
+        uint256 userIdA = getUserId(userA);
+        uint256 userIdB = getUserId(userB);
+        uint256 pairNumber = (userIdA << 64) + userIdB;
+        if (_likeMap[pairNumber] > 0) revert AlreadyLike();
+        _likeMap[pairNumber] = 1;
     }
 }

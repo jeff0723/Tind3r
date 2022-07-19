@@ -2,12 +2,13 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { ethers, upgrades, network } from "hardhat";
 
-const initBaseURI = "https://staging.tableland.network/query?s";
+const initBaseURI = "https://testnet.tableland.network/query?";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { save } = hre.deployments;
     const chainId = await hre.getChainId();
     console.log("network:", network.name, `(${chainId})`);
+
     const Tind3rMembership = await ethers.getContractFactory("Tind3rMembership");
 
     // deploy

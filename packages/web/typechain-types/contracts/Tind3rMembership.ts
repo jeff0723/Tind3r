@@ -52,10 +52,13 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "getUserId(address)": FunctionFragment;
     "initialize(string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "like(address)": FunctionFragment;
+    "matchingContract()": FunctionFragment;
     "metadataURI()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
+    "prefixURI()": FunctionFragment;
     "proxiableUUID()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -63,6 +66,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBaseURI(string)": FunctionFragment;
     "setController(address)": FunctionFragment;
+    "setMatchingContract(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -84,10 +88,13 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "getUserId"
       | "initialize"
       | "isApprovedForAll"
+      | "like"
+      | "matchingContract"
       | "metadataURI"
       | "name"
       | "owner"
       | "ownerOf"
+      | "prefixURI"
       | "proxiableUUID"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
@@ -95,6 +102,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "setApprovalForAll"
       | "setBaseURI"
       | "setController"
+      | "setMatchingContract"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
@@ -139,6 +147,14 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "like",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "matchingContract",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "metadataURI",
     values?: undefined
   ): string;
@@ -148,6 +164,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "prefixURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "proxiableUUID",
     values?: undefined
@@ -183,6 +200,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setController",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMatchingContract",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -243,6 +264,11 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "like", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "matchingContract",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "metadataURI",
     data: BytesLike
@@ -250,6 +276,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "prefixURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "proxiableUUID",
     data: BytesLike
@@ -273,6 +300,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setController",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMatchingContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -518,6 +549,13 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    like(
+      target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    matchingContract(overrides?: CallOverrides): Promise<[string]>;
+
     metadataURI(overrides?: CallOverrides): Promise<[string]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -528,6 +566,8 @@ export interface Tind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    prefixURI(overrides?: CallOverrides): Promise<[string]>;
 
     proxiableUUID(overrides?: CallOverrides): Promise<[string]>;
 
@@ -563,6 +603,11 @@ export interface Tind3rMembership extends BaseContract {
 
     setController(
       newController: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setMatchingContract(
+      _matchingContract: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -650,6 +695,13 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  like(
+    target: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  matchingContract(overrides?: CallOverrides): Promise<string>;
+
   metadataURI(overrides?: CallOverrides): Promise<string>;
 
   name(overrides?: CallOverrides): Promise<string>;
@@ -660,6 +712,8 @@ export interface Tind3rMembership extends BaseContract {
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  prefixURI(overrides?: CallOverrides): Promise<string>;
 
   proxiableUUID(overrides?: CallOverrides): Promise<string>;
 
@@ -695,6 +749,11 @@ export interface Tind3rMembership extends BaseContract {
 
   setController(
     newController: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setMatchingContract(
+    _matchingContract: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -780,6 +839,13 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    like(
+      target: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    matchingContract(overrides?: CallOverrides): Promise<string>;
+
     metadataURI(overrides?: CallOverrides): Promise<string>;
 
     name(overrides?: CallOverrides): Promise<string>;
@@ -790,6 +856,8 @@ export interface Tind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    prefixURI(overrides?: CallOverrides): Promise<string>;
 
     proxiableUUID(overrides?: CallOverrides): Promise<string>;
 
@@ -823,6 +891,11 @@ export interface Tind3rMembership extends BaseContract {
 
     setController(
       newController: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMatchingContract(
+      _matchingContract: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1014,6 +1087,13 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    like(
+      target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    matchingContract(overrides?: CallOverrides): Promise<BigNumber>;
+
     metadataURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1024,6 +1104,8 @@ export interface Tind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    prefixURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1059,6 +1141,11 @@ export interface Tind3rMembership extends BaseContract {
 
     setController(
       newController: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setMatchingContract(
+      _matchingContract: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1147,6 +1234,13 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    like(
+      target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    matchingContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     metadataURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1157,6 +1251,8 @@ export interface Tind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    prefixURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1192,6 +1288,11 @@ export interface Tind3rMembership extends BaseContract {
 
     setController(
       newController: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMatchingContract(
+      _matchingContract: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

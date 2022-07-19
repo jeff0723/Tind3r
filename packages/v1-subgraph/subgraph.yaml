@@ -6,7 +6,7 @@ dataSources:
     name: Tind3rMembership
     network: mumbai
     source:
-      address: "0x66680F83e6C45E1FB66d3e732279087384FB9E98"
+      address: "0xa6D514ceE32d661CAEd3A7415acEa98B717f698e"
       abi: Tind3rMembership
     mapping:
       kind: ethereum/events
