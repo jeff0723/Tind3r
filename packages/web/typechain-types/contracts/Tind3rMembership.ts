@@ -76,6 +76,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "updateProfile((string,string,string))": FunctionFragment;
     "upgradeTo(address)": FunctionFragment;
     "upgradeToAndCall(address,bytes)": FunctionFragment;
+    "userList(uint256,uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -112,6 +113,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "updateProfile"
       | "upgradeTo"
       | "upgradeToAndCall"
+      | "userList"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -243,6 +245,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "upgradeToAndCall",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "userList",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -333,6 +339,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "upgradeToAndCall",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "userList", data: BytesLike): Result;
 
   events: {
     "AdminChanged(address,address)": EventFragment;
@@ -653,6 +660,12 @@ export interface Tind3rMembership extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    userList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
   };
 
   approve(
@@ -801,6 +814,12 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  userList(
+    startId: PromiseOrValue<BigNumberish>,
+    endId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   callStatic: {
     approve(
       to: PromiseOrValue<string>,
@@ -945,6 +964,12 @@ export interface Tind3rMembership extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    userList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
   };
 
   filters: {
@@ -1196,6 +1221,12 @@ export interface Tind3rMembership extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    userList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1343,6 +1374,12 @@ export interface Tind3rMembership extends BaseContract {
       newImplementation: PromiseOrValue<string>,
       data: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    userList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

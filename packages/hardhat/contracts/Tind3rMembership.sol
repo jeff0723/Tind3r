@@ -301,6 +301,29 @@ contract Tind3rMembership is
     }
 
     /**
+     * @dev Return user list given ID range [startId, endId)
+     */
+    function userList(uint256 startId, uint256 endId)
+        public
+        view
+        returns (string memory)
+    {
+        string memory baseURI = _baseURI();
+        if (bytes(baseURI).length == 0) return "";
+        return
+            string.concat(
+                baseURI,
+                "mode=list&",
+                "s=SELECT+owner+FROM+",
+                _metadataTable,
+                "+WHERE+id>=",
+                startId.toString(),
+                "+AND+id<",
+                endId.toString()
+            );
+    }
+
+    /**
      * @dev Override baseURI
      */
     function _baseURI() internal view override returns (string memory) {
