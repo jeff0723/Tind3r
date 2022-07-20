@@ -22,10 +22,10 @@ function App({ children }: AppProps) {
         <Provider store={store}>
             <Web3Provider>
                 <CeramicProvider>
-                    {/* <XmtpProvider> */}
-                    <Updaters />
-                    {children}
-                    {/* </XmtpProvider> */}
+                    <XmtpProvider>
+                        <Updaters />
+                        {children}
+                    </XmtpProvider>
                 </CeramicProvider>
             </Web3Provider>
         </Provider>

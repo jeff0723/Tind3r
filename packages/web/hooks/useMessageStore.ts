@@ -1,6 +1,6 @@
 import { Message } from '@xmtp/xmtp-js'
 import { useCallback, useReducer } from 'react'
-import { MessageStoreEvent } from '../contexts/xmtp'
+import { MessageStoreEvent } from 'contexts/xmtp'
 
 type MessageDeduper = (message: Message) => boolean
 type MessageStore = { [address: string]: Message[] }
@@ -40,4 +40,19 @@ const useMessageStore = () => {
   }
 }
 
+export const getLastMessage = (
+  messages: Record<string, Message>
+): Message | null => {
+  const messagesList = Object.values(messages);
+  if (messagesList.length === 0) return null;
+  return messagesList.reduce((currentMostRecent, nextMessage) => {
+    const tCurrent = currentMostRecent.sent?.getTime() || -Infinity;
+    const tNext = nextMessage.sent?.getTime() || -Infinity;
+    if (tCurrent > tNext) {
+      return currentMostRecent;
+    } else {
+      return nextMessage;
+    }
+  });
+};
 export default useMessageStore
