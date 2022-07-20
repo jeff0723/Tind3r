@@ -1,4 +1,4 @@
-import { Checkbox } from 'antd'
+import { Checkbox, Col, Row, Input, Radio, Button } from 'antd'
 import NextImage from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -18,6 +18,7 @@ import config from 'schema/ceramic/model.json';
 import { updateIsCeramicProfileExists, updateMembershipCreated } from 'state/user/reducer';
 import { useAppSelector } from 'state/hooks';
 import { makeStorageClient } from 'utils/web3-storage';
+import { NextPage } from 'next'
 
 type Props = {}
 type Tind3rMembership = {
@@ -26,115 +27,71 @@ type Tind3rMembership = {
     image: string,
 }
 const Header = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
     border-bottom: 1px solid #D9D9D9;
     width: 100%;
     height: 87px;
     padding: 16px 32px 16px 64px;
 `
 const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-`
-const TitleBox = styled.div`
-    padding: 10px;
+    padding-top: 30px;
+    max-width: 700px;
+    margin: 0 auto;
 `
 const Title = styled.div`
     font-weight: 700;
     font-size: 32px;
     line-height: 48px;
-`
-const RequiredInfoBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-`
-const RequiredLeftColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     padding: 10px;
-    gap: 10px;
+    text-align: center;
 `
-const RequiredRightColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-    gap: 10px;
+const FormField = styled.div`
+    margin-bottom: 10px;
 `
-const InfoBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 10px;
-`
-const Heading = styled.div`
+const FormLabel = styled.div`
     font-weight: 400;
     font-size: 16px;
     line-height: 18px;
+    margin-bottom: 10px;
+`
+const OptionalTitle = styled.div`
     display: flex;
+    position: relative;
+    justify-content: center;
     align-items: center;
-    text-align: center;
+    padding: 0px;
+    gap: 24px;
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    &:after {
+        content: "";
+        display: block;
+        width: 149.48px;
+        height: 1px;
+        background: #D9D9D9;
+    }
+    &:before {
+        content: "";
+        display: block;
+        width: 149.48px;
+        height: 1px;
+        background: #D9D9D9;
+    }
 `
-const InputBox = styled.div`
+const SubmitArea = styled.div`
     display: flex;
-    gap:10px;
+    justify-content: center;
+    padding-top: 10px;
 `
-const OptionalHeader = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-padding: 0px;
-gap: 24px;
-`
-const Line = styled.div`
-width: 149.48px;
-height: 0px;
-border: 1px solid #D9D9D9;
-`
-const OptionalContainer = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-padding: 0px;
-gap: 24px;
-
-`
-const OptionalContentBox = styled.div`
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-padding: 0px;
-gap: 10px;
-`
-const ConfirmBox = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-`
-const UploadButton = (
-    <div>
-        <PlusOutlined />
-        <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-);
 
 const UserProfileDefinitionId = config.definitions.UserProfile
-const genderMap = [
+const genderOption = [
     "WOMEN",
     "MEN",
     "EVERYONE"
 ]
-const index = (props: Props) => {
+const OnBoardingPage: NextPage = (props: Props) => {
     const router = useRouter()
     const { idx, isAuthenticated } = useCeramic()
     const { account } = useWeb3React()
@@ -257,9 +214,12 @@ const index = (props: Props) => {
 
                 const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
                 const receipt = await tx?.wait()
+                console.log('recepie', receipt)
                 if (receipt.status) {
                     openNotificationWithIcon("success", "Success", "Profile created successfully")
-                    router.push('/app')
+                    // need to redirect to "app/recs"
+                    // temporary redirect to "/" for testing
+                    router.push('/')
                 }
             } else {
                 console.log("idx set error")
@@ -281,85 +241,98 @@ const index = (props: Props) => {
                 <NextImage src='/images/logo-with-word-mix.png' width={176} height={55} />
             </Header>
             <Content>
-                <TitleBox>
-                    <Title>Create Account</Title>
-                </TitleBox>
-                <RequiredInfoBox>
-                    <RequiredLeftColumn>
-                        <InfoBox>
-                            <Heading>First Name</Heading>
-                            <input placeholder='First Name' name='name' value={onBoardingInfo?.name} onChange={handleChange} />
-                        </InfoBox>
-                        <InfoBox>
-                            <Heading>Birthday</Heading>
-                            <InputBox>
-                                <input placeholder='MM' type={'date'} onChange={handleChange} name='birthday' value={onBoardingInfo?.birthday} />
-                            </InputBox>
-
-                        </InfoBox>
-                        <InfoBox>
-                            <Heading>Gender</Heading>
-                            <InputBox>
-                                {genderMap.map((item, index) => (
-                                    <button disabled={index == onBoardingInfo?.gender} key={index} name='gender' value={index} onClick={handleButtonClick}>{genderMap[index]}</button>
-                                ))}
-
-                            </InputBox>
-                            <Checkbox name='showMyGenderOnProfile' onChange={handleCheckBoxChange} checked={onBoardingInfo?.showMyGenderOnProfile}> Show my gender on my profile</Checkbox>
-                        </InfoBox>
-                        <InfoBox>
-                            <Heading>Show me</Heading>
-                            <InputBox>
-                                {genderMap.map((item, index) => (
-                                    <button disabled={index == onBoardingInfo?.showMe} key={index} name='showMe' value={index} onClick={handleButtonClick}>{genderMap[index]}</button>
-                                ))}
-                            </InputBox>
-                            <div>
-                                <Checkbox name='importNFT' onChange={handleCheckBoxChange} checked={onBoardingInfo?.importNFT}>Import NFT</Checkbox>
-                            </div>
-                            <div>
-                                <Checkbox name='addOnChainActivity' onChange={handleCheckBoxChange} checked={onBoardingInfo?.addOnChainActivity}>Add onchain activity</Checkbox>
-                            </div>
-                        </InfoBox>
-                        <OptionalHeader>
-                            <Line />
-                            <span>Optional</span>
-                            <Line />
-                        </OptionalHeader>
-                        <InfoBox>
-                            <Heading>My Organization</Heading>
+                <Title>Create Account</Title>
+                <Row gutter={30}>
+                    <Col span={12}>
+                        <FormField>
+                            <FormLabel>First Name</FormLabel>
+                            <Input placeholder='First Name' name='name' value={onBoardingInfo?.name} onChange={handleChange} />
+                        </FormField>
+                        <FormField>
+                            <FormLabel>Birthday</FormLabel>
+                            <Input type="date" placeholder='First Name' name='name' value={onBoardingInfo?.name} onChange={handleChange} />
+                        </FormField>
+                        <FormField>
+                            <FormLabel>Gender</FormLabel>
+                            {genderOption.map((item, index) =>
+                                <Radio.Button
+                                    key={index}
+                                    value={index}
+                                    disabled={index == onBoardingInfo?.gender}
+                                    name='gender'
+                                    style={{ borderRadius: '4px', marginLeft: index > 0 ? '10px' : '0' }}
+                                    onClick={handleButtonClick}
+                                >
+                                    {genderOption[index]}
+                                </Radio.Button>
+                            )}
+                        </FormField>
+                        <FormField>
+                            <Checkbox style={{ padding: '12px 0' }} name='showMyGenderOnProfile' onChange={handleCheckBoxChange} checked={onBoardingInfo?.showMyGenderOnProfile}> Show my gender on my profile</Checkbox>
+                        </FormField>
+                        <FormField>
+                            <FormLabel>Show me</FormLabel>
+                            {genderOption.map((item, index) =>
+                                <Radio.Button
+                                    key={index}
+                                    value={index}
+                                    disabled={index == onBoardingInfo?.showMe}
+                                    name='showMe'
+                                    style={{ borderRadius: '4px', marginLeft: index > 0 ? '10px' : '0' }}
+                                    onClick={handleButtonClick}
+                                >
+                                    {genderOption[index]}
+                                </Radio.Button>
+                            )}
+                        </FormField>
+                        <FormField>
+                            <Checkbox name='importNFT' onChange={handleCheckBoxChange} checked={onBoardingInfo?.importNFT}>Import NFT</Checkbox>
+                        </FormField>
+                        <FormField>
+                            <Checkbox name='addOnChainActivity' onChange={handleCheckBoxChange} checked={onBoardingInfo?.addOnChainActivity}>Add onchain activity</Checkbox>
+                        </FormField>
+                    </Col>
+                    <Col span={12}>
+                        <FormField>
+                            <FormLabel>Profile</FormLabel>
+                            <ImgCrop rotate>
+                                <Upload
+                                    listType="picture-card"
+                                    fileList={photoList}
+                                    onChange={onChange}
+                                    onPreview={onPreview}
+                                >
+                                    {photoList.length < 5 && '+ Upload'}
+                                </Upload>
+                            </ImgCrop>
+                        </FormField>
+                    </Col>
+                    <Col span={24}>
+                        <OptionalTitle>Optional</OptionalTitle>
+                        <FormField>
+                            <FormLabel>My Organization</FormLabel>
                             <button>Add</button>
-                        </InfoBox>
-                        <InfoBox>
-                            <Heading>Passion</Heading>
+                        </FormField>
+                        <FormField>
+                            <FormLabel>Passion</FormLabel>
                             <button>Add</button>
-                        </InfoBox>
-                    </RequiredLeftColumn>
-                    <RequiredRightColumn>
-                        <InfoBox>
-                            <Heading>Profile</Heading>
-                            <InputBox>
-                                <ImgCrop rotate>
-                                    <Upload
-                                        listType="picture-card"
-                                        fileList={photoList}
-                                        onChange={onChange}
-                                        onPreview={onPreview}
-                                    >
-                                        {photoList.length < 5 && '+ Upload'}
-                                    </Upload>
-                                </ImgCrop>
-                            </InputBox>
-                        </InfoBox>
-
-                    </RequiredRightColumn>
-                </RequiredInfoBox>
-                <ConfirmBox onClick={handleConfirm}>
-                    <button>Confirm</button>
-                </ConfirmBox>
+                        </FormField>
+                    </Col>
+                </Row>
+                <SubmitArea>
+                    <Button
+                        style={{ width: '96px', height: '30px', textAlign: 'center' }}
+                        type="primary"
+                        shape="round"
+                        size='small'
+                        onClick={handleConfirm}
+                    >
+                        Confirm
+                    </Button>
+                </SubmitArea>
             </Content>
         </div>
     )
 }
 
-export default index
+export default OnBoardingPage
