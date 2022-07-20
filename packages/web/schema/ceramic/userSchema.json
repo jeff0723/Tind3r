@@ -2,11 +2,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "title": "Tind3rUserProfile",
-    "required": [
-        "name",
-        "birthday",
-        "gender"
-    ],
+    "required": [],
     "additionalProperties": false,
     "properties": {
         "name": {
@@ -29,7 +25,7 @@
             "description": "gender -> 0 - women, 1 - men, 2 - non-binary",
             "default": 0
         },
-        "sexOrientation": {
+        "sexualOrientation": {
             "type": "number",
             "description": "sex orientation  -> 0 - women, 1 - men, 2 - non-binary",
             "default": 0
@@ -37,6 +33,16 @@
         "showMe": {
             "type": "number",
             "description": "show me which gender  -> 0 - women, 1 - men, 2 - non-binary",
+            "default": 0
+        },
+        "ageFilterMax": {
+            "type": "number",
+            "description": "the highest age can accept",
+            "default": 100
+        },
+        "ageFilterMin": {
+            "type": "number",
+            "description": "the lowest age can accept",
             "default": 0
         },
         "showMyGenderOnProfile": {
@@ -76,7 +82,12 @@
         },
         "profileBaseUri": {
             "type": "string",
-            "description": "profiel picture base uri",
+            "description": "profile picture base uri",
+            "default": ""
+        },
+        "profilePicture": {
+            "type": "string",
+            "description": "profile picture",
             "default": ""
         },
         "profilePictureCounts": {
@@ -87,6 +98,41 @@
         "selectedProfileIndex": {
             "type": "number",
             "description": "selected profile picture index",
+            "default": 0
+        },
+        "discoverable": {
+            "type": "boolean",
+            "description": "is user discoverable",
+            "default": "1"
+        },
+        "createDate": {
+            "type": "string",
+            "description": "createDate",
+            "default": ""
+        },
+        "distanceFilter": {
+            "type": "number",
+            "description": "distance filter",
+            "default": 10000
+        },
+        "school": {
+            "type": "string",
+            "description": "school",
+            "default": ""
+        },
+        "hobbies": {
+            "type": "array",
+            "description": "hobbies",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 0,
+            "uniqueItems": true,
+            "default": []
+        },
+        "selfieVerification": {
+            "type": "boolean",
+            "description": "selfie verification",
             "default": 0
         }
     }

@@ -40,7 +40,7 @@
                     "_id": "string",
                     "bio": "string",
                     "birth_date": "string",
-                    "gender": 1,
+                    "gender": "number",
                     "name": "string",
                     "ping_time": "string",
                     "photos": [

@@ -68,15 +68,6 @@
                 }
             ],
             "available_cards": [
-                "string",
-                "string",
-                "string",
-                "string",
-                "string",
-                "string",
-                "string",
-                "string",
-                "string",
                 "string"
             ]
         },
@@ -108,31 +99,31 @@
                 "merchandising": {
                     "data": {
                         "hide_ads": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "hide_age": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "hide_distance": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "like": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "control_who_sees_you": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "passport": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "rewind": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "superboost_alc_access": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "control_who_you_see": {
-                            "type": "any"
+                            "type": "unknown"
                         }
                     },
                     "ordering": {
@@ -184,31 +175,31 @@
                             }
                         },
                         "hide_ads": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "hide_age": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "hide_distance": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "like": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "control_who_sees_you": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "passport": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "rewind": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "superboost_alc_access": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "control_who_you_see": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "toppicks": {
                             "type": "string",
@@ -219,10 +210,10 @@
                             }
                         },
                         "toppicks_alc_access": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "likes_you": {
-                            "type": "any"
+                            "type": "unknown"
                         }
                     },
                     "ordering": {
@@ -274,31 +265,31 @@
                             }
                         },
                         "hide_ads": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "hide_age": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "hide_distance": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "like": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "control_who_sees_you": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "passport": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "rewind": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "superboost_alc_access": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "control_who_you_see": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "toppicks": {
                             "type": "RENEWABLE",
@@ -309,20 +300,20 @@
                             }
                         },
                         "toppicks_alc_access": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "likes_you": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "superlike_attach_message": {
-                            "type": "any"
+                            "type": "unknown"
                         },
                         "my_likes_lookback": {
-                            "type": "any",
+                            "type": "unknown",
                             "duration": "number"
                         },
                         "priority_likes": {
-                            "type": "any"
+                            "type": "unknown"
                         }
                     },
                     "ordering": {
@@ -546,7 +537,7 @@
             "ping_time": "string",
             "jobs": [
                 {
-                    "company": {
+                    "compunknown": {
                         "displayed": "boolean",
                         "name": "string"
                     },
