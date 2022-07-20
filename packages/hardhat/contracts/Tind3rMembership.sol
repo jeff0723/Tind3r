@@ -51,8 +51,13 @@ contract Tind3rMembership is
         string image
     );
 
-    // Emit user address and ID when delete
-    event DeleteProfile(uint256 indexed tokenId);
+    // Emit profile data (to be caught by TheGraph indexers)
+    event UpdateProfile(
+        uint256 indexed tokenId,
+        string name,
+        string description,
+        string image
+    );
 
     /**
      * @dev initialization function for upgradeable contract
@@ -172,7 +177,7 @@ contract Tind3rMembership is
                 ";"
             )
         );
-        emit NewProfile(
+        emit UpdateProfile(
             ownerTokenId,
             newProfile.name,
             newProfile.description,
@@ -314,7 +319,7 @@ contract Tind3rMembership is
             string.concat(
                 baseURI,
                 "mode=list&",
-                "s=SELECT+owner+FROM+",
+                "s=SELECT+description+FROM+",
                 _metadataTable,
                 "+WHERE+id>=",
                 startId.toString(),

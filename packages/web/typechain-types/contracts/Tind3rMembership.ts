@@ -347,11 +347,11 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "ApprovalForAll(address,address,bool)": EventFragment;
     "BeaconUpgraded(address)": EventFragment;
     "ConsecutiveTransfer(uint256,uint256,address,address)": EventFragment;
-    "DeleteProfile(uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "NewProfile(uint256,string,string,string)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "UpdateProfile(uint256,string,string,string)": EventFragment;
     "Upgraded(address)": EventFragment;
   };
 
@@ -360,11 +360,11 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ConsecutiveTransfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "DeleteProfile"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewProfile"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UpdateProfile"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
 }
 
@@ -427,16 +427,6 @@ export type ConsecutiveTransferEvent = TypedEvent<
 export type ConsecutiveTransferEventFilter =
   TypedEventFilter<ConsecutiveTransferEvent>;
 
-export interface DeleteProfileEventObject {
-  tokenId: BigNumber;
-}
-export type DeleteProfileEvent = TypedEvent<
-  [BigNumber],
-  DeleteProfileEventObject
->;
-
-export type DeleteProfileEventFilter = TypedEventFilter<DeleteProfileEvent>;
-
 export interface InitializedEventObject {
   version: number;
 }
@@ -480,6 +470,19 @@ export type TransferEvent = TypedEvent<
 >;
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+
+export interface UpdateProfileEventObject {
+  tokenId: BigNumber;
+  name: string;
+  description: string;
+  image: string;
+}
+export type UpdateProfileEvent = TypedEvent<
+  [BigNumber, string, string, string],
+  UpdateProfileEventObject
+>;
+
+export type UpdateProfileEventFilter = TypedEventFilter<UpdateProfileEvent>;
 
 export interface UpgradedEventObject {
   implementation: string;
@@ -1024,13 +1027,6 @@ export interface Tind3rMembership extends BaseContract {
       to?: PromiseOrValue<string> | null
     ): ConsecutiveTransferEventFilter;
 
-    "DeleteProfile(uint256)"(
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): DeleteProfileEventFilter;
-    DeleteProfile(
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): DeleteProfileEventFilter;
-
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
@@ -1066,6 +1062,19 @@ export interface Tind3rMembership extends BaseContract {
       to?: PromiseOrValue<string> | null,
       tokenId?: PromiseOrValue<BigNumberish> | null
     ): TransferEventFilter;
+
+    "UpdateProfile(uint256,string,string,string)"(
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      name?: null,
+      description?: null,
+      image?: null
+    ): UpdateProfileEventFilter;
+    UpdateProfile(
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      name?: null,
+      description?: null,
+      image?: null
+    ): UpdateProfileEventFilter;
 
     "Upgraded(address)"(
       implementation?: PromiseOrValue<string> | null

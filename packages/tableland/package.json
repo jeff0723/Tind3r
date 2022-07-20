@@ -1,0 +1,10 @@
+{
+  "name": "tableland",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "install": "cd evm-tableland && yarn",
+    "localhost": "cd local-tableland && yarn run up"
+  }
+}

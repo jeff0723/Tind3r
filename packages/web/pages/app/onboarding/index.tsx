@@ -238,29 +238,34 @@ const index = (props: Props) => {
         const cid = await client.put(files)
 
         console.log("start to create")
-        const _memberShipInput: Tind3rMembership = {
-            name: onBoardingInfo.name,
-            description: "Tind3r Membership",
-            image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP"
-        }
+
         if (isAuthenticated) {
-            const res = await idx?.set(UserProfileDefinitionId, {
+            const streamId = await idx?.set(UserProfileDefinitionId, {
                 ...onBoardingInfo,
                 profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,
                 profilePictureCounts: imageCount,
                 selectedProfileIndex: 0,
             })
-            console.log("set idx:", res)
-            getUserProfile()
-        }
+            console.log("profile set, stream ID:", streamId)
+            if (streamId) {
+                getUserProfile()
+                const _memberShipInput: Tind3rMembership = {
+                    name: onBoardingInfo.name,
+                    description: streamId.toString(),
+                    image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP",
+                }
 
-        const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
-        const receipt = await tx?.wait()
-        if (receipt.status) {
-            openNotificationWithIcon("success", "Success", "Profile created successfully")
-            router.push('/app')
-        }
+                const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+                const receipt = await tx?.wait()
+                if (receipt.status) {
+                    openNotificationWithIcon("success", "Success", "Profile created successfully")
+                    router.push('/app')
+                }
+            } else {
+                console.log("idx set error")
+            }
 
+        }
     }
     useEffect(() => {
         getUserProfile()
