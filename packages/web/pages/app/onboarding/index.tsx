@@ -139,6 +139,7 @@ const loadingWords = (status: UploadStatus) => {
   }
 }
 
+
 const OnBoardingPage: NextPage = (props: Props) => {
   const [loading, setLoading] = useState(false)
   const [uploadingStatus, setUploadingStatus] = useState<UploadStatus>(UploadStatus.notUploading)
@@ -304,7 +305,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
   console.log("Is Membership Created", isMemberCreated)
   return (
     <div>
-      {loading && <Loading><Spin size="large" tip={loadingWords(uploadingStatus)} /></Loading>}
+      {loading && <Loading><Spin size="large" tip={loadingWords(uploadingStatus)} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /></Loading>}
       <Header>
         <NextImage src='/images/logo-with-word-mix.png' width={176} height={55} />
       </Header>
@@ -400,11 +401,10 @@ const OnBoardingPage: NextPage = (props: Props) => {
         </Row>
         <SubmitArea>
           <Button
-            style={{ width: '96px', height: '30px', textAlign: 'center', background: '#18E3FF', color: '#fff' }}
-            shape="round"
-            size='small'
-            type="link"
+            style={{ width: '120px', height: '36px', textAlign: 'center', borderRadius: '24px' }}
+            type='primary'
             onClick={handleConfirm}
+            disabled={!validateInput(onBoardingInfo)}
           >
             Confirm
           </Button>
