@@ -215,7 +215,7 @@ const index = (props: Props) => {
         }
     }, [isAuthenticated, idx])
     const validateInput = (input: UserProfile) => {
-        if (!input.name || !input.gender || !input.birthday || !photoList.length) return false
+        if (!input.name || !input.birthday || !photoList.length) return false
         return true
     }
     const handleConfirm = async () => {

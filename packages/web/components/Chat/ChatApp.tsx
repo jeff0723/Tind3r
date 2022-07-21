@@ -7,12 +7,47 @@ import Image from 'next/image';
 import { AppstoreFilled } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaStoreAlt } from "react-icons/fa";
+import Match from './Match';
 
 type Props = {}
-enum TabType {
+export enum TabType {
   MATCHES,
   MASSEGES
 }
+type MatchType = {
+  walletAddress: string,
+  name: string,
+  avatar: string,
+  lastMessage: string,
+}
+const matches: MatchType[] = [
+  {
+    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+    name: "Jessica Lin",
+    avatar: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+    lastMessage: "Hello"
+  },
+  {
+    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+    name: "Cheasea",
+    avatar: "https://images.unsplash.com/photo-1496440737103-cd596325d314?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+    lastMessage: "你好"
+  },
+  {
+    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+    name: "Jessica Sabrina Lin",
+    avatar: "https://images.unsplash.com/photo-1514315384763-ba401779410f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=766&q=80",
+    lastMessage: "Hello"
+  },
+  {
+    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+    name: "Cheasea",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+    lastMessage: "你好"
+  },
+]
+
+
 const Header = styled.div`
   display: flex;
   flex-direction: row;
@@ -70,6 +105,40 @@ const TabTextBox = styled.div`
   align-items: center;
   text-align: center;
 `
+interface ContentBoxProps {
+  selectedTab: TabType;
+}
+const ContentBox = styled.div<ContentBoxProps>`
+  display: flex; 
+  flex-direction: ${props => props.selectedTab === TabType.MATCHES ? "row" : "column"};
+  justify-content: ${props => props.selectedTab === TabType.MATCHES ? "space-between" : ""};
+  gap:${props => props.selectedTab === TabType.MATCHES ? "10px" : "24px"};
+  flex-wrap: ${props => props.selectedTab === TabType.MATCHES ? "wrap" : "nowrap"};
+  padding: 10px 16px;
+`
+
+const MessageBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  gap: 16px;
+`
+const MessageUserName = styled.div`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+`
+const MessageText = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+align-items: center;
+color:#595959;
+`
 
 const Avatar = ({ imageUrl }: { imageUrl?: string }) => {
   if (imageUrl) {
@@ -82,6 +151,8 @@ const Avatar = ({ imageUrl }: { imageUrl?: string }) => {
   }
   return <div className={styles.avatar}></div>
 }
+
+
 function ChatApp() {
   const userProfile = useAppSelector(state => state.user.userProfile)
   const [userName, setUserName] = useState("")
@@ -117,25 +188,57 @@ function ChatApp() {
           <TabTextBox>Messages</TabTextBox>
         </Tab>
       </Tabs>
-      <Link href="/app/message/123">
-        <div className={styles.message}>
-          <div className={styles.avatar} />
-          <div className={styles['message-content']}>
-            <div>Hi</div>
-            <div>跟我一樣Ｒ</div>
-          </div>
-        </div>
-      </Link>
-      <Link href="/app/message/456">
-        <div className={styles.message}>
-          <div className={styles.avatar} />
-          <div className={styles['message-content']}>
-            <div>Hi2</div>
-            <div>跟我一樣Ｒ2</div>
-          </div>
-        </div>
-      </Link>
+      <ContentBox selectedTab={tabSelected}>
+        {matches.map((match, index) => (
+          <Match selectedTab={tabSelected} key={index} {...match} />
+        ))}
+      </ContentBox>
+      {/* <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '10px', padding: '10px 16px', flexWrap: 'wrap' }}>
+        {matches.map((match, index) => (
+          <MatchCard key={index} imageUrl={match.avatar}>
+            {match.name}
+          </MatchCard>
+        ))}
+      </div> */}
+      {/* <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '10px 16px' }}>
+        {
+          matches.map((match, index) => (
+            <MessageBox key={index}>
+              <div style={{ overflow: "hidden", background: `url(${match.avatar})`, width: '74px', height: '74px', borderRadius: '50%', backgroundSize: 'cover', backgroundPosition: '50%', backgroundRepeat: 'no-repeat' }}>
+              </div>
+              <div>
+                <MessageUserName>
+                  {match.name}
+                </MessageUserName>
+                <MessageText>
+                  {match.lastMessage}
+                </MessageText>
+              </div>
+            </MessageBox>
+          ))
+        } */}
+
     </div>
+
+    //   {/* <Link href="/app/message/123">
+    //     <div className={styles.message}>
+    //       <div className={styles.avatar} />
+    //       <div className={styles['message-content']}>
+    //         <div>Hi</div>
+    //         <div>跟我一樣Ｒ</div>
+    //       </div>
+    //     </div>
+    //   </Link>
+    //   <Link href="/app/message/456">
+    //     <div className={styles.message}>
+    //       <div className={styles.avatar} />
+    //       <div className={styles['message-content']}>
+    //         <div>Hi2</div>
+    //         <div>跟我一樣Ｒ2</div>
+    //       </div>
+    //     </div>
+    //   </Link> */}
+    // </div >
 
   )
 }
