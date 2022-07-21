@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { Message } from '@xmtp/xmtp-js'
 import { ButtonProps } from 'antd/lib/button/button';
 import { InputProps } from 'antd/lib/input/input';
-import styles from './Conversation.module.css'
+
 
 
 

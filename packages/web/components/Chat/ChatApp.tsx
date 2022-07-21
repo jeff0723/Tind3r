@@ -53,7 +53,7 @@ const Header = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
+  padding: 0px 16px;
   gap: 10px;
   width: 100%;
   height: 86px;
