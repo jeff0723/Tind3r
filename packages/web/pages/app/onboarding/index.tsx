@@ -1,4 +1,4 @@
-import { Checkbox, Col, Row, Input, Radio, Button } from 'antd'
+import { Checkbox, Col, Row, Input, Radio, Button, Select } from 'antd'
 import NextImage from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -20,6 +20,8 @@ import { useAppSelector } from 'state/hooks';
 import { makeStorageClient } from 'utils/web3-storage';
 import { NextPage } from 'next'
 
+const { Option } = Select
+
 type Props = {}
 type Tind3rMembership = {
     name: string,
@@ -33,7 +35,7 @@ const Header = styled.div`
     padding: 16px 32px 16px 64px;
 `
 const Content = styled.div`
-    padding-top: 30px;
+    padding: 30px 0;
     max-width: 700px;
     margin: 0 auto;
 `
@@ -84,12 +86,29 @@ const SubmitArea = styled.div`
     justify-content: center;
     padding-top: 10px;
 `
+const styles = {
+    radioButton: {
+        borderRadius: '4px',
+        lineHeight: '37px',
+        height: '37px',
+        'borderLeftWidth': '1px'
+    }
+}
 
 const UserProfileDefinitionId = config.definitions.UserProfile
-const genderOption = [
+const genderOptions = [
     "WOMEN",
     "MEN",
     "EVERYONE"
+]
+const organizationOptions = [
+    'Organization1',
+    'Organization2',
+    'Organization3'
+]
+const passionOptions = [
+    'passionOptions1',
+    'passionOptions2'
 ]
 const OnBoardingPage: NextPage = (props: Props) => {
     const router = useRouter()
@@ -141,12 +160,18 @@ const OnBoardingPage: NextPage = (props: Props) => {
     };
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOnBoardingInfo({
-            ...onBoardingInfo,
-            [e.target.name as string]: e.target.value
-        } as UserProfile
-        );
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[], name?:string) => {
+        if (!Array.isArray(e)) {
+            setOnBoardingInfo({
+                ...onBoardingInfo,
+                [e.target.name as string]: e.target.value
+            } as UserProfile);
+        } else {
+            setOnBoardingInfo({
+                ...onBoardingInfo,
+                [name!]: e
+            } as UserProfile);
+        }
     }
     const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setOnBoardingInfo({
@@ -242,7 +267,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
             </Header>
             <Content>
                 <Title>Create Account</Title>
-                <Row gutter={30}>
+                <Row gutter={70}>
                     <Col span={12}>
                         <FormField>
                             <FormLabel>First Name</FormLabel>
@@ -254,36 +279,41 @@ const OnBoardingPage: NextPage = (props: Props) => {
                         </FormField>
                         <FormField>
                             <FormLabel>Gender</FormLabel>
-                            {genderOption.map((item, index) =>
-                                <Radio.Button
-                                    key={index}
-                                    value={index}
-                                    disabled={index == onBoardingInfo?.gender}
-                                    name='gender'
-                                    style={{ borderRadius: '4px', marginLeft: index > 0 ? '10px' : '0' }}
-                                    onClick={handleButtonClick}
-                                >
-                                    {genderOption[index]}
-                                </Radio.Button>
-                            )}
+                            <Radio.Group buttonStyle="solid">
+                                {genderOptions.map((item, index) =>
+                                    <Radio.Button
+                                        key={index}
+                                        value={index}
+                                        checked={index == onBoardingInfo?.gender}
+                                        name='gender'
+                                        style={{ ...styles.radioButton , marginLeft: index > 0 ? '10px' : '0' }}
+                                        onClick={handleButtonClick}
+                                    >
+                                        {genderOptions[index]}
+                                    </Radio.Button>
+                                )}
+                            </Radio.Group>
                         </FormField>
                         <FormField>
                             <Checkbox style={{ padding: '12px 0' }} name='showMyGenderOnProfile' onChange={handleCheckBoxChange} checked={onBoardingInfo?.showMyGenderOnProfile}> Show my gender on my profile</Checkbox>
                         </FormField>
                         <FormField>
                             <FormLabel>Show me</FormLabel>
-                            {genderOption.map((item, index) =>
-                                <Radio.Button
-                                    key={index}
-                                    value={index}
-                                    disabled={index == onBoardingInfo?.showMe}
-                                    name='showMe'
-                                    style={{ borderRadius: '4px', marginLeft: index > 0 ? '10px' : '0' }}
-                                    onClick={handleButtonClick}
-                                >
-                                    {genderOption[index]}
-                                </Radio.Button>
-                            )}
+                            <Radio.Group buttonStyle="solid">
+                                {genderOptions.map((item, index) =>
+                                    <Radio.Button
+                                        key={index}
+                                        value={index}
+                                        
+                                        checked={index == onBoardingInfo?.showMe}
+                                        name='showMe'
+                                        style={{ ...styles.radioButton, marginLeft: index > 0 ? '10px' : '0' }}
+                                        onClick={handleButtonClick}
+                                    >
+                                        {genderOptions[index]}
+                                    </Radio.Button>
+                                )}
+                            </Radio.Group>
                         </FormField>
                         <FormField>
                             <Checkbox name='importNFT' onChange={handleCheckBoxChange} checked={onBoardingInfo?.importNFT}>Import NFT</Checkbox>
@@ -311,20 +341,26 @@ const OnBoardingPage: NextPage = (props: Props) => {
                         <OptionalTitle>Optional</OptionalTitle>
                         <FormField>
                             <FormLabel>My Organization</FormLabel>
-                            <button>Add</button>
+                            {/* @ts-ignore */}
+                            <Select mode="tags" style={{ width: '100%' }} onChange={(e) => handleChange(e, 'organizations')}>
+                                {organizationOptions.map(option => <Option key={option} value={option}>{option}</Option>  )}
+                            </Select>
                         </FormField>
                         <FormField>
                             <FormLabel>Passion</FormLabel>
-                            <button>Add</button>
+                            {/* @ts-ignore */}
+                            <Select mode="tags" style={{ width: '100%' }} onChange={(e) => handleChange(e, 'tags')}>
+                                {passionOptions.map(option => <Option key={option} value={option}>{option}</Option>  )}
+                            </Select>
                         </FormField>
                     </Col>
                 </Row>
                 <SubmitArea>
                     <Button
-                        style={{ width: '96px', height: '30px', textAlign: 'center' }}
-                        type="primary"
+                        style={{ width: '96px', height: '30px', textAlign: 'center', background: '#18E3FF', color: '#fff' }}
                         shape="round"
                         size='small'
+                        type="link"
                         onClick={handleConfirm}
                     >
                         Confirm
