@@ -13280,6 +13280,11 @@ p-settle@^4.1.1:
     p-limit "^2.2.2"
     p-reflect "^2.1.0"
 
+p-sleep@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/p-sleep/-/p-sleep-1.1.0.tgz#a6c9333059b5103c3c0e46bcbba95a1f7969095b"
+  integrity sha512-bwP3GKZirBUYMtiUuBrheLUQdRXVeE/pmHOaLpNJzNfAD4b5AjDn6l823brXcQFade4G/g7GMNQ3KV86E8EaEw==
+
 p-some@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/p-some/-/p-some-5.0.0.tgz#8b730c74b4fe5169d7264a240ad010b6ebc686a4"
@@ -14621,6 +14626,13 @@ react-style-singleton@^2.2.1:
     get-nonce "^1.0.0"
     invariant "^2.2.4"
     tslib "^2.0.0"
+
+react-tinder-card@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/react-tinder-card/-/react-tinder-card-1.4.5.tgz#946e210d7b77545e75db3b320dee0cea647480fe"
+  integrity sha512-VUdAZQiWoFClTe6Evua4sjYy3L3bSYvoWgEMNroiRoK0h5AsfqDXCfhaizUczN6gEUe0mvVDd4bZcQ1qR4sI7Q==
+  dependencies:
+    p-sleep "^1.1.0"
 
 react@17.0.2:
   version "17.0.2"
