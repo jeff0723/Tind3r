@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { openNotificationWithIcon } from 'utils/notification'
 import { injectedConnection } from 'connection'
 import { useRouter } from 'next/router'
+
 type Props = {}
 
 const ImageBackground = styled.div`

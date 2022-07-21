@@ -193,52 +193,7 @@ function ChatApp() {
           <Match selectedTab={tabSelected} key={index} {...match} />
         ))}
       </ContentBox>
-      {/* <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '10px', padding: '10px 16px', flexWrap: 'wrap' }}>
-        {matches.map((match, index) => (
-          <MatchCard key={index} imageUrl={match.avatar}>
-            {match.name}
-          </MatchCard>
-        ))}
-      </div> */}
-      {/* <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '10px 16px' }}>
-        {
-          matches.map((match, index) => (
-            <MessageBox key={index}>
-              <div style={{ overflow: "hidden", background: `url(${match.avatar})`, width: '74px', height: '74px', borderRadius: '50%', backgroundSize: 'cover', backgroundPosition: '50%', backgroundRepeat: 'no-repeat' }}>
-              </div>
-              <div>
-                <MessageUserName>
-                  {match.name}
-                </MessageUserName>
-                <MessageText>
-                  {match.lastMessage}
-                </MessageText>
-              </div>
-            </MessageBox>
-          ))
-        } */}
-
     </div>
-
-    //   {/* <Link href="/app/message/123">
-    //     <div className={styles.message}>
-    //       <div className={styles.avatar} />
-    //       <div className={styles['message-content']}>
-    //         <div>Hi</div>
-    //         <div>跟我一樣Ｒ</div>
-    //       </div>
-    //     </div>
-    //   </Link>
-    //   <Link href="/app/message/456">
-    //     <div className={styles.message}>
-    //       <div className={styles.avatar} />
-    //       <div className={styles['message-content']}>
-    //         <div>Hi2</div>
-    //         <div>跟我一樣Ｒ2</div>
-    //       </div>
-    //     </div>
-    //   </Link> */}
-    // </div >
 
   )
 }
