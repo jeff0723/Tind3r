@@ -6,7 +6,6 @@ import "antd/dist/antd.css";
 
 
 
-
 const AppWithoutSSR = dynamic(() => import('../components/App'), {
   ssr: false,
 })

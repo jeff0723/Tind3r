@@ -21,7 +21,26 @@ export const XmtpProvider: FunctionComponent<{
   const { isAuthenticated } = useCeramic()
   const { provider, account } = useWeb3React()
   const [client, setClient] = useState<Client>()
-  const prevClientAddress = usePreviousString(client?.address);
+  const { getMessages, dispatchMessages } = useMessageStore()
+
+  const [loadingConversations, setLoadingConversations] =
+    useState<boolean>(false)
+  const [conversations, dispatchConversations] = useReducer(
+    (state: Conversation[], newConvos: Conversation[] | undefined) => {
+      if (newConvos === undefined) {
+        return []
+      }
+      console.log("new convos: ", newConvos)
+      newConvos = newConvos.filter(
+        (convo) =>
+          state.findIndex((otherConvo) => {
+            return convo.peerAddress === otherConvo.peerAddress
+          }) < 0 && convo.peerAddress != client?.address
+      )
+      return newConvos === undefined ? [] : state.concat(newConvos)
+    },
+    []
+  )
 
   const getXmtp = useCallback(async () => {
     if (isAuthenticated && provider && account) {
@@ -32,19 +51,19 @@ export const XmtpProvider: FunctionComponent<{
   const listConversations = useCallback(async () => {
     if (!client) return
     console.log('Listing conversations')
-    // setLoadingConversations(true)
+    setLoadingConversations(true)
     const convos = await client.conversations.list()
     convos.forEach((convo: Conversation) => {
-      // dispatchConversations([convo])
-      console.log('Conversation:', convo)
+      dispatchConversations([convo])
     })
-  }, [[client]])
+    setLoadingConversations(false)
+  }, [client])
 
   const streamConversations = useCallback(async () => {
     if (!client) return
     const stream = await client.conversations.stream()
     for await (const convo of stream) {
-      console.log('Conversation stream', convo)
+      dispatchConversations([convo])
     }
   }, [client])
   useEffect(() => {
@@ -59,21 +78,27 @@ export const XmtpProvider: FunctionComponent<{
   }, [client])
 
   const [providerState, setProviderState] = useState<XmtpContextType>({
-
     client,
-
+    conversations,
+    loadingConversations,
+    getMessages,
+    dispatchMessages,
   })
 
   useEffect(() => {
     setProviderState({
-
       client,
-
+      conversations,
+      loadingConversations,
+      getMessages,
+      dispatchMessages,
     })
   }, [
-
     client,
-
+    conversations,
+    loadingConversations,
+    getMessages,
+    dispatchMessages,
   ])
 
   return (

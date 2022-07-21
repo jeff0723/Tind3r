@@ -11,13 +11,18 @@ export type MessageStoreEvent = {
 export type XmtpContextType = {
 
   client: Client | undefined
+  conversations: Conversation[]
+  loadingConversations: boolean
+  getMessages: (peerAddress: string) => Message[]
+  dispatchMessages?: Dispatch<MessageStoreEvent>
 
 }
 
 export const XmtpContext = createContext<XmtpContextType>({
-
   client: undefined,
-
+  conversations: [],
+  loadingConversations: false,
+  getMessages: () => [],
 })
 
 export default XmtpContext

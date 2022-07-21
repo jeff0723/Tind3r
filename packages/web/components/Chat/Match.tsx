@@ -1,3 +1,5 @@
+import { Avatar } from 'antd';
+import Router, { useRouter } from 'next/router';
 import React from 'react'
 import styled from 'styled-components';
 import { TabType } from './ChatApp';
@@ -28,16 +30,7 @@ const MatchCard = styled.div<ImageProps>`
   font-weight:500;
 `
 
-const MessageImage = styled.div<ImageProps>`
-    width: 74px;
-    height: 74px;
-    border-radius: 50%;
-    background: url(${props => props.imageUrl});
-    background-size: cover;
-    background-position: 50%;
-    background-repeat: no-repeat;
-    overflow: hidden;
-`
+
 const MessageBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -61,16 +54,20 @@ align-items: center;
 color:#595959;
 `
 const Match = (props: Props) => {
+    const router = useRouter()
+    const handleClick = () => {
+        router.push('/app/message/' + props.walletAddress)
+    }
     if (props.selectedTab === TabType.MATCHES) {
         return (
-            <MatchCard imageUrl={props.avatar}>
+            <MatchCard imageUrl={props.avatar} onClick={handleClick}>
                 {props.name}
             </MatchCard>
         )
     }
     return (
-        <MessageBox>
-            <MessageImage imageUrl={props.avatar} />
+        <MessageBox onClick={handleClick}>
+            <Avatar src={props.avatar} style={{ width: '74px', height: '74px' }} />
             <div>
                 <MessageUserName>
                     {props.name}
