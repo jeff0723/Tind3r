@@ -58,7 +58,7 @@ const CeramicProvider = ({ children }: Props) => {
         console.log("idx: ", idx)
         setIdx(idx)
         console.log("idx authenticated: ", idx.authenticated)
-        console.log("Sing in success")
+        console.log("Sign in success")
 
       }
 
