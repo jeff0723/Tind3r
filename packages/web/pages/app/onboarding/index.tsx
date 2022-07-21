@@ -1,4 +1,4 @@
-import { Checkbox, Col, Row, Input, Radio, Button, Select } from 'antd'
+import { Checkbox, Col, Row, Input, Radio, Button, Select, Spin } from 'antd'
 import NextImage from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -86,6 +86,20 @@ const SubmitArea = styled.div`
     justify-content: center;
     padding-top: 10px;
 `
+const Loading = styled.div`
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    opacity: 0.8;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
 const styles = {
     radioButton: {
         borderRadius: '4px',
@@ -111,6 +125,7 @@ const passionOptions = [
     'passionOptions2'
 ]
 const OnBoardingPage: NextPage = (props: Props) => {
+    const [loading, setLoading] = useState(false)
     const router = useRouter()
     const { idx, isAuthenticated } = useCeramic()
     const { account } = useWeb3React()
@@ -222,32 +237,38 @@ const OnBoardingPage: NextPage = (props: Props) => {
         console.log("start to create")
 
         if (isAuthenticated) {
-            const streamId = await idx?.set(UserProfileDefinitionId, {
-                ...onBoardingInfo,
-                profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,
-                profilePictureCounts: imageCount,
-                selectedProfileIndex: 0,
-            })
-            console.log("profile set, stream ID:", streamId)
-            if (streamId) {
-                getUserProfile()
-                const _memberShipInput: Tind3rMembership = {
-                    name: onBoardingInfo.name,
-                    description: streamId.toString(),
-                    image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP",
+            try {
+                setLoading(true)
+                const streamId = await idx?.set(UserProfileDefinitionId, {
+                    ...onBoardingInfo,
+                    profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,
+                    profilePictureCounts: imageCount,
+                    selectedProfileIndex: 0,
+                })
+                console.log("profile set, stream ID:", streamId)
+                if (streamId) {
+                    getUserProfile()
+                    const _memberShipInput: Tind3rMembership = {
+                        name: onBoardingInfo.name,
+                        description: streamId.toString(),
+                        image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP",
+                    }
+    
+                    const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+                    const receipt = await tx?.wait()
+                    console.log('recepie', receipt)
+                    if (receipt.status) {
+                        openNotificationWithIcon("success", "Success", "Profile created successfully")
+                        // need to redirect to "app/recs"
+                        // temporary redirect to "/" for testing
+                        router.push('/')
+                    }
+                } else {
+                    setLoading(false)
+                    console.log("idx set error")
                 }
-
-                const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
-                const receipt = await tx?.wait()
-                console.log('recepie', receipt)
-                if (receipt.status) {
-                    openNotificationWithIcon("success", "Success", "Profile created successfully")
-                    // need to redirect to "app/recs"
-                    // temporary redirect to "/" for testing
-                    router.push('/')
-                }
-            } else {
-                console.log("idx set error")
+            } catch (error) {
+                setLoading(false)
             }
 
         }
@@ -262,6 +283,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
     console.log("Is Membership Created", isMemberCreated)
     return (
         <div>
+            {loading && <Loading><Spin size="large" /></Loading>}
             <Header>
                 <NextImage src='/images/logo-with-word-mix.png' width={176} height={55} />
             </Header>
