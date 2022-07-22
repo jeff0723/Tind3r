@@ -115,9 +115,8 @@ contract Tind3rMembership is
         returns (uint256)
     {
         address msgSender = _msgSenderERC721A();
-        // TODO: for testing
-        // if (balanceOf(msgSender) > 0)
-        //     revert ExistentProfile(_getAux(msgSender));
+        if (balanceOf(msgSender) > 0)
+            revert ExistentProfile(_getAux(msgSender));
         uint256 newTokenId = _nextTokenId();
         _tableland.runSQL(
             address(this),

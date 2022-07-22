@@ -54,7 +54,7 @@ const Card = styled.div`
 `
 
 const Home: NextPage = () => {
-    const { account } = useWeb3React()
+    const { account, chainId } = useWeb3React()
     const { client } = useXmtp()
     const { idx, isAuthenticated } = useCeramic()
     const [name, setName] = useState("")
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
 
     const getProfile = async () => {
         if (idx && account && isAuthenticated) {
-            const res = await idx.get("basicProfile", `${account}@eip155:1`) as BasicProfile
+            const res = await idx.get("basicProfile", `${account}@eip155:${chainId}`) as BasicProfile
             if (res) {
                 dispatch(updateUserName({ userName: res.name }))
             }

@@ -147,7 +147,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
   const [uploadingStatus, setUploadingStatus] = useState<UploadStatus>(UploadStatus.notUploading)
   const router = useRouter()
   const { idx, isAuthenticated } = useCeramic()
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const tind3rMembershipContract = useTind3rMembershipContract()
   const [photoList, setPhotoList] = useState<UploadFile[]>([
     // {
@@ -228,7 +228,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
   const getUserProfile = useCallback(async () => {
     if (isAuthenticated && idx) {
-      idx.get(UserProfileDefinitionId, `${account}@eip155:1`)
+      idx.get(UserProfileDefinitionId, `${account}@eip155:${chainId}`)
         .then(res => dispatch(updateUserProfile({ userProfile: res })))
         .catch(err => console.log(err))
 
@@ -266,8 +266,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
       try {
         console.log("start to set profile on ceramic")
         const streamId = await idx?.set(UserProfileDefinitionId, {
-          // ...onBoardingInfo,
-          name: onBoardingInfo.name,
+          ...onBoardingInfo,
           profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,
           profilePictureCounts: imageCount,
           selectedProfileIndex: 0,
@@ -278,7 +277,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
           const _memberShipInput: Tind3rMembership = {
             name: onBoardingInfo.name,
             description: streamId.toString(),
-            image: `https://ipfs.io/ipfs/${cid}/0`,
+            image: `https://ipfs.io/ipfs/${cid}/0.png`,
           }
 
           const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)

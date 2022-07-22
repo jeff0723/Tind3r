@@ -12,14 +12,14 @@ const UserProfileDefinitionId = config.definitions.Tind3r
 
 
 export default function Updater(): null {
-    const { account, provider } = useWeb3React()
+    const { account, provider, chainId } = useWeb3React()
     const { idx, isAuthenticated } = useCeramic()
     const tind3rMembershipContract = useTind3rMembershipContract()
     const dispatch = useAppDispatch()
 
     const checkUserProfileExists = useCallback(async () => {
         if (idx && idx.authenticated) {
-            idx.get(UserProfileDefinitionId, `${account}@eip155:1`).then(res => {
+            idx.get(UserProfileDefinitionId, `${account}@eip155:${chainId}`).then(res => {
                 if (res) {
                     dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: true }))
                     dispatch(updateUserProfile({ userProfile: res }))

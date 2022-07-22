@@ -9,6 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaStoreAlt } from "react-icons/fa";
 import Match from './Match';
 import { UserProfile } from 'schema/ceramic/user';
+import useCeramic from 'hooks/useCeramic';
+import { useTind3rMembershipContract } from 'hooks/useContract';
+import { useWeb3React } from '@web3-react/core';
 
 type Props = {}
 export enum TabType {
@@ -168,6 +171,12 @@ function ChatApp() {
   const [userName, setUserName] = useState("")
   const [profileImage, setProfileImage] = useState("")
   const [tabSelected, setTabSelected] = useState(TabType.MATCHES)
+  //--- Justa-2022-07-23
+  const { ceramic } = useCeramic()
+  const tind3rMembershipContract = useTind3rMembershipContract()
+  const { account } = useWeb3React()
+  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+owner,description+FROM+tind3r_membership_80001_452+where+id+in+"
+  //--- end
   useEffect(() => {
     if (userProfile.name) {
       setUserName(userProfile.name)
@@ -176,10 +185,39 @@ function ChatApp() {
       const index = userProfile.selectedProfileIndex
       setProfileImage(userProfile.profileBaseUri + index?.toString() + '.png')
     }
+    getMatchedProfileList()
   }, [userProfile])
   const handleTabClick = (tab: number) => {
     setTabSelected(tab)
   }
+  //--- Justa-2022-07-23
+  const queryUserInfoFromTableland = async (userIdList: number[]): Promise<string[][]> => {
+    const queryURL = TABLELAND_PREFIX + `(${userIdList.join(',')})`;
+    console.log(queryURL)
+    const content = await fetch(queryURL)
+    const object = await content.json()
+    return object.rows
+  }
+
+  const getMatchedProfileList = async (): Promise<MatchType[]> => {
+    if (!ceramic || !tind3rMembershipContract || !account) return []
+    // const userIdList = await tind3rMembershipContract.getMatches(account)
+    const userIdList = [0, 1]
+    const userInfoList = await queryUserInfoFromTableland(userIdList)
+    console.log(userInfoList)
+    const queryList = userInfoList.map(info => { return { streamId: info[1] } })
+    console.log(queryList)
+    const streamRecord = await ceramic.multiQuery(queryList)
+    const matchList: MatchType[] = Object.values(streamRecord).map((stream, idx) => {
+      return {
+        ...stream.content,
+        walletAddress: userInfoList[idx][0]
+      }
+    })
+    console.log(matchList)
+    return matchList
+  }
+  //--- end
   console.log("User profile", userProfile)
   return (
     <div>
