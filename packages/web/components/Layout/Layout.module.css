@@ -8,6 +8,10 @@
 }
 
 .content {
-  flex: 1 0 auto;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: #F0F0F0;
 }
