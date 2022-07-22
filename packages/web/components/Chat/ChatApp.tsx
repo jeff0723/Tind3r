@@ -175,7 +175,7 @@ function ChatApp() {
   const { ceramic } = useCeramic()
   const tind3rMembershipContract = useTind3rMembershipContract()
   const { account } = useWeb3React()
-  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+owner,description+FROM+tind3r_membership_80001_452+where+id+in+"
+  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+id+in+"
   //--- end
   useEffect(() => {
     if (userProfile.name) {
@@ -185,7 +185,7 @@ function ChatApp() {
       const index = userProfile.selectedProfileIndex
       setProfileImage(userProfile.profileBaseUri + index?.toString() + '.png')
     }
-    // getMatchedProfileList()
+    getMatchedProfileList()
   }, [userProfile])
   const handleTabClick = (tab: number) => {
     setTabSelected(tab)
@@ -205,13 +205,17 @@ function ChatApp() {
     const userIdList = [0, 1]
     const userInfoList = await queryUserInfoFromTableland(userIdList)
     console.log(userInfoList)
-    const queryList = userInfoList.map(info => { return { streamId: info[1] } })
-    console.log(queryList)
+    // @ts-ignore
+    const userInfoMap = new Map<string, string>(userInfoList)
+    console.log(userInfoMap)
+    const streamIdList = Array(...userInfoMap.keys())
+    const queryList = streamIdList.map(sid => { return { streamId: sid } })
     const streamRecord = await ceramic.multiQuery(queryList)
-    const matchList: MatchType[] = Object.values(streamRecord).map((stream, idx) => {
+    console.log(streamRecord)
+    const matchList: MatchType[] = Object.values(streamRecord).map((stream) => {
       return {
         ...stream.content,
-        walletAddress: userInfoList[idx][0]
+        walletAddress: userInfoMap.get(stream.id.toString())
       }
     })
     console.log(matchList)

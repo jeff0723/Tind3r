@@ -173,7 +173,7 @@ const Recommendation: NextPage = () => {
   const canSwipe = currentIndex >= 0
   //--- Justa-2022-07-23
   const { ceramic } = useCeramic();
-  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+owner,description+FROM+tind3r_membership_80001_452+where+"
+  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+"
   //--- end
   const childRefs = useMemo<any[]>(
     () =>
@@ -198,17 +198,21 @@ const Recommendation: NextPage = () => {
     if (!ceramic) return []
     const userInfoList = await queryUserInfoFromTableland(0, 10)
     console.log(userInfoList)
-    const queryList = userInfoList.map(info => { return { streamId: info[1] } })
-    console.log(queryList)
+    // @ts-ignore
+    const userInfoMap = new Map<string, string>(userInfoList)
+    console.log(userInfoMap)
+    const streamIdList = Array(...userInfoMap.keys())
+    const queryList = streamIdList.map(sid => { return { streamId: sid } })
     const streamRecord = await ceramic.multiQuery(queryList)
-    const matchList: UserProfile[] = Object.values(streamRecord).map((stream, idx) => {
+    console.log(streamRecord)
+    const recProfileList: UserProfile[] = Object.values(streamRecord).map((stream) => {
       return {
         ...stream.content,
-        walletAddress: userInfoList[idx][0]
+        walletAddress: userInfoMap.get(stream.id.toString())
       }
     })
-    console.log(matchList)
-    return matchList
+    console.log(recProfileList)
+    return recProfileList
   }
   //--- end
 
@@ -231,7 +235,7 @@ const Recommendation: NextPage = () => {
   }
   const handleInfoClick = () => {
     router.push('/app/recs/profile')
-    // getRecProfileList()
+    getRecProfileList()
   }
   return (
     <Layout>
