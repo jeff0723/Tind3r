@@ -63,6 +63,13 @@ contract Tind3rMatching is
     }
 
     /**
+     * @dev Show membership contract
+     */
+    function membershipContract() public view returns (address) {
+        return address(_t3mContract);
+    }
+
+    /**
      * @dev Only Tind3eMembership contract can call
      */
     modifier onlyT3M() {
