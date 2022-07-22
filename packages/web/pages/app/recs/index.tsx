@@ -41,7 +41,7 @@ const characters = [
   },
   {
     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
-    name: "Cheasea",
+    name: "Cheasea ",
     age: '26',
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
     bio: "I am just a boring person"
@@ -165,10 +165,6 @@ const StyledButton = styled(Button)`
 `
 
 const Recommendation: NextPage = () => {
-  const { account } = useWeb3React()
-  const { client } = useXmtp()
-  const { idx, isAuthenticated } = useCeramic()
-  const [name, setName] = useState("")
 
   // swiper
   const [currentIndex, setCurrentIndex] = useState(characters.length - 1)
@@ -183,27 +179,8 @@ const Recommendation: NextPage = () => {
     []
   )
 
-  const dispatch = useAppDispatch()
-  const userName = useAppSelector(state => state.user.userName)
-  const userProfile = useAppSelector(state => state.user.userProfile)
   const router = useRouter()
 
-
-  const getProfile = async () => {
-    if (idx && account && isAuthenticated) {
-      const res = await idx.get("basicProfile", `${account}@eip155:1`) as BasicProfile
-      if (res) {
-        dispatch(updateUserName({ userName: res.name }))
-      }
-    }
-  }
-  useEffect(() => {
-    getProfile()
-  }, [idx, account, isAuthenticated])
-
-
-  console.log(idx?.authenticated)
-  console.log("User Profile:", userProfile)
 
 
 
@@ -234,7 +211,7 @@ const Recommendation: NextPage = () => {
           <TinderCard
             ref={childRefs[index]}
             className='swipe'
-            key={character.name}
+            key={index}
             onSwipe={(dir) => swiped(dir, character.name, index)}
           >
             <CardContainer>

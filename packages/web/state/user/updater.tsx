@@ -19,13 +19,16 @@ export default function Updater(): null {
 
     const checkUserProfileExists = useCallback(async () => {
         if (idx && idx.authenticated) {
-            const res = await idx.get(UserProfileDefinitionId, `${account}@eip155:1`)
-            if (res) {
-                dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: true }))
-                dispatch(updateUserProfile({ userProfile: res }))
-            } else {
-                dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: false }))
-            }
+            idx.get(UserProfileDefinitionId, `${account}@eip155:1`).then(res => {
+                if (res) {
+                    dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: true }))
+                    dispatch(updateUserProfile({ userProfile: res }))
+                } else {
+                    dispatch(updateIsCeramicProfileExists({ isCeramicProfileExists: false }))
+                }
+            })
+                .catch(err => console.log(err))
+
 
         }
     }, [account, idx, isAuthenticated])

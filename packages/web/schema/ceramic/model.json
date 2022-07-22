@@ -1,10 +1,10 @@
 {
     "definitions": {
-        "UserProfile": "kjzl6cwe1jw148pdlewyzeo5b3z4584baawx3fcy5i1oegoyngfqh1bmamo2udo"
+        "UserProfile": "kjzl6cwe1jw149ko8225j03vvdz1tyaxk1qqu5243tpwwrbto0g3g5u7zbj1wsm"
     },
     "schemas": {
         "Tind3rUserProfle": "ceramic://k3y52l7qbv1frxms06a3i624vmwm0jnekvv2fmmuysk9b8e044oiciqmdjmg0ve2o",
-        "Tind3rUserProfile": "ceramic://k3y52l7qbv1frxjy0ssqi0s2d0qi01796mwcqqsi5uj9zojshjtuet4pfwcqzq1og"
+        "Tind3rUserProfile": "ceramic://k3y52l7qbv1frxyyabt72jgpaleomiadj70dv7l2nm2bdhq6l1npc8bmvtb9rdgqo"
     },
     "tiles": {}
 }

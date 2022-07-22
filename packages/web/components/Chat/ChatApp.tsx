@@ -8,6 +8,7 @@ import { AppstoreFilled } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaStoreAlt } from "react-icons/fa";
 import Match from './Match';
+import { UserProfile } from 'schema/ceramic/user';
 
 type Props = {}
 export enum TabType {
@@ -154,7 +155,7 @@ const Avatar = ({ imageUrl }: { imageUrl?: string }) => {
 
 
 function ChatApp() {
-  const userProfile = useAppSelector(state => state.user.userProfile)
+  const userProfile = useAppSelector(state => state.user.userProfile) as UserProfile
   const [userName, setUserName] = useState("")
   const [profileImage, setProfileImage] = useState("")
   const [tabSelected, setTabSelected] = useState(TabType.MATCHES)
@@ -170,6 +171,7 @@ function ChatApp() {
   const handleTabClick = (tab: number) => {
     setTabSelected(tab)
   }
+  console.log("User profile", userProfile)
   return (
     <div>
       <Header>

@@ -13,7 +13,7 @@ import { useWeb3React } from '@web3-react/core';
 type Props = {
   children?: React.ReactNode
 }
-const apiHost = "https://ceramic-clay.3boxlabs.com" || "http://localhost:7007"
+const apiHost = "https://ceramic-clay.3boxlabs.com"
 
 const CeramicProvider = ({ children }: Props) => {
   const { provider, account } = useWeb3React()

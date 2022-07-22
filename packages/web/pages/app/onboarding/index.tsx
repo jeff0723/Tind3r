@@ -15,11 +15,12 @@ import useCeramic from 'hooks/useCeramic';
 import { useWeb3React } from '@web3-react/core';
 import { useRouter } from 'next/router';
 import config from 'schema/ceramic/model.json';
-import { updateIsCeramicProfileExists, updateMembershipCreated } from 'state/user/reducer';
-import { useAppSelector } from 'state/hooks';
+import { updateIsCeramicProfileExists, updateMembershipCreated, updateUserProfile } from 'state/user/reducer';
+import { useAppSelector, useAppDispatch } from 'state/hooks';
 import { makeStorageClient } from 'utils/web3-storage';
 import { NextPage } from 'next'
 import { ORGANIZATION_OPTIONS, PASSION_OPTIONS } from 'constants/options';
+
 
 const { Option } = Select
 
@@ -141,6 +142,7 @@ const loadingWords = (status: UploadStatus) => {
 
 
 const OnBoardingPage: NextPage = (props: Props) => {
+  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [uploadingStatus, setUploadingStatus] = useState<UploadStatus>(UploadStatus.notUploading)
   const router = useRouter()
@@ -223,9 +225,11 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
   const getUserProfile = useCallback(async () => {
     if (isAuthenticated && idx) {
-      console.log('getUserProfile')
-      const res = await idx.get(UserProfileDefinitionId, `${account}@eip155:1`) as UserProfile
-      console.log("UserProfle:", res)
+      idx.get(UserProfileDefinitionId, `${account}@eip155:1`)
+        .then(res => dispatch(updateUserProfile({ userProfile: res })))
+        .catch(err => console.log(err))
+
+
     }
   }, [isAuthenticated, idx])
   const validateInput = (input: UserProfile) => {
@@ -233,7 +237,6 @@ const OnBoardingPage: NextPage = (props: Props) => {
     return true
   }
   const handleConfirm = async () => {
-    console.log(onBoardingInfo)
     if (!photoList.length) {
       openNotificationWithIcon("info", "Please upload at least one profile photo", "")
       return
@@ -254,7 +257,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
     const cid = await client.put(files)
     setUploadingStatus(UploadStatus.ipfsFinished)
 
-    console.log("start to create")
+
 
     if (isAuthenticated) {
       try {
@@ -264,7 +267,6 @@ const OnBoardingPage: NextPage = (props: Props) => {
           profilePictureCounts: imageCount,
           selectedProfileIndex: 0,
         })
-        console.log("profile set, stream ID:", streamId)
         setUploadingStatus(UploadStatus.ceramicFinished)
         if (streamId) {
           getUserProfile()
@@ -276,11 +278,13 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
           const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
           const receipt = await tx?.wait()
-          console.log('recepie', receipt)
+
           if (receipt.status) {
             setLoading(false)
             setUploadingStatus(UploadStatus.finished)
+            dispatch(updateMembershipCreated({ isMemberCreated: true }))
             openNotificationWithIcon("success", "Success", "Profile created successfully")
+            setOnBoardingInfo({} as UserProfile);
             // need to redirect to "app/recs"
             // temporary redirect to "/" for testing
             router.push('/app/recs')
@@ -299,10 +303,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
     getUserProfile()
   }, [isAuthenticated, idx])
 
-  console.log("Photolist", photoList)
-  console.log("IDX authenticated", idx?.authenticated)
-  console.log("Is Ceramic Profile Exists", isCeramicProfileExists)
-  console.log("Is Membership Created", isMemberCreated)
+
   return (
     <div>
       {loading && <Loading><Spin size="large" tip={loadingWords(uploadingStatus)} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /></Loading>}
@@ -323,7 +324,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
             </FormField>
             <FormField>
               <FormLabel>Gender</FormLabel>
-              <Radio.Group buttonStyle="solid">
+              <Radio.Group name='gender' buttonStyle="solid">
                 {genderOptions.map((item, index) =>
                   <Radio.Button
                     key={index}
@@ -343,7 +344,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
             </FormField>
             <FormField>
               <FormLabel>Show me</FormLabel>
-              <Radio.Group buttonStyle="solid">
+              <Radio.Group name='showMe' buttonStyle="solid">
                 {genderOptions.map((item, index) =>
                   <Radio.Button
                     key={index}
