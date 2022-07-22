@@ -215,7 +215,9 @@ export interface Tind3rMatchingInterface extends utils.Interface {
     "AdminChanged(address,address)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "BeaconUpgraded(address)": EventFragment;
+    "Block(uint256,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
+    "Match(uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
@@ -226,7 +228,9 @@ export interface Tind3rMatchingInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Block"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Match"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
@@ -267,12 +271,28 @@ export type BeaconUpgradedEvent = TypedEvent<
 
 export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>;
 
+export interface BlockEventObject {
+  aUserId: BigNumber;
+  bUserId: BigNumber;
+}
+export type BlockEvent = TypedEvent<[BigNumber, BigNumber], BlockEventObject>;
+
+export type BlockEventFilter = TypedEventFilter<BlockEvent>;
+
 export interface InitializedEventObject {
   version: number;
 }
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+
+export interface MatchEventObject {
+  aUserId: BigNumber;
+  bUserId: BigNumber;
+}
+export type MatchEvent = TypedEvent<[BigNumber, BigNumber], MatchEventObject>;
+
+export type MatchEventFilter = TypedEventFilter<MatchEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -682,8 +702,14 @@ export interface Tind3rMatching extends BaseContract {
       beacon?: PromiseOrValue<string> | null
     ): BeaconUpgradedEventFilter;
 
+    "Block(uint256,uint256)"(aUserId?: null, bUserId?: null): BlockEventFilter;
+    Block(aUserId?: null, bUserId?: null): BlockEventFilter;
+
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
+
+    "Match(uint256,uint256)"(aUserId?: null, bUserId?: null): MatchEventFilter;
+    Match(aUserId?: null, bUserId?: null): MatchEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,

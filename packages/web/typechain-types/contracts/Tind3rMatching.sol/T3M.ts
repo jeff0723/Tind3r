@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   PopulatedTransaction,
@@ -22,13 +23,27 @@ import type {
 
 export interface T3MInterface extends utils.Interface {
   functions: {
+    "getUserId(address)": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
     "prefixURI()": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "prefixURI"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "getUserId" | "ownerOf" | "prefixURI"
+  ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "getUserId",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "ownerOf",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "prefixURI", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "getUserId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "prefixURI", data: BytesLike): Result;
 
   events: {};
@@ -61,22 +76,72 @@ export interface T3M extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    getUserId(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     prefixURI(overrides?: CallOverrides): Promise<[string]>;
   };
+
+  getUserId(
+    user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  ownerOf(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   prefixURI(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    getUserId(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     prefixURI(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
+    getUserId(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     prefixURI(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    getUserId(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     prefixURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

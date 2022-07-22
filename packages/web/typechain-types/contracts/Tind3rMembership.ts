@@ -51,6 +51,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "getUserId(address)": FunctionFragment;
     "initialize(string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isMatched(address,address)": FunctionFragment;
     "isTind3rMember(address)": FunctionFragment;
     "like(address)": FunctionFragment;
     "matchingContract()": FunctionFragment;
@@ -88,6 +89,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "getUserId"
       | "initialize"
       | "isApprovedForAll"
+      | "isMatched"
       | "isTind3rMember"
       | "like"
       | "matchingContract"
@@ -142,6 +144,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isMatched",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -266,6 +272,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isMatched", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isTind3rMember",
     data: BytesLike
@@ -555,6 +562,12 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     isTind3rMember(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -708,6 +721,12 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  isMatched(
+    userA: PromiseOrValue<string>,
+    userB: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   isTind3rMember(
     user: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -858,6 +877,12 @@ export interface Tind3rMembership extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -1122,6 +1147,12 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isTind3rMember(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1273,6 +1304,12 @@ export interface Tind3rMembership extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

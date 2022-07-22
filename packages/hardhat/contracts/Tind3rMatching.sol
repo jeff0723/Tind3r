@@ -11,6 +11,10 @@ import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 
 interface T3M {
     function prefixURI() external view returns (string memory);
+
+    function getUserId(address user) external view returns (uint256);
+
+    function ownerOf(uint256 tokenId) external view returns (address);
 }
 
 error NotCallByMembershipContract();
@@ -22,6 +26,10 @@ contract Tind3rMatching is
     OwnableUpgradeable
 {
     T3M private _t3mContract;
+
+    event Match(uint256 aUserId, uint256 bUserId);
+
+    event Block(uint256 aUserId, uint256 bUserId);
 
     /**
      * @dev initialization function for upgradeable contract
@@ -41,15 +49,6 @@ contract Tind3rMatching is
     }
 
     /**
-     * @dev Override _authorizeUpgrade to upgrade only by owner
-     */
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        override
-        onlyOwner
-    {}
-
-    /**
      * @dev Mint A's token to B and B's to A
      */
     function mint(
@@ -60,11 +59,48 @@ contract Tind3rMatching is
     ) external onlyT3M {
         _mint(aUser, bUserId, 1, "");
         _mint(bUser, aUserId, 1, "");
+        emit Match(aUserId, bUserId);
     }
 
+    /**
+     * @dev Only Tind3eMembership contract can call
+     */
     modifier onlyT3M() {
         if (msg.sender != address(_t3mContract))
             revert NotCallByMembershipContract();
         _;
     }
+
+    function _afterTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal override {
+        uint256 size = ids.length;
+        uint256 fromId = _t3mContract.getUserId(from);
+        uint256 toId = _t3mContract.getUserId(to);
+        for (uint256 i = 0; i < size; ++i) {
+            uint256 targetId = ids[i];
+            address targetUser = _t3mContract.ownerOf(targetId);
+            if (balanceOf(from, targetId) == 0) {
+                emit Block(fromId, targetId);
+            }
+            if (balanceOf(targetUser, toId) > 0 && amounts[i] > 0) {
+                emit Match(toId, targetId);
+            }
+        }
+        super._afterTokenTransfer(operator, from, to, ids, amounts, data);
+    }
+
+    /**
+     * @dev Override _authorizeUpgrade to upgrade only by owner
+     */
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        override
+        onlyOwner
+    {}
 }
