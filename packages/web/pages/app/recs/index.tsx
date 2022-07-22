@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { Button, Card } from 'antd';
 import { CloseOutlined, HeartFilled, InfoOutlined, StarFilled } from '@ant-design/icons';
 import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs'
+import { useRouter } from 'next/router';
 
 const { Meta } = Card;
 
@@ -51,9 +52,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 128px 0px 0px 0px;
-  gap: 10px;
   height: 100%;
+  padding-top:5vh;
 `
 const CardContainer = styled.div`
   display: flex;
@@ -88,7 +88,7 @@ const CardAction = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 124px;
+  height: 102px;
   background: #000000;
   border-radius: 0px 0px 16px 16px;
   padding: 0px 48px;
@@ -145,13 +145,13 @@ const HelperContent = styled.div`
   flex-direction: row;
   align-items: center;
   gap:50px;
-  margin-bottom:50px;
+  position: absolute;
+  bottom:2.5vh;
 `
 const InstructionBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px;
   gap: 4px;
   color:#595959;
 `
@@ -186,11 +186,7 @@ const Recommendation: NextPage = () => {
   const dispatch = useAppDispatch()
   const userName = useAppSelector(state => state.user.userName)
   const userProfile = useAppSelector(state => state.user.userProfile)
-  const handleConnect = async () => {
-    console.log('connect clicked')
-
-    await injectedConnection.connector.activate()
-  }
+  const router = useRouter()
 
 
   const getProfile = async () => {
@@ -205,17 +201,7 @@ const Recommendation: NextPage = () => {
     getProfile()
   }, [idx, account, isAuthenticated])
 
-  const handleUpdateName = async () => {
-    console.log('button clicked')
-    console.log(name)
-    if (!name || !isAuthenticated || !idx || !idx.authenticated) return
-    console.log('start to update')
-    const res = await idx?.set("basicProfile", { name })
 
-    console.log("respones", res)
-    getProfile()
-
-  }
   console.log(idx?.authenticated)
   console.log("User Profile:", userProfile)
 
@@ -237,28 +223,11 @@ const Recommendation: NextPage = () => {
     setLastDirection(direction)
     updateCurrentIndex(index - 1)
   }
+  const handleInfoClick = () => {
+    router.push('/app/recs/profile')
+  }
   return (
     <Layout>
-      {/* <CardContainer>
-        {characters.map((character, index) =>
-          // @ts-ignore
-          <TinderCard
-            ref={childRefs[index]}
-            className='swipe'
-            key={character.name}
-            onSwipe={(dir) => swiped(dir, character.name, index)}
-
-          >
-            <Card
-              hoverable
-              style={{ width: 240 }}
-              cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
-          </TinderCard>
-        )}
-      </CardContainer> */}
       <Container>
         {characters.map((character, index) =>
           // @ts-ignore
@@ -267,7 +236,6 @@ const Recommendation: NextPage = () => {
             className='swipe'
             key={character.name}
             onSwipe={(dir) => swiped(dir, character.name, index)}
-            style={{ justifyContent: "center", alignItems: "center" }}
           >
             <CardContainer>
               <CardContent image={character.avatar}>
@@ -284,7 +252,7 @@ const Recommendation: NextPage = () => {
                   <DescriptionBox>
                     <Description>{character.bio}</Description>
 
-                    <Button shape='circle' icon={<InfoOutlined />} size='small' />
+                    <Button shape='circle' icon={<InfoOutlined />} size='small' onClick={handleInfoClick} />
                   </DescriptionBox>
                 </CardInfoBox>
 
@@ -304,7 +272,6 @@ const Recommendation: NextPage = () => {
         <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>
         <InstructionBox><BsArrowUpSquare />SUPERLIKE</InstructionBox>
         <InstructionBox><BsArrowRightSquare />LIKE</InstructionBox>
-
       </HelperContent>
     </Layout>
   )

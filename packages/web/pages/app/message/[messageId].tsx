@@ -10,7 +10,7 @@ const MessagePage: NextPage = () => {
 
   return (
     <div style={{ height: '100vh', display: 'flex' }}>
-      <div style={{ width: '400px' }}>
+      <div style={{ width: '25vw', minWidth: '390px', maxWidth: '400px' }}>
         <ChatApp />
       </div>
       <div>

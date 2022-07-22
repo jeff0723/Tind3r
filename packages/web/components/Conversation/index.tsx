@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { Message } from '@xmtp/xmtp-js'
 import { ButtonProps } from 'antd/lib/button/button';
 import { InputProps } from 'antd/lib/input/input';
+import { useRouter } from 'next/router'
 
 
 
@@ -17,7 +18,7 @@ const ConversationBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 690px;
+    width: 50vw;
     height: 100%;
     background: #FFFFFF;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -45,7 +46,7 @@ const ConversationContent = styled.div`
     flex-direction: column;
     padding: 10px 16px;
     gap: 10px;
-    width: 690px;
+    width: 100%;
     height: 797px;
     overflow-y: scroll;
 `
@@ -94,7 +95,7 @@ const MessageSendBox = styled.form`
     align-items: center;
     padding: 10px 10px;
     gap: 10px;
-    width: 658px;
+    width: 100%;
     background: #F5F5F5;
     border: 1px solid #BFBFBF;
     border-radius: 48px;
@@ -147,6 +148,7 @@ const Conversation = ({ peerAddress }: Props) => {
     const { messages, sendMessage, loading } = useConversation(peerAddress)
     const { account } = useWeb3React()
     const [message, setMessage] = useState("")
+    const router = useRouter()
     // console.log('meesage sent:', messages[0].sent)
     // console.log('meesage content:', messages[0].content)
     // console.log('meesage timestamp:', messages[0].senderAddress)
@@ -170,6 +172,9 @@ const Conversation = ({ peerAddress }: Props) => {
         },
         [sendMessage, message]
     )
+    const handleExit = () => {
+        router.push('/app/recs')
+    }
     return (
         <ConversationBox>
             <ConversationHeader>
@@ -177,7 +182,7 @@ const Conversation = ({ peerAddress }: Props) => {
                     <Avatar src="https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80" />
                     You Matched with Hi on 7/15/2022
                 </ConversationHeaderInfo>
-                <Button shape='circle' icon={<CloseOutlined />} style={{ color: '#BFBFBF' }} />
+                <Button shape='circle' icon={<CloseOutlined />} style={{ color: '#BFBFBF' }} onClick={handleExit} />
             </ConversationHeader>
             <ConversationContent>
                 {messages.length ? messages.map((message: Message, index) => {
