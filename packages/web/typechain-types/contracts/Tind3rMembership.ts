@@ -48,7 +48,9 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "createProfile((string,string,string))": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getMatches(address)": FunctionFragment;
     "getUserId(address)": FunctionFragment;
+    "ifLike(address,address)": FunctionFragment;
     "initialize(string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isMatched(address,address)": FunctionFragment;
@@ -77,7 +79,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "updateProfile((string,string,string))": FunctionFragment;
     "upgradeTo(address)": FunctionFragment;
     "upgradeToAndCall(address,bytes)": FunctionFragment;
-    "userList(uint256,uint256)": FunctionFragment;
+    "userStreamIdList(uint256,uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -86,7 +88,9 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "balanceOf"
       | "createProfile"
       | "getApproved"
+      | "getMatches"
       | "getUserId"
+      | "ifLike"
       | "initialize"
       | "isApprovedForAll"
       | "isMatched"
@@ -115,7 +119,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "updateProfile"
       | "upgradeTo"
       | "upgradeToAndCall"
-      | "userList"
+      | "userStreamIdList"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -135,8 +139,16 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getMatches",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getUserId",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "ifLike",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -252,7 +264,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "userList",
+    functionFragment: "userStreamIdList",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
 
@@ -266,7 +278,9 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getMatches", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getUserId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ifLike", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
@@ -346,7 +360,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "upgradeToAndCall",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "userList", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "userStreamIdList",
+    data: BytesLike
+  ): Result;
 
   events: {
     "AdminChanged(address,address)": EventFragment;
@@ -546,10 +563,21 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[number[]]>;
+
     getUserId(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     initialize(
       initBaseURI: PromiseOrValue<string>,
@@ -677,7 +705,7 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    userList(
+    userStreamIdList(
       startId: PromiseOrValue<BigNumberish>,
       endId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -705,10 +733,21 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getMatches(
+    user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<number[]>;
+
   getUserId(
     user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  ifLike(
+    userA: PromiseOrValue<string>,
+    userB: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   initialize(
     initBaseURI: PromiseOrValue<string>,
@@ -836,7 +875,7 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  userList(
+  userStreamIdList(
     startId: PromiseOrValue<BigNumberish>,
     endId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -864,10 +903,21 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<number[]>;
+
     getUserId(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     initialize(
       initBaseURI: PromiseOrValue<string>,
@@ -993,7 +1043,7 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    userList(
+    userStreamIdList(
       startId: PromiseOrValue<BigNumberish>,
       endId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1131,8 +1181,19 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getUserId(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1262,7 +1323,7 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    userList(
+    userStreamIdList(
       startId: PromiseOrValue<BigNumberish>,
       endId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1291,8 +1352,19 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getUserId(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1422,7 +1494,7 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    userList(
+    userStreamIdList(
       startId: PromiseOrValue<BigNumberish>,
       endId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides

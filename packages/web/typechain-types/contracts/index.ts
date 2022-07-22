@@ -3,4 +3,5 @@
 /* eslint-disable */
 import type * as tind3RMatchingSol from "./Tind3rMatching.sol";
 export type { tind3RMatchingSol };
+export type { ITind3rMembership } from "./ITind3rMembership";
 export type { Tind3rMembership } from "./Tind3rMembership";

@@ -192,7 +192,7 @@ contract Tind3rMembership is
     function like(address target) external {
         address msgSender = _msgSenderERC721A();
         _setLike(msgSender, target);
-        if (_ifLike(target, msgSender)) {
+        if (ifLike(target, msgSender)) {
             matchingContract.mint(
                 msgSender,
                 getUserId(msgSender),
@@ -265,6 +265,12 @@ contract Tind3rMembership is
         return string.concat(_prefixURI, tokenId.toString());
     }
 
+    function ifLike(address userA, address userB) public view returns (bool) {
+        uint256 userIdA = getUserId(userA);
+        uint256 userIdB = getUserId(userB);
+        return _likeMap[(userIdA << 64) + userIdB] > 0;
+    }
+
     /**
      * @dev get whole data of table
      */
@@ -311,7 +317,7 @@ contract Tind3rMembership is
     /**
      * @dev Return user list given ID range [startId, endId)
      */
-    function userList(uint256 startId, uint256 endId)
+    function userStreamIdList(uint256 startId, uint256 endId)
         public
         view
         returns (string memory)
@@ -347,6 +353,13 @@ contract Tind3rMembership is
     }
 
     /**
+     * @dev Get all matches given user
+     */
+    function getMatches(address user) public view returns (uint32[] memory) {
+        return matchingContract.getMatches(user);
+    }
+
+    /**
      * @dev Override baseURI
      */
     function _baseURI() internal view override returns (string memory) {
@@ -373,12 +386,6 @@ contract Tind3rMembership is
     ) internal override {
         if (from != address(0) && to != address(0)) revert CanNotTransfer();
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
-    }
-
-    function _ifLike(address userA, address userB) private view returns (bool) {
-        uint256 userIdA = getUserId(userA);
-        uint256 userIdB = getUserId(userB);
-        return _likeMap[(userIdA << 64) + userIdB] > 0;
     }
 
     function _setLike(address userA, address userB) private {

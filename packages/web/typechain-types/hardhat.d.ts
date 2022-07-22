@@ -85,6 +85,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TablelandDeployments__factory>;
     getContractFactory(
+      name: "ITind3rMembership",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ITind3rMembership__factory>;
+    getContractFactory(
       name: "T3M",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.T3M__factory>;
@@ -211,6 +215,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.TablelandDeployments>;
+    getContractAt(
+      name: "ITind3rMembership",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ITind3rMembership>;
     getContractAt(
       name: "T3M",
       address: string,

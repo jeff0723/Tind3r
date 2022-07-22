@@ -48,6 +48,8 @@ export type { ITablelandTables } from "./@tableland/evm/contracts/ITablelandTabl
 export { ITablelandTables__factory } from "./factories/@tableland/evm/contracts/ITablelandTables__factory";
 export type { TablelandDeployments } from "./@tableland/evm/contracts/utils/TablelandDeployments";
 export { TablelandDeployments__factory } from "./factories/@tableland/evm/contracts/utils/TablelandDeployments__factory";
+export type { ITind3rMembership } from "./contracts/ITind3rMembership";
+export { ITind3rMembership__factory } from "./factories/contracts/ITind3rMembership__factory";
 export type { T3M } from "./contracts/Tind3rMatching.sol/T3M";
 export { T3M__factory } from "./factories/contracts/Tind3rMatching.sol/T3M__factory";
 export type { Tind3rMatching } from "./contracts/Tind3rMatching.sol/Tind3rMatching";

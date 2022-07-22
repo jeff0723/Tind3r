@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as tind3RMatchingSol from "./Tind3rMatching.sol";
+export { ITind3rMembership__factory } from "./ITind3rMembership__factory";
 export { Tind3rMembership__factory } from "./Tind3rMembership__factory";
