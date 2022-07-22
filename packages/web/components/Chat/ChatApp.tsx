@@ -185,7 +185,7 @@ function ChatApp() {
       const index = userProfile.selectedProfileIndex
       setProfileImage(userProfile.profileBaseUri + index?.toString() + '.png')
     }
-    getMatchedProfileList()
+    // getMatchedProfileList()
   }, [userProfile])
   const handleTabClick = (tab: number) => {
     setTabSelected(tab)

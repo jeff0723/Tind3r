@@ -7,7 +7,7 @@ import type { NextPage } from 'next';
 import { useEffect, useState, useRef, createRef, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from 'state/hooks';
 import { updateIsProfileExists, updateUserName } from 'state/user/reducer';
-import { BasicProfile } from 'schema/ceramic/user';
+import { BasicProfile, UserProfile } from 'schema/ceramic/user';
 import TinderCard from 'react-tinder-card';
 import styled from 'styled-components';
 import { Button, Card } from 'antd';
@@ -171,6 +171,10 @@ const Recommendation: NextPage = () => {
   const [lastDirection, setLastDirection] = useState("")
   const currentIndexRef = useRef(currentIndex)
   const canSwipe = currentIndex >= 0
+  //--- Justa-2022-07-23
+  const { ceramic } = useCeramic();
+  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+owner,description+FROM+tind3r_membership_80001_452+where+"
+  //--- end
   const childRefs = useMemo<any[]>(
     () =>
       Array(characters.length)
@@ -181,7 +185,32 @@ const Recommendation: NextPage = () => {
 
   const router = useRouter()
 
+  //--- Justa-2022-07-23
+  const queryUserInfoFromTableland = async (startId: number, endId: number): Promise<string[][]> => {
+    const queryURL = TABLELAND_PREFIX + `id>=${startId}+and+id<${endId}`;
+    console.log(queryURL)
+    const content = await fetch(queryURL)
+    const object = await content.json()
+    return object.rows
+  }
 
+  const getRecProfileList = async (): Promise<UserProfile[]> => {
+    if (!ceramic) return []
+    const userInfoList = await queryUserInfoFromTableland(0, 10)
+    console.log(userInfoList)
+    const queryList = userInfoList.map(info => { return { streamId: info[1] } })
+    console.log(queryList)
+    const streamRecord = await ceramic.multiQuery(queryList)
+    const matchList: UserProfile[] = Object.values(streamRecord).map((stream, idx) => {
+      return {
+        ...stream.content,
+        walletAddress: userInfoList[idx][0]
+      }
+    })
+    console.log(matchList)
+    return matchList
+  }
+  //--- end
 
 
   const updateCurrentIndex = (val: number) => {
@@ -202,6 +231,7 @@ const Recommendation: NextPage = () => {
   }
   const handleInfoClick = () => {
     router.push('/app/recs/profile')
+    // getRecProfileList()
   }
   return (
     <Layout>
