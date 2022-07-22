@@ -27,4 +27,5 @@ a {
 .ant-input:focus, .ant-input-focused {
   border:none !important;
   border-color:none !important;
+  box-shadow: none !important;
 }

@@ -33,8 +33,10 @@ export interface Tind3rMatchingInterface extends utils.Interface {
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "exists(uint256)": FunctionFragment;
+    "getMatches(address)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "membershipContract()": FunctionFragment;
     "mint(address,uint256,address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "proxiableUUID()": FunctionFragment;
@@ -55,8 +57,10 @@ export interface Tind3rMatchingInterface extends utils.Interface {
       | "balanceOf"
       | "balanceOfBatch"
       | "exists"
+      | "getMatches"
       | "initialize"
       | "isApprovedForAll"
+      | "membershipContract"
       | "mint"
       | "owner"
       | "proxiableUUID"
@@ -85,12 +89,20 @@ export interface Tind3rMatchingInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getMatches",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "initialize",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "membershipContract",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
@@ -165,9 +177,14 @@ export interface Tind3rMatchingInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getMatches", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "membershipContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
@@ -393,6 +410,11 @@ export interface Tind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[number[]] & { matchedIds: number[] }>;
+
     initialize(
       t3mContract: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -403,6 +425,8 @@ export interface Tind3rMatching extends BaseContract {
       operator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    membershipContract(overrides?: CallOverrides): Promise<[string]>;
 
     mint(
       aUser: PromiseOrValue<string>,
@@ -493,6 +517,11 @@ export interface Tind3rMatching extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  getMatches(
+    user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<number[]>;
+
   initialize(
     t3mContract: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -503,6 +532,8 @@ export interface Tind3rMatching extends BaseContract {
     operator: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  membershipContract(overrides?: CallOverrides): Promise<string>;
 
   mint(
     aUser: PromiseOrValue<string>,
@@ -593,6 +624,11 @@ export interface Tind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<number[]>;
+
     initialize(
       t3mContract: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -603,6 +639,8 @@ export interface Tind3rMatching extends BaseContract {
       operator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    membershipContract(overrides?: CallOverrides): Promise<string>;
 
     mint(
       aUser: PromiseOrValue<string>,
@@ -782,6 +820,11 @@ export interface Tind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     initialize(
       t3mContract: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -792,6 +835,8 @@ export interface Tind3rMatching extends BaseContract {
       operator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    membershipContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(
       aUser: PromiseOrValue<string>,
@@ -883,6 +928,11 @@ export interface Tind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     initialize(
       t3mContract: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -891,6 +941,10 @@ export interface Tind3rMatching extends BaseContract {
     isApprovedForAll(
       account: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    membershipContract(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

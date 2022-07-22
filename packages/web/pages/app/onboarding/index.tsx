@@ -111,7 +111,7 @@ const styles = {
   }
 }
 
-const UserProfileDefinitionId = config.definitions.UserProfile
+const UserProfileDefinitionId = config.definitions.Tind3r
 const genderOptions = [
   "WOMEN",
   "MEN",
@@ -196,11 +196,14 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[], name?: string) => {
     if (!Array.isArray(e)) {
+      console.log('set here 1')
       setOnBoardingInfo({
         ...onBoardingInfo,
         [e.target.name as string]: e.target.value
       } as UserProfile);
     } else {
+      console.log('set here 2')
+
       setOnBoardingInfo({
         ...onBoardingInfo,
         [name!]: e
@@ -261,8 +264,10 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
     if (isAuthenticated) {
       try {
+        console.log("start to set profile on ceramic")
         const streamId = await idx?.set(UserProfileDefinitionId, {
-          ...onBoardingInfo,
+          // ...onBoardingInfo,
+          name: onBoardingInfo.name,
           profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,
           profilePictureCounts: imageCount,
           selectedProfileIndex: 0,
@@ -273,7 +278,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
           const _memberShipInput: Tind3rMembership = {
             name: onBoardingInfo.name,
             description: streamId.toString(),
-            image: "ipfs://Qmd2VW9uTn1TuG6sP21SGCp41URP2eeyr2A4QhnU82wmyP",
+            image: `https://ipfs.io/ipfs/${cid}/0`,
           }
 
           const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
@@ -388,14 +393,14 @@ const OnBoardingPage: NextPage = (props: Props) => {
               <FormLabel>My Organization</FormLabel>
               {/* @ts-ignore */}
               <Select mode="tags" style={{ width: '100%' }} onChange={(e) => handleChange(e, 'organizations')}>
-                {ORGANIZATION_OPTIONS.map(option => <Option key={option} value={option}>{option}</Option>)}
+                {ORGANIZATION_OPTIONS.map(option => <Option name="organizations" key={option} value={option}>{option}</Option>)}
               </Select>
             </FormField>
             <FormField>
               <FormLabel>Passion</FormLabel>
               {/* @ts-ignore */}
               <Select mode="tags" style={{ width: '100%' }} onChange={(e) => handleChange(e, 'tags')}>
-                {PASSION_OPTIONS.map(option => <Option key={option} value={option}>{option}</Option>)}
+                {PASSION_OPTIONS.map(option => <Option name="tags" key={option} value={option}>{option}</Option>)}
               </Select>
             </FormField>
           </Col>

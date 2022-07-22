@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateIsCeramicProfileExists, updateMembershipCreated, updateUserProfile } from './reducer'
 import config from 'schema/ceramic/model.json';
 
-const UserProfileDefinitionId = config.definitions.UserProfile
+const UserProfileDefinitionId = config.definitions.Tind3r
 
 
 export default function Updater(): null {

@@ -3,8 +3,9 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { ethers, upgrades, network } from "hardhat";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    const { save, get } = hre.deployments;
+    const { save, get, execute } = hre.deployments;
     const chainId = await hre.getChainId();
+    const { deployer } = await hre.getNamedAccounts();
     console.log("network:", network.name, `(${chainId})`);
     const t3mDeployment = await get("Tind3rMembership");
     const t3mAddress = t3mDeployment.address;
@@ -37,6 +38,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         ...logicArtifact
     };
     await save('Tind3rMatchingLogic', logicDeployments);
+
+    await execute("Tind3rMembership", { from: deployer }, "setMatchingContract", proxy.address);
 };
 export default func;
 func.tags = ["deployMatching", "deploy"];

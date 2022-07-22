@@ -18,7 +18,6 @@ const ConversationBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50vw;
     height: 100%;
     background: #FFFFFF;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -32,7 +31,7 @@ const ConversationHeader = styled.div`
     width: 100%;
     height: 86px;
     border-bottom: 1px solid #D9D9D9;
-
+    flex-shrink: 0;
 `
 const ConversationHeaderInfo = styled.div`
     display: flex;

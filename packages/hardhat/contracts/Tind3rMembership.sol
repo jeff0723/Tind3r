@@ -10,17 +10,17 @@ import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 import "./Tind3rMatching.sol";
 
-error ExistentProfile(uint64);
-error NonExistentProfile();
-error CanNotTransfer();
-error AlreadyLike();
-
 contract Tind3rMembership is
     Initializable,
     UUPSUpgradeable,
     ERC721AUpgradeable,
     OwnableUpgradeable
 {
+    error ExistentProfile(uint64);
+    error NonExistentProfile();
+    error CanNotTransfer();
+    error AlreadyLike();
+
     using StringsUpgradeable for uint256;
     using StringsUpgradeable for address;
 
