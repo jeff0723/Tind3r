@@ -21,33 +21,34 @@ type MatchType = {
   avatar: string,
   lastMessage: string,
 }
-const matches: MatchType[] = [
-  {
-    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
-    name: "Jessica Lin",
-    avatar: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-    lastMessage: "Hello"
-  },
-  {
-    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
-    name: "Cheasea",
-    avatar: "https://images.unsplash.com/photo-1496440737103-cd596325d314?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-    lastMessage: "你好"
-  },
-  {
-    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
-    name: "Jessica Sabrina Lin",
-    avatar: "https://images.unsplash.com/photo-1514315384763-ba401779410f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=766&q=80",
-    lastMessage: "Hello"
-  },
-  {
-    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
-    name: "Cheasea",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-    lastMessage: "你好"
-  },
-]
+// const matches: MatchType[] = [
+//   {
+//     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+//     name: "Jessica Lin",
+//     avatar: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+//     lastMessage: "Hello"
+//   },
+//   {
+//     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+//     name: "Cheasea",
+//     avatar: "https://images.unsplash.com/photo-1496440737103-cd596325d314?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+//     lastMessage: "你好"
+//   },
+//   {
+//     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+//     name: "Jessica Sabrina Lin",
+//     avatar: "https://images.unsplash.com/photo-1514315384763-ba401779410f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=766&q=80",
+//     lastMessage: "Hello"
+//   },
+//   {
+//     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+//     name: "Cheasea",
+//     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+//     lastMessage: "你好"
+//   },
+// ]
 
+const matches: MatchType[] = []
 
 const Header = styled.div`
   display: flex;
@@ -117,30 +118,38 @@ const ContentBox = styled.div<ContentBoxProps>`
   flex-wrap: ${props => props.selectedTab === TabType.MATCHES ? "wrap" : "nowrap"};
   padding: 10px 16px;
 `
-
-const MessageBox = styled.div`
+const ContentTextBox = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 0px;
-  gap: 16px;
+  padding: 10px 32px;
+  gap: 64px;
+  height: 60vh;
+
 `
-const MessageUserName = styled.div`
+const GreeterTitleBox = styled.div`
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 48px;
+`
+const GreeterSubtitleBox = styled.div`
   font-weight: 500;
   font-size: 18px;
   line-height: 27px;
-  display: flex;
-  align-items: center;
-  text-align: center;
 `
-const MessageText = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: flex-start;
-align-items: center;
-color:#595959;
-`
-
+const GreeterTitle = (tab: TabType) => {
+  if (tab === TabType.MATCHES) {
+    return "Start Matching"
+  }
+  return "Say Hello!"
+}
+const GreeterSubtitle = (tab: TabType) => {
+  if (tab === TabType.MATCHES) {
+    return "Matches will appear here once you start to Like people. You can mesage them directly from here when you’re ready to spark up the conversation"
+  }
+  return "Looking to strike up a conversation? When you match with others, you can send them a message under “Matchers”"
+}
 const Avatar = ({ imageUrl }: { imageUrl?: string }) => {
   if (imageUrl) {
 
@@ -190,11 +199,25 @@ function ChatApp() {
           <TabTextBox>Messages</TabTextBox>
         </Tab>
       </Tabs>
-      <ContentBox selectedTab={tabSelected}>
-        {matches.map((match, index) => (
-          <Match selectedTab={tabSelected} key={index} {...match} />
-        ))}
-      </ContentBox>
+      {
+        matches.length ? (
+          <ContentBox selectedTab={tabSelected}>
+            {matches.map((match, index) => (
+              <Match selectedTab={tabSelected} key={index} {...match} />
+            ))}
+          </ContentBox>
+        ) :
+          <ContentTextBox>
+            <GreeterTitleBox>
+              {GreeterTitle(tabSelected)}
+            </GreeterTitleBox>
+            <GreeterSubtitleBox>
+              {GreeterSubtitle(tabSelected)}
+            </GreeterSubtitleBox>
+          </ContentTextBox>
+
+      }
+
     </div>
 
   )
