@@ -186,10 +186,13 @@ contract Tind3rMembership is
         return ownerTokenId;
     }
 
+    /**
+     * @dev Like target
+     */
     function like(address target) external {
         address msgSender = _msgSenderERC721A();
-        _setALikeB(msgSender, target);
-        if (_isALikeB(target, msgSender)) {
+        _setLike(msgSender, target);
+        if (_ifLike(target, msgSender)) {
             matchingContract.mint(
                 msgSender,
                 getUserId(msgSender),
@@ -329,6 +332,21 @@ contract Tind3rMembership is
     }
 
     /**
+     * @dev if A and B are matched
+     */
+    function isMatched(address userA, address userB)
+        public
+        view
+        returns (bool)
+    {
+        uint256 userAId = getUserId(userA);
+        uint256 userBId = getUserId(userB);
+        return
+            matchingContract.balanceOf(userA, userBId) > 0 &&
+            matchingContract.balanceOf(userB, userAId) > 0;
+    }
+
+    /**
      * @dev Override baseURI
      */
     function _baseURI() internal view override returns (string memory) {
@@ -357,17 +375,13 @@ contract Tind3rMembership is
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
     }
 
-    function _isALikeB(address userA, address userB)
-        private
-        view
-        returns (bool)
-    {
+    function _ifLike(address userA, address userB) private view returns (bool) {
         uint256 userIdA = getUserId(userA);
         uint256 userIdB = getUserId(userB);
         return _likeMap[(userIdA << 64) + userIdB] > 0;
     }
 
-    function _setALikeB(address userA, address userB) private {
+    function _setLike(address userA, address userB) private {
         uint256 userIdA = getUserId(userA);
         uint256 userIdB = getUserId(userB);
         uint256 pairNumber = (userIdA << 64) + userIdB;
