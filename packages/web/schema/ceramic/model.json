@@ -1,10 +1,9 @@
 {
     "definitions": {
-        "UserProfile": "kjzl6cwe1jw14bijiywugp6pz2x5381ig9pju557okz1vpxzgx4jjn1yvvio9bx"
+        "Tind3r": "kjzl6cwe1jw14bijiywugp6pz2x5381ig9pju557okz1vpxzgx4jjn1yvvio9bx"
     },
     "schemas": {
-        "Tind3rUserProfle": "ceramic://k3y52l7qbv1frxms06a3i624vmwm0jnekvv2fmmuysk9b8e044oiciqmdjmg0ve2o",
-        "Tind3rUserProfile": "ceramic://k3y52l7qbv1frxjy0ssqi0s2d0qi01796mwcqqsi5uj9zojshjtuet4pfwcqzq1og"
+        "HackFsSchema": "ceramic://k3y52l7qbv1fry75eietzknu2a3aizioutnzwdu6p84rj9yh0refuiwaxdbqj8t1c"
     },
     "tiles": {}
 }

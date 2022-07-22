@@ -110,7 +110,7 @@ const styles = {
   }
 }
 
-const UserProfileDefinitionId = config.definitions.UserProfile
+const UserProfileDefinitionId = config.definitions.Tind3r
 const genderOptions = [
   "WOMEN",
   "MEN",
