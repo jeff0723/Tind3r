@@ -1,4 +1,7 @@
+
 .ant-input:focus, .ant-input-focused {
-    border: none; 
-    background: none;
-}
+    border:none !important;
+    border-color:none !important;
+    box-shadow: none !important;
+  }
+  

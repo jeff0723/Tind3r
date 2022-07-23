@@ -8,7 +8,7 @@ if (typeof INFURA_KEY === 'undefined') {
 }
 
 export const MAINNET_PROVIDER = new JsonRpcProvider(`https://mainnet.infura.io/v3/${INFURA_KEY}`)
-
+export const EXPLORER_URL = 'https://etherscan.io/'
 /**
  * These are the network URLs used by the interface when there is not another available source of chain data
  */

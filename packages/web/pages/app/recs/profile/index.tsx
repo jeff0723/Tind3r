@@ -3,13 +3,15 @@ import Layout from 'components/Layout'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs'
-import { ArrowDownOutlined, CloseOutlined, HeartFilled, ManOutlined, StarFilled, UserOutlined, WomanOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, CloseOutlined, HeartFilled, ManOutlined, SelectOutlined, StarFilled, UserOutlined, WomanOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router'
 import { useAppSelector } from 'state/hooks'
 import { calculateAge, convertGenderToText, GenderType } from 'utils'
 import { UserProfile } from 'schema/ceramic/user'
 import { useTind3rMembershipContract } from 'hooks/useContract'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import Link from 'next/link'
+import { EXPLORER_URL } from 'constants/networks'
 
 
 type Props = {}
@@ -280,6 +282,9 @@ const RecommendationProfile = (props: Props) => {
           <InfoBox>
             <Name>{userProfile.name}</Name>
             <Age>{calculateAge(userProfile.birthday)}</Age>
+            <a href={EXPLORER_URL + "address/" + userProfile.walletAddress} target="_blank" rel="noopener noreferrer">
+              <SelectOutlined />
+            </a>
           </InfoBox>
           <InfoBox>
 

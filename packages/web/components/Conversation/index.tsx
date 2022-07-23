@@ -11,7 +11,6 @@ import styled from 'styled-components'
 
 
 
-
 const ConversationBox = styled.div`
     display: flex;
     flex-direction: column;
@@ -109,6 +108,7 @@ const TextInput = styled(Input)`
     background-color:#18E3FF;
     border: none; 
     background: none;
+  
 `;
 
 
@@ -173,7 +173,7 @@ const Conversation = ({ peerAddress, imageUrl, name }: Props) => {
             <ConversationHeader>
                 <ConversationHeaderInfo>
                     <Avatar src={imageUrl} />
-                    You Matched with {name} on 7/15/2022
+                    You Matched with {name} on 7/23/2022
                 </ConversationHeaderInfo>
                 <Button shape='circle' icon={<CloseOutlined />} style={{ color: '#BFBFBF' }} onClick={handleExit} />
             </ConversationHeader>
@@ -213,7 +213,7 @@ const Conversation = ({ peerAddress, imageUrl, name }: Props) => {
                     {/* Todo 1 - remove input area focused
                     Todo 2 - Change it to form  */}
                     <PlusButton shape='circle' icon={<PlusOutlined style={{ color: '#fff' }} />} />
-                    <TextInput placeholder='Type a message' onChange={handleMessageChange} value={message} />
+                    <TextInput bordered={false} placeholder='Type a message' onChange={handleMessageChange} value={message} />
                     <SendButton htmlType="submit"> SEND</SendButton>
                 </MessageSendBox>
             </MessageSendContainer>

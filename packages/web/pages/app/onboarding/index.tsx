@@ -4,6 +4,7 @@ import { Button, Checkbox, Col, Input, Radio, Row, Select, Spin, Upload } from '
 import ImgCrop from 'antd-img-crop';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import TextArea from 'antd/lib/input/TextArea';
 import { ORGANIZATION_OPTIONS, PASSION_OPTIONS } from 'constants/options';
 import useCeramic from 'hooks/useCeramic';
 import { useTind3rMembershipContract } from 'hooks/useContract';
@@ -181,7 +182,8 @@ const OnBoardingPage: NextPage = (props: Props) => {
   };
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[], name?: string) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[] | ChangeEvent<HTMLTextAreaElement>
+    , name?: string) => {
     if (!Array.isArray(e)) {
       setOnBoardingInfo({
         ...onBoardingInfo,
@@ -373,6 +375,10 @@ const OnBoardingPage: NextPage = (props: Props) => {
           </Col>
           <Col span={24}>
             <OptionalTitle>Optional</OptionalTitle>
+            <FormField>
+              <FormLabel>Bio</FormLabel>
+              <TextArea name="bio" onChange={handleChange} placeholder='Your short bio' />
+            </FormField>
             <FormField>
               <FormLabel>Your Web3 role</FormLabel>
               {/* @ts-ignore */}

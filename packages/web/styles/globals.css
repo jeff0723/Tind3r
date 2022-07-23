@@ -24,8 +24,3 @@ a {
 .ant-radio-button-wrapper:not(:first-child)::before {
   display: none !important;
 }
-.ant-input:focus, .ant-input-focused {
-  border:none !important;
-  border-color:none !important;
-  box-shadow: none !important;
-}

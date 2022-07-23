@@ -11,8 +11,8 @@ import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import { UserProfile } from 'schema/ceramic/user'
 import { calculateAge } from 'utils'
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-
+import { LeftOutlined, RightOutlined, SelectOutlined } from '@ant-design/icons';
+import { EXPLORER_URL } from 'constants/networks'
 const Profile = styled.div`
   display: flex;
   flex-direction: column;
@@ -208,13 +208,17 @@ const MessagePage: NextPage = () => {
             <ProfileTitle>
               <Name>{userProfile?.name}</Name>
               <Age>{calculateAge(userProfile?.birthday as string)}</Age>
+
+              <a href={EXPLORER_URL + "address/" + userProfile?.walletAddress} target="_blank" rel="noopener noreferrer">
+                <SelectOutlined />
+              </a>
             </ProfileTitle>
             <ProfileSubtitle>134 kilometers away</ProfileSubtitle>
           </ProfileInfo>
           <ProfileInfo style={{ borderBottom: '1px solid #BFBFBF' }}>
             <Subtitle>About Me</Subtitle>
 
-            <ProfileSubtitle>游泳/爬山/喝酒/日光浴</ProfileSubtitle>
+            <ProfileSubtitle>Surfing / Hiking / Alcohol / Artist</ProfileSubtitle>
             <TagList>
               <Tag>Sagittarius</Tag>
               <Tag>IPFS</Tag>
