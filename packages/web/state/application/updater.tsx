@@ -85,19 +85,5 @@ export default function Updater(): null {
         getMatchedProfileList()
 
     }, [dispatch, account, ceramic, tind3rMembershipContract])
-
-    useEffect(() => {
-        if (router.pathname !== '/' && account) {
-            if (!isMembershipCreated) {
-                router.push('/app/onboarding')
-            } else {
-                router.push('/app/recs')
-            }
-        }
-        if (!account) {
-            router.push('/')
-        }
-
-    }, [isMembershipCreated, account])
     return null
 }
