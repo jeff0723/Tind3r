@@ -1,14 +1,12 @@
-import { CloseOutlined, PlusCircleFilled, PlusOutlined } from '@ant-design/icons'
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { useWeb3React } from '@web3-react/core'
+import { Message } from '@xmtp/xmtp-js'
 import { Avatar, Button, Input } from 'antd'
+import { ButtonProps } from 'antd/lib/button/button'
 import useConversation from 'hooks/useConversation'
-import useMessageStore from 'hooks/useMessageStore'
+import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { Message } from '@xmtp/xmtp-js'
-import { ButtonProps } from 'antd/lib/button/button';
-import { InputProps } from 'antd/lib/input/input';
-import { useRouter } from 'next/router'
 
 
 
@@ -107,11 +105,10 @@ const PlusButton = styled((props: ButtonProps) => <Button {...props} />)`
     border:none;
 `;
 
-const TextInput = styled((props: InputProps) => <Input {...props} />)`
+const TextInput = styled(Input)`
     background-color:#18E3FF;
     border: none; 
     background: none;
-
 `;
 
 
@@ -145,18 +142,12 @@ const formatDate = (date?: Date) => {
 const isThirtyMinutesDifference = (lastSent: Date, msgSent: Date) => {
     return Math.abs(msgSent.getTime() - lastSent.getTime()) > 1800000
 }
-const AvatarUrl = "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
 const Conversation = ({ peerAddress, imageUrl, name }: Props) => {
     const { messages, sendMessage, loading } = useConversation(peerAddress)
     const { account } = useWeb3React()
     const [message, setMessage] = useState("")
     const router = useRouter()
-    // console.log('meesage sent:', messages[0].sent)
-    // console.log('meesage content:', messages[0].content)
-    // console.log('meesage timestamp:', messages[0].senderAddress)
-
     let lastMessageDate: Date | undefined
-    let lastSender: string | undefined
 
     const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
