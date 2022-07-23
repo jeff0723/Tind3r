@@ -6,8 +6,9 @@ export const ORGANIZATION_OPTIONS = [
     'Web3 Newbie'
 ]
 export const PASSION_OPTIONS = [
-    'Surfing',
-    'Guitar',
-    'Basketball',
-    'Tennis'
+    'Trader',
+    'Developer',
+    'Entrepreneur',
+    'NFT Enthusiast',
+    'Web3 Newbie'
 ]

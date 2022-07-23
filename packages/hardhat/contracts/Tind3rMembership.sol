@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 import "./ITind3rMembership.sol";
@@ -20,6 +21,7 @@ contract Tind3rMembership is
 {
     using StringsUpgradeable for uint256;
     using StringsUpgradeable for address;
+    using EnumerableSetUpgradeable for EnumerableSetUpgradeable.UintSet;
 
     string private constant TABLE_PREFIX = "tind3r_membership";
 
@@ -34,6 +36,8 @@ contract Tind3rMembership is
     mapping(uint256 => uint256) private _likeMap;
 
     mapping(address => int256) private _userElo;
+
+    mapping(uint256 => EnumerableSetUpgradeable.UintSet) private _likeSet;
 
     /**
      * @dev initialization function for upgradeable contract
@@ -252,7 +256,7 @@ contract Tind3rMembership is
     function ifLike(address userA, address userB) public view returns (bool) {
         uint256 userIdA = getUserId(userA);
         uint256 userIdB = getUserId(userB);
-        return _likeMap[(userIdA << 64) + userIdB] > 0;
+        return _likeSet[userIdA].contains(userIdB);
     }
 
     /**
@@ -363,9 +367,8 @@ contract Tind3rMembership is
         if (userA == userB) revert CanNotSelfLike();
         uint256 userIdA = getUserId(userA);
         uint256 userIdB = getUserId(userB);
-        uint256 pairNumber = (userIdA << 64) + userIdB;
-        if (_likeMap[pairNumber] > 0) revert AlreadyLike();
-        _likeMap[pairNumber] = 1;
+        if (_likeSet[userIdA].contains(userIdB)) revert AlreadyLike();
+        _likeSet[userIdA].add(userIdB);
         ++_userElo[userB];
     }
 
