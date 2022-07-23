@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { openNotificationWithIcon } from 'utils/notification'
 import { injectedConnection } from 'connection'
 import { useRouter } from 'next/router'
+import type { NextPage } from 'next';
 
 type Props = {}
 
@@ -70,7 +71,7 @@ const CTAButton = styled.button`
     border-radius: 32px;
     font-size: 16px;
 `
-const index = (props: Props) => {
+const Home: NextPage = () => {
     const router = useRouter()
     const handleCTAButtonClick = async () => {
         if (!window.ethereum) {
@@ -85,7 +86,7 @@ const index = (props: Props) => {
     return (
         <ImageBackground>
             <Header>
-                <Image src='/images/logo-with-word-white.png' width={293} height={92} />
+                <Image src='/images/logo-with-word-white.png' width={293} height={92} alt='background' />
                 <LoginButton>Log In</LoginButton>
             </Header>
             <Content>
@@ -97,4 +98,4 @@ const index = (props: Props) => {
     )
 }
 
-export default index
+export default Home

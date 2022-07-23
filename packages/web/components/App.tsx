@@ -1,6 +1,4 @@
 import CeramicProvider from "providers/CeramicProvider"
-import MiniXtmpProvider from "providers/MiniXtmpProvider"
-import { WalletProvider } from "providers/WalletProvider"
 import Web3Provider from "providers/Web3Provider"
 import XmtpProvider from "providers/XmtpProvider"
 import { Provider } from 'react-redux'

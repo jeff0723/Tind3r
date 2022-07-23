@@ -221,7 +221,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
 
     }
-  }, [isAuthenticated, idx])
+  }, [isAuthenticated, idx, dispatch, account, chainId])
   const validateInput = (input?: UserProfile) => {
     if (!input?.name || !input.birthday || !photoList.length) return false
     return true
@@ -293,7 +293,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
   }
   useEffect(() => {
     getUserProfile()
-  }, [isAuthenticated, idx])
+  }, [isAuthenticated, idx, getUserProfile])
 
 
   return (

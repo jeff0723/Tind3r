@@ -253,8 +253,7 @@ const RecommendationProfile = (props: Props) => {
     if (currentImgIndex === 0) return
     setCurrentImgIndex(currentImgIndex - 1)
   }
-  console.log('Selected User Profile', userProfile)
-  console.log("profile picture count", userProfile.profilePictureCounts)
+
   return (
     <Layout>
       <ProfileCardContainer>
@@ -299,8 +298,8 @@ const RecommendationProfile = (props: Props) => {
           <Subtitle >My Interests</Subtitle>
           <Tags>
             {userProfile?.tags?.map((tag, index) => (
-              <Tag>
-                Tennis
+              <Tag key={index}>
+                {tag}
               </Tag>
             ))}
           </Tags>

@@ -4,7 +4,7 @@ import { injectedConnection } from 'connection';
 import useCeramic from 'hooks/useCeramic';
 import useXmtp from 'hooks/useXmtp';
 import type { NextPage } from 'next';
-import { useEffect, useState, useRef, createRef, useMemo } from 'react';
+import { useEffect, useState, useRef, createRef, useMemo, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from 'state/hooks';
 import { updateIsProfileExists, updateUserName } from 'state/user/reducer';
 import { BasicProfile } from 'schema/ceramic/user';
@@ -82,17 +82,17 @@ const Home: NextPage = () => {
     }
 
 
-    const getProfile = async () => {
+    const getProfile = useCallback(async () => {
         if (idx && account && isAuthenticated) {
             const res = await idx.get("basicProfile", `${account}@eip155:${chainId}`) as BasicProfile
             if (res) {
                 dispatch(updateUserName({ userName: res.name }))
             }
         }
-    }
+    }, [idx, account, isAuthenticated, dispatch, chainId])
     useEffect(() => {
         getProfile()
-    }, [idx, account, isAuthenticated])
+    }, [idx, account, isAuthenticated, getProfile])
 
     const handleUpdateName = async () => {
         console.log('button clicked')
