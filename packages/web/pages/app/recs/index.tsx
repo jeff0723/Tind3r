@@ -81,13 +81,8 @@ const StyledButton = styled(Button)`
 `
 
 const Recommendation: NextPage = () => {
-  const { account } = useWeb3React()
-  const dispatch = useAppDispatch()
+  const recommendProfileList = useAppSelector(state => state.application.recommendationList)
   // swiper
-  const [recommendProfileList, setRecommendProfileList] = useState<UserProfile[]>()
-  //--- Justa-2022-07-23
-  const { ceramic } = useCeramic();
-  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+"
   //--- end
   const swiperCardRefs = useMemo<any[]>(
     () =>
@@ -97,42 +92,7 @@ const Recommendation: NextPage = () => {
     [recommendProfileList]
   )
 
-  //--- Justa-2022-07-23
-  const queryUserInfoFromTableland = async (startId: number, endId: number): Promise<string[][]> => {
-    const queryURL = TABLELAND_PREFIX + `id>=${startId}+and+id<${endId}`;
-    console.log(queryURL)
-    const content = await fetch(queryURL)
-    const object = await content.json()
-    return object.rows
-  }
 
-  const getRecProfileList = useCallback(async (): Promise<UserProfile[]> => {
-    if (!ceramic) return []
-    const userInfoList = await queryUserInfoFromTableland(0, 10)
-    console.log(userInfoList)
-    // @ts-ignore
-    const userInfoMap = new Map<string, string>(userInfoList)
-    console.log(userInfoMap)
-    const streamIdList = Array(...userInfoMap.keys())
-    const queryList = streamIdList.map(sid => { return { streamId: sid } })
-    const streamRecord = await ceramic.multiQuery(queryList)
-    console.log(streamRecord)
-    const recProfileList: UserProfile[] = Object.values(streamRecord).map((stream) => {
-      return {
-        ...stream.content,
-        walletAddress: userInfoMap.get(stream.id.toString())
-      }
-    })
-    const _recommendProfileList = recProfileList.filter((profile) => profile.walletAddress !== account?.toLocaleLowerCase())
-    dispatch(updateRecommedationList({ recommendationList: _recommendProfileList }))
-    setRecommendProfileList(_recommendProfileList)
-    return recProfileList
-  }, [ceramic])
-  //--- end
-
-  useEffect(() => {
-    getRecProfileList()
-  }, [ceramic])
 
   return (
     <Layout>

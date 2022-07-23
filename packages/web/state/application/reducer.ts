@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ConnectionType } from 'connection'
-import { UserProfile } from 'schema/ceramic/user'
+import { UserProfile, MatchProfile } from 'schema/ceramic/user'
 
 export interface ApplicationState {
     recommendationList?: UserProfile[],
     selectedProfile?: UserProfile,
+    matchList?: MatchProfile[]
 }
 export const initialState: ApplicationState = {
     recommendationList: [],
@@ -23,6 +24,7 @@ export const initialState: ApplicationState = {
         profilePictureCounts: 0,
         selectedProfileIndex: 0,
     },
+    matchList: []
 
 }
 
@@ -36,11 +38,15 @@ const applicationSlice = createSlice({
         updateSelectedProfile(state, { payload: { selectedProfile } }) {
             state.selectedProfile = selectedProfile
         },
+        updateMatchList(state, { payload: { matchList } }) {
+            state.matchList = matchList
+        }
     }
 })
 
 export const {
     updateRecommedationList,
-    updateSelectedProfile
+    updateSelectedProfile,
+    updateMatchList
 } = applicationSlice.actions
 export default applicationSlice.reducer

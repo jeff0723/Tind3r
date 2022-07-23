@@ -165,59 +165,12 @@ const Avatar = ({ imageUrl }: { imageUrl?: string }) => {
 
 function ChatApp() {
   const userProfile = useAppSelector(state => state.user.userProfile) as UserProfile
+  const matchList = useAppSelector(state => state.application.matchList) as MatchProfile[]
+
   const router = useRouter()
   const [userName, setUserName] = useState("")
   const [profileImage, setProfileImage] = useState("")
   const [tabSelected, setTabSelected] = useState(TabType.MATCHES)
-  const [matchList, setMatchList] = useState<MatchProfile[]>([])
-  //--- Justa-2022-07-23
-  const { ceramic } = useCeramic()
-  const tind3rMembershipContract = useTind3rMembershipContract()
-  const { account } = useWeb3React()
-  const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+id+in+"
-  //--- end
-
-  const handleTabClick = (tab: number) => {
-    setTabSelected(tab)
-  }
-  //--- Justa-2022-07-23
-  const queryUserInfoFromTableland = async (userIdList: number[]): Promise<string[][]> => {
-    const queryURL = TABLELAND_PREFIX + `(${userIdList.join(',')})`;
-    console.log(queryURL)
-    const content = await fetch(queryURL)
-    const object = await content.json()
-    return object.rows
-  }
-
-  const getMatchedProfileList = useCallback(async (): Promise<MatchProfile[]> => {
-    console.log("get matched profile list")
-    if (!ceramic || !tind3rMembershipContract || !account) return []
-    const userIdList = await tind3rMembershipContract.getMatches(account)
-    // .then(res => { return res })
-    // .catch(err => console.log(err))
-    console.log("get matched profile list 2")
-
-    // const userIdList = [0, 1]
-    const userInfoList = await queryUserInfoFromTableland(userIdList)
-    console.log(userInfoList)
-    // @ts-ignore
-    const userInfoMap = new Map<string, string>(userInfoList)
-    console.log(userInfoMap)
-    const streamIdList = Array(...userInfoMap.keys())
-    const queryList = streamIdList.map(sid => { return { streamId: sid } })
-    const streamRecord = await ceramic.multiQuery(queryList)
-    console.log(streamRecord)
-    const _matchList: MatchProfile[] = Object.values(streamRecord).map((stream) => {
-      return {
-        ...stream.content,
-        walletAddress: userInfoMap.get(stream.id.toString()),
-        lastMessage: "hi",
-      }
-    })
-    console.log("matchList", _matchList)
-    setMatchList(_matchList)
-    return _matchList
-  }, [ceramic, tind3rMembershipContract, account])
 
   useEffect(() => {
     if (userProfile.name) {
@@ -227,14 +180,11 @@ function ChatApp() {
       const index = userProfile.selectedProfileIndex
       setProfileImage(userProfile.profileBaseUri + index?.toString() + '.png')
     }
-    getMatchedProfileList()
-  }, [userProfile, getMatchedProfileList])
+  }, [userProfile])
   const handleProfileClick = () => {
     router.push('/app/profile')
   }
   //--- end
-  console.log("User profile", userProfile)
-  console.log('Match list', matchList)
   return (
     <div>
       <Header>
