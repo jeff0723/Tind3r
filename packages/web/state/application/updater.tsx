@@ -38,7 +38,7 @@ export default function Updater(): null {
 
     const getRecProfileList = useCallback(async () => {
         if (!ceramic || !account) return
-        const userInfoList = await queryUserInfoListFromTableland(0, 10)
+        const userInfoList = await queryUserInfoListFromTableland(0, 100)
         if (userInfoList.length == 0) return
         // @ts-ignore
         const userInfoMap = new Map<string, string>(userInfoList)
