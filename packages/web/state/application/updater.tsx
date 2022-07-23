@@ -8,6 +8,7 @@ import { UserProfile, MatchProfile } from 'schema/ceramic/user'
 
 import { updateRecommedationList, updateSelectedProfile, updateMatchList } from './reducer'
 import config from 'schema/ceramic/model.json';
+import { openNotificationWithIcon } from 'utils/notification'
 
 
 const queryUserInfoListFromTableland = async (startId: number, endId: number): Promise<string[][]> => {
@@ -53,23 +54,27 @@ export default function Updater(): null {
 
     const getMatchedProfileList = useCallback(async () => {
         if (!ceramic || !tind3rMembershipContract || !account) return
-        const userIdList = await tind3rMembershipContract.getMatches(account)
-        if (userIdList.length == 0) return
-        const userInfoList = await queryUserInfoFromTableland(userIdList)
-        // @ts-ignore
-        const userInfoMap = new Map<string, string>(userInfoList)
-        console.log(userInfoMap)
-        const streamIdList = Array(...userInfoMap.keys())
-        const queryList = streamIdList.map(sid => { return { streamId: sid } })
-        const streamRecord = await ceramic.multiQuery(queryList)
-        const _matchList: MatchProfile[] = Object.values(streamRecord).map((stream) => {
-            return {
-                ...stream.content,
-                walletAddress: userInfoMap.get(stream.id.toString()),
-                lastMessage: "hi",
-            }
-        })
-        dispatch(updateMatchList({ matchList: _matchList }))
+        try {
+            const userIdList = await tind3rMembershipContract.getMatches(account)
+            if (userIdList.length == 0) return
+            const userInfoList = await queryUserInfoFromTableland(userIdList)
+            // @ts-ignore
+            const userInfoMap = new Map<string, string>(userInfoList)
+            console.log(userInfoMap)
+            const streamIdList = Array(...userInfoMap.keys())
+            const queryList = streamIdList.map(sid => { return { streamId: sid } })
+            const streamRecord = await ceramic.multiQuery(queryList)
+            const _matchList: MatchProfile[] = Object.values(streamRecord).map((stream) => {
+                return {
+                    ...stream.content,
+                    walletAddress: userInfoMap.get(stream.id.toString()),
+                    lastMessage: "hi",
+                }
+            })
+            dispatch(updateMatchList({ matchList: _matchList }))
+        } catch (error) {
+            openNotificationWithIcon('error', 'Error', error.message)
+        }
     }, [ceramic, tind3rMembershipContract, account])
 
     useEffect(() => {
