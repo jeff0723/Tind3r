@@ -32,6 +32,7 @@ export interface Tind3rMatchingInterface extends utils.Interface {
   functions: {
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
+    "burn(address,uint256,uint256)": FunctionFragment;
     "exists(uint256)": FunctionFragment;
     "getMatches(address)": FunctionFragment;
     "initialize(address)": FunctionFragment;
@@ -56,6 +57,7 @@ export interface Tind3rMatchingInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "balanceOf"
       | "balanceOfBatch"
+      | "burn"
       | "exists"
       | "getMatches"
       | "initialize"
@@ -83,6 +85,14 @@ export interface Tind3rMatchingInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOfBatch",
     values: [PromiseOrValue<string>[], PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burn",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "exists",
@@ -176,6 +186,7 @@ export interface Tind3rMatchingInterface extends utils.Interface {
     functionFragment: "balanceOfBatch",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getMatches", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -405,6 +416,13 @@ export interface Tind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     exists(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -512,6 +530,13 @@ export interface Tind3rMatching extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  burn(
+    account: PromiseOrValue<string>,
+    id: PromiseOrValue<BigNumberish>,
+    value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   exists(
     id: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -618,6 +643,13 @@ export interface Tind3rMatching extends BaseContract {
       ids: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     exists(
       id: PromiseOrValue<BigNumberish>,
@@ -815,6 +847,13 @@ export interface Tind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     exists(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -921,6 +960,13 @@ export interface Tind3rMatching extends BaseContract {
       accounts: PromiseOrValue<string>[],
       ids: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     exists(

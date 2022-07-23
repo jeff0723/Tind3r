@@ -12,6 +12,11 @@ import type {
 const _abi = [
   {
     inputs: [],
+    name: "CallerIsOwnerNorApproved",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "NotCallByMembershipContract",
     type: "error",
   },
@@ -217,6 +222,29 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "burn",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

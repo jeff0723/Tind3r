@@ -33,6 +33,8 @@ contract Tind3rMembership is
 
     mapping(uint256 => uint256) private _likeMap;
 
+    mapping(address => int256) private _userElo;
+
     /**
      * @dev initialization function for upgradeable contract
      */
@@ -175,6 +177,16 @@ contract Tind3rMembership is
     }
 
     /**
+     * @dev Report target
+     */
+    function report(address target) external {
+        address msgSender = _msgSenderERC721A();
+        _setReport(msgSender, target);
+        uint256 targetId = getUserId(target);
+        matchingContract.burn(msgSender, targetId, 1);
+    }
+
+    /**
      * @dev Set baseURI
      */
     function setBaseURI(string calldata newBaseURI) external onlyOwner {
@@ -287,26 +299,10 @@ contract Tind3rMembership is
     }
 
     /**
-     * @dev Return user list given ID range [startId, endId)
+     * @dev Return user's elo
      */
-    function userStreamIdList(uint256 startId, uint256 endId)
-        public
-        view
-        returns (string memory)
-    {
-        string memory baseURI = _baseURI();
-        if (bytes(baseURI).length == 0) return "";
-        return
-            string.concat(
-                baseURI,
-                "mode=list&",
-                "s=SELECT+description+FROM+",
-                _metadataTable,
-                "+WHERE+id>=",
-                startId.toString(),
-                "+AND+id<",
-                endId.toString()
-            );
+    function userElo(address user) external view returns (int256) {
+        return _userElo[user];
     }
 
     /**
@@ -360,11 +356,24 @@ contract Tind3rMembership is
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
     }
 
+    /**
+     * @dev Set A like B
+     */
     function _setLike(address userA, address userB) private {
+        if (userA == userB) revert CanNotSelfLike();
         uint256 userIdA = getUserId(userA);
         uint256 userIdB = getUserId(userB);
         uint256 pairNumber = (userIdA << 64) + userIdB;
         if (_likeMap[pairNumber] > 0) revert AlreadyLike();
         _likeMap[pairNumber] = 1;
+        ++_userElo[userB];
+    }
+
+    /**
+     * @dev Set A report B
+     */
+    function _setReport(address userA, address userB) private {
+        if (userA == userB) revert CanNotSelfReport();
+        _userElo[userB] -= 5;
     }
 }
