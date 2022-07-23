@@ -1,8 +1,8 @@
 import { CloseOutlined, HeartFilled, InfoOutlined, StarFilled } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Avatar, Button, Input, Modal } from 'antd';
 import { useTind3rMembershipContract } from 'hooks/useContract';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { UserProfile } from 'schema/ceramic/user';
 import { updateSelectedProfile } from 'state/application/reducer';
@@ -11,6 +11,10 @@ import styled from 'styled-components';
 import { calculateAge } from 'utils';
 import { openNotificationWithIcon } from 'utils/notification';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { useWeb3React } from '@web3-react/core';
+import useConversation from 'hooks/useConversation';
+import { ethers } from 'ethers';
+
 
 const MinusImgIndexBtn = styled.div`
   position: absolute;
@@ -141,26 +145,47 @@ type Props = {
 
 
 const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
+  const myUserProfile = useAppSelector(state => state.user.userProfile);
+  const { sendMessage } = useConversation(ethers.utils.getAddress(userProfile.walletAddress as string))
+
+  const { account } = useWeb3React()
   const tind3rMembershipContract = useTind3rMembershipContract()
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const profileList = useAppSelector(state => state.application.recommendationList);
   const dipatch = useAppDispatch();
   const router = useRouter()
-  useEffect(() => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [message, setMessage] = useState("");
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
 
-  })
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
 
-  const handleLike = () => {
-    if (!tind3rMembershipContract) return
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleLike = async () => {
+    if (!tind3rMembershipContract || !userProfile.walletAddress || !account) return
+    const isLiked = await tind3rMembershipContract.ifLike(userProfile.walletAddress, account)
+    console.log(isLiked)
     if (userProfile.walletAddress) {
-      tind3rMembershipContract.like(userProfile.walletAddress)
-        .then(tx => tx.wait())
-        .then(receipt => {
-          if (receipt.status) {
-            openNotificationWithIcon("success", "Success", `You liked ${userProfile.name}`)
-          }
-        })
-        .catch(err => console.log(err))
+      try {
+        const tx = await tind3rMembershipContract.like(userProfile.walletAddress)
+        if (isLiked) {
+          setIsModalVisible(true)
+        }
+        const receipt = await tx.wait()
+        if (receipt.status) {
+          openNotificationWithIcon("success", "Success", `You liked ${userProfile.name}`)
+
+        }
+      } catch (e) {
+        openNotificationWithIcon("error", "Error", e.message)
+      }
     }
 
   }
@@ -199,6 +224,24 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
 
     swiperCardRef.current.swipe(dir) // Swipe the card!
   }
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value)
+    setMessage(e.target.value)
+  }
+  const handleMessageSend = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>
+    ) => {
+      e.preventDefault()
+      if (!message) {
+        return
+      }
+      setMessage('')
+      setIsModalVisible(false)
+      await sendMessage(message)
+    },
+    [sendMessage, message]
+  )
+  console.log(message)
   return (
     //@ts-ignore
     <TinderCard
@@ -229,9 +272,9 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
 
         </CardContent>
         <CardAction>
-          <Button shape='circle' icon={<CloseOutlined style={{ color: "#FF5E51", fontWeight: 'bold', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: "2px solid #FF5E51" }} onClick={() => { swipe("left") }} />
-          <Button shape='circle' icon={<StarFilled style={{ color: '#07A6FF', fontSize: '24px' }} />} style={{ width: '55px', height: '55px', background: 'none', border: '2px solid #07A6FF' }} />
-          <Button shape='circle' icon={<HeartFilled style={{ color: '#00D387', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: ' 2px solid #00D387' }} onClick={() => { swipe("right") }} />
+          <Button shape='circle' icon={<CloseOutlined style={{ color: "#FF5E51", fontWeight: 'bold', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: "2px solid #FF5E51", zIndex: 1 }} onClick={() => { swipe("left") }} />
+          <Button shape='circle' icon={<StarFilled style={{ color: '#07A6FF', fontSize: '24px' }} />} style={{ width: '55px', height: '55px', background: 'none', border: '2px solid #07A6FF', zIndex: 1 }} />
+          <Button shape='circle' icon={<HeartFilled style={{ color: '#00D387', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: ' 2px solid #00D387', zIndex: 1 }} onClick={() => { swipe("right") }} />
         </CardAction>
         {
           userProfile.profilePictureCounts > 1 && <>
@@ -244,7 +287,29 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
           </>
         }
       </CardContainer>
-    </TinderCard>
+
+      <Modal title="Congratulations. You have a new match!" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={false} >
+
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ display: "flex", flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+            <Avatar src={myUserProfile.profileBaseUri + '0.png'} alt="you" style={{ width: '150px', height: '150px' }} />
+            <div style={{ fontWeight: 500 }}> {myUserProfile.name}</div>
+          </div>
+          <div style={{ fontStyle: 'italic', fontSize: '24px' }}>MATCH </div>
+          <div style={{ display: "flex", flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+            <Avatar src={userProfile.profileBaseUri + '0.png'} alt="you" style={{ width: '150px', height: '150px' }} />
+            <div style={{ fontWeight: 500 }}>{userProfile.name}</div>
+          </div>
+
+        </div>
+
+        <form style={{ padding: '0px 32px', display: 'flex', marginTop: '32px' }} onSubmit={handleMessageSend}>
+
+          <Input placeholder='Say something...' onChange={handleMessageChange} value={message} />
+          <Button htmlType="submit" style={{ border: 'none', color: '#1890ff' }}>SEND</Button>
+        </form>
+      </Modal>
+    </TinderCard >
   )
 }
 

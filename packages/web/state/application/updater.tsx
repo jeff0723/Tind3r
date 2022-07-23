@@ -87,9 +87,17 @@ export default function Updater(): null {
     }, [dispatch, account, ceramic, tind3rMembershipContract])
 
     useEffect(() => {
-        if (!isMembershipCreated) {
-            router.push('/app/onboarding')
+        if (router.pathname !== '/' && account) {
+            if (!isMembershipCreated) {
+                router.push('/app/onboarding')
+            } else {
+                router.push('/app/recs')
+            }
         }
-    }, [isMembershipCreated])
+        if (!account) {
+            router.push('/')
+        }
+
+    }, [isMembershipCreated, account])
     return null
 }

@@ -5,7 +5,7 @@ import { UserProfile, MatchProfile } from 'schema/ceramic/user'
 export interface ApplicationState {
     recommendationList?: UserProfile[],
     selectedProfile?: UserProfile,
-    matchList?: MatchProfile[]
+    matchList?: MatchProfile[],
 }
 export const initialState: ApplicationState = {
     recommendationList: [],
@@ -24,7 +24,7 @@ export const initialState: ApplicationState = {
         profilePictureCounts: 0,
         selectedProfileIndex: 0,
     },
-    matchList: []
+    matchList: [],
 
 }
 
@@ -40,13 +40,13 @@ const applicationSlice = createSlice({
         },
         updateMatchList(state, { payload: { matchList } }) {
             state.matchList = matchList
-        }
+        },
     }
 })
 
 export const {
     updateRecommedationList,
     updateSelectedProfile,
-    updateMatchList
+    updateMatchList,
 } = applicationSlice.actions
 export default applicationSlice.reducer
