@@ -236,7 +236,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
       openNotificationWithIcon("info", "Please fill in required field", "")
       return
     }
-    if (!tind3rMembershipContract) return
+    if (!tind3rMembershipContract || !account) return
     const files = photoList.map((item, index) => {
       const newFile = new File([item.originFileObj as File], `${index}.png`, { type: 'image/png' });
       return newFile
@@ -267,22 +267,26 @@ const OnBoardingPage: NextPage = (props: Props) => {
             image: `https://ipfs.io/ipfs/${cid}/0.png`,
           }
 
-          const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+          const isTind3rMember = await tind3rMembershipContract.isTind3rMember(account)
+          const tx = isTind3rMember ?
+            await tind3rMembershipContract?.updateProfile(_memberShipInput) :
+            await tind3rMembershipContract?.createProfile(_memberShipInput)
+
           setUploadingStatus(UploadStatus.finished)
           const receipt = await tx?.wait()
-
           if (receipt.status) {
             setLoading(false)
-            dispatch(updateMembershipCreated({ isMembershipCreated: true }))
-            openNotificationWithIcon("success", "Success", "Profile created successfully")
+            isTind3rMember ?
+              openNotificationWithIcon("success", "Success", "Profile updated successfully") :
+              openNotificationWithIcon("success", "Success", "Profile created successfully")
             setOnBoardingInfo({} as UserProfile);
             // need to redirect to "app/recs"
             // temporary redirect to "/" for testing
             router.push('/app/recs')
+          } else {
+            setLoading(false)
+            console.log("tx error")
           }
-        } else {
-          setLoading(false)
-          console.log("idx set error")
         }
       } catch (error) {
         setLoading(false)
