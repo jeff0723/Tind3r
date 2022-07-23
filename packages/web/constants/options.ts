@@ -1,9 +1,13 @@
 export const ORGANIZATION_OPTIONS = [
-    'Organization1',
-    'Organization2',
-    'Organization3'
+    'Trader',
+    'Developer',
+    'Entrepreneur',
+    'NFT Enthusiast',
+    'Web3 Newbie'
 ]
 export const PASSION_OPTIONS = [
-    'passionOptions1',
-    'passionOptions2'
+    'Surfing',
+    'Guitar',
+    'Basketball',
+    'Tennis'
 ]
