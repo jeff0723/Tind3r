@@ -169,8 +169,8 @@ contract Tind3rMembership is
      */
     function like(address target) external {
         address msgSender = _msgSenderERC721A();
-        _setLike(msgSender, target);
-        if (ifLike(target, msgSender)) {
+        bool isFirstLike = _setLike(msgSender, target);
+        if (isFirstLike && ifLike(target, msgSender)) {
             matchingContract.mint(
                 msgSender,
                 getUserId(msgSender),
@@ -363,13 +363,17 @@ contract Tind3rMembership is
     /**
      * @dev Set A like B
      */
-    function _setLike(address userA, address userB) private {
+    function _setLike(address userA, address userB) private returns (bool) {
         if (userA == userB) revert CanNotSelfLike();
         uint256 userIdA = getUserId(userA);
         uint256 userIdB = getUserId(userB);
-        if (_likeSet[userIdA].contains(userIdB)) revert AlreadyLike();
-        _likeSet[userIdA].add(userIdB);
-        ++_userElo[userB];
+        if (_likeSet[userIdA].contains(userIdB)) {
+            return false;
+        } else {
+            _likeSet[userIdA].add(userIdB);
+            ++_userElo[userB];
+            return true;
+        }
     }
 
     /**
