@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import config from 'schema/ceramic/model.json'
 import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
 
 const Profile = styled.div`
   display: flex;
@@ -113,13 +114,14 @@ const MessagePage: NextPage = () => {
         .catch(err => console.log(err))
     }
   }, [idx, isAuthenticated, chainId])
+  console.log("checksum address:", ethers.utils.getAddress(messageId))
   return (
     <div style={{ height: '100vh', display: 'flex' }}>
       <div style={{ width: '25vw', minWidth: '390px', maxWidth: '414px' }}>
         <ChatApp />
       </div>
       <div style={{ flexGrow: 1 }}>
-        <Conversation peerAddress={messageId} />
+        <Conversation peerAddress={ethers.utils.getAddress(messageId)} />
       </div>
       <div style={{ width: '25vw', minWidth: '390px', maxWidth: '414px' }}>
         <Profile>

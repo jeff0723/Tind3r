@@ -201,6 +201,8 @@ function ChatApp() {
   const getMatchedProfileList = async (): Promise<MatchProfile[]> => {
     if (!ceramic || !tind3rMembershipContract || !account) return []
     // const userIdList = await tind3rMembershipContract.getMatches(account)
+    //   .then(res => { return res })
+    //   .catch(err => console.log(err))
     const userIdList = [0, 1]
     const userInfoList = await queryUserInfoFromTableland(userIdList)
     console.log(userInfoList)
