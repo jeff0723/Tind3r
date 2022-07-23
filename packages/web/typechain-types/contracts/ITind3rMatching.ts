@@ -31,6 +31,7 @@ export interface ITind3rMatchingInterface extends utils.Interface {
   functions: {
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
+    "burn(address,uint256,uint256)": FunctionFragment;
     "getMatches(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(address,uint256,address,uint256)": FunctionFragment;
@@ -44,6 +45,7 @@ export interface ITind3rMatchingInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "balanceOf"
       | "balanceOfBatch"
+      | "burn"
       | "getMatches"
       | "isApprovedForAll"
       | "mint"
@@ -60,6 +62,14 @@ export interface ITind3rMatchingInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOfBatch",
     values: [PromiseOrValue<string>[], PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burn",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getMatches",
@@ -112,6 +122,7 @@ export interface ITind3rMatchingInterface extends utils.Interface {
     functionFragment: "balanceOfBatch",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getMatches", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
@@ -255,6 +266,13 @@ export interface ITind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     getMatches(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -316,6 +334,13 @@ export interface ITind3rMatching extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  burn(
+    account: PromiseOrValue<string>,
+    id: PromiseOrValue<BigNumberish>,
+    value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   getMatches(
     user: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -376,6 +401,13 @@ export interface ITind3rMatching extends BaseContract {
       ids: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getMatches(
       user: PromiseOrValue<string>,
@@ -494,6 +526,13 @@ export interface ITind3rMatching extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     getMatches(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -554,6 +593,13 @@ export interface ITind3rMatching extends BaseContract {
       accounts: PromiseOrValue<string>[],
       ids: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    burn(
+      account: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getMatches(

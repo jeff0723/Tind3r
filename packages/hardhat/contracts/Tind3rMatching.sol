@@ -59,6 +59,25 @@ contract Tind3rMatching is
     }
 
     /**
+     * @dev Burn token
+     */
+    function burn(
+        address account,
+        uint256 id,
+        uint256 value
+    ) public {
+        if (
+            address(_membershipContract) == _msgSender() ||
+            account == _msgSender() ||
+            isApprovedForAll(account, _msgSender())
+        ) {
+            _burn(account, id, value);
+        } else {
+            revert CallerIsOwnerNorApproved();
+        }
+    }
+
+    /**
      * @dev Show membership contract
      */
     function membershipContract() public view returns (address) {

@@ -64,6 +64,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "prefixURI()": FunctionFragment;
     "proxiableUUID()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "report(address)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
@@ -79,7 +80,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     "updateProfile((string,string,string))": FunctionFragment;
     "upgradeTo(address)": FunctionFragment;
     "upgradeToAndCall(address,bytes)": FunctionFragment;
-    "userStreamIdList(uint256,uint256)": FunctionFragment;
+    "userElo(address)": FunctionFragment;
   };
 
   getFunction(
@@ -104,6 +105,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "prefixURI"
       | "proxiableUUID"
       | "renounceOwnership"
+      | "report"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -119,7 +121,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
       | "updateProfile"
       | "upgradeTo"
       | "upgradeToAndCall"
-      | "userStreamIdList"
+      | "userElo"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -194,6 +196,10 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "report",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
       PromiseOrValue<string>,
@@ -264,8 +270,8 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "userStreamIdList",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    functionFragment: "userElo",
+    values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -312,6 +318,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "report", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -360,10 +367,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
     functionFragment: "upgradeToAndCall",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "userStreamIdList",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "userElo", data: BytesLike): Result;
 
   events: {
     "AdminChanged(address,address)": EventFragment;
@@ -627,6 +631,11 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    report(
+      target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -705,11 +714,10 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
+    userElo(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[BigNumber]>;
   };
 
   approve(
@@ -797,6 +805,11 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  report(
+    target: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -875,11 +888,10 @@ export interface Tind3rMembership extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  userStreamIdList(
-    startId: PromiseOrValue<BigNumberish>,
-    endId: PromiseOrValue<BigNumberish>,
+  userElo(
+    user: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<string>;
+  ): Promise<BigNumber>;
 
   callStatic: {
     approve(
@@ -965,6 +977,11 @@ export interface Tind3rMembership extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    report(
+      target: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1043,11 +1060,10 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
+    userElo(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<BigNumber>;
   };
 
   filters: {
@@ -1245,6 +1261,11 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    report(
+      target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1323,9 +1344,8 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
+    userElo(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -1416,6 +1436,11 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    report(
+      target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1494,9 +1519,8 @@ export interface Tind3rMembership extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
+    userElo(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

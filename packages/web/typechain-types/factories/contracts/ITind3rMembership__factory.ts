@@ -37,6 +37,16 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "CanNotSelfLike",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "CanNotSelfReport",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "CanNotTransferOrBurn",
     type: "error",
   },
@@ -570,6 +580,19 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "report",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "from",
         type: "address",
       },
@@ -756,30 +779,6 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "startId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "endId",
-        type: "uint256",
-      },
-    ],
-    name: "userStreamIdList",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];

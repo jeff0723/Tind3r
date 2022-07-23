@@ -58,6 +58,7 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "prefixURI()": FunctionFragment;
+    "report(address)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
@@ -67,7 +68,6 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "updateProfile((string,string,string))": FunctionFragment;
-    "userStreamIdList(uint256,uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -87,6 +87,7 @@ export interface ITind3rMembershipInterface extends utils.Interface {
       | "name"
       | "ownerOf"
       | "prefixURI"
+      | "report"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -96,7 +97,6 @@ export interface ITind3rMembershipInterface extends utils.Interface {
       | "totalSupply"
       | "transferFrom"
       | "updateProfile"
-      | "userStreamIdList"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -154,6 +154,10 @@ export interface ITind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "prefixURI", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "report",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
       PromiseOrValue<string>,
@@ -199,10 +203,6 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     functionFragment: "updateProfile",
     values: [ITind3rMembership.Tind3rProfileStruct]
   ): string;
-  encodeFunctionData(
-    functionFragment: "userStreamIdList",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -234,6 +234,7 @@ export interface ITind3rMembershipInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "prefixURI", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "report", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -262,10 +263,6 @@ export interface ITind3rMembershipInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "updateProfile",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "userStreamIdList",
     data: BytesLike
   ): Result;
 
@@ -459,6 +456,11 @@ export interface ITind3rMembership extends BaseContract {
 
     prefixURI(overrides?: CallOverrides): Promise<[string]>;
 
+    report(
+      user: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -505,12 +507,6 @@ export interface ITind3rMembership extends BaseContract {
       userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
   };
 
   approve(
@@ -583,6 +579,11 @@ export interface ITind3rMembership extends BaseContract {
 
   prefixURI(overrides?: CallOverrides): Promise<string>;
 
+  report(
+    user: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -629,12 +630,6 @@ export interface ITind3rMembership extends BaseContract {
     userProfile: ITind3rMembership.Tind3rProfileStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  userStreamIdList(
-    startId: PromiseOrValue<BigNumberish>,
-    endId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   callStatic: {
     approve(
@@ -707,6 +702,11 @@ export interface ITind3rMembership extends BaseContract {
 
     prefixURI(overrides?: CallOverrides): Promise<string>;
 
+    report(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -753,12 +753,6 @@ export interface ITind3rMembership extends BaseContract {
       userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
   };
 
   filters: {
@@ -906,6 +900,11 @@ export interface ITind3rMembership extends BaseContract {
 
     prefixURI(overrides?: CallOverrides): Promise<BigNumber>;
 
+    report(
+      user: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -951,12 +950,6 @@ export interface ITind3rMembership extends BaseContract {
     updateProfile(
       userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -1031,6 +1024,11 @@ export interface ITind3rMembership extends BaseContract {
 
     prefixURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    report(
+      user: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1076,12 +1074,6 @@ export interface ITind3rMembership extends BaseContract {
     updateProfile(
       userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    userStreamIdList(
-      startId: PromiseOrValue<BigNumberish>,
-      endId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }
