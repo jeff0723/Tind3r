@@ -1,5 +1,6 @@
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js'
 import { useContext, useCallback, useState, useEffect } from 'react'
+import { openNotificationWithIcon } from 'utils/notification'
 import { XmtpContext } from '../contexts/xmtp'
 
 type OnMessageCallback = () => void
@@ -16,7 +17,13 @@ const useConversation = (
       if (!client) {
         return
       }
-      setConversation(await client.conversations.newConversation(peerAddress))
+      client.conversations.newConversation(peerAddress)
+        .then(convo => { setConversation(convo) })
+        .catch(err => {
+          openNotificationWithIcon("error", 'Error', err.message)
+          console.log(err)
+        })
+      // setConversation(await client.conversations.newConversation(peerAddress))
     }
     getConvo()
   }, [client, peerAddress])

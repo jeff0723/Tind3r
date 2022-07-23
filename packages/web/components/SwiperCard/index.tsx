@@ -150,14 +150,17 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
 
   const handleLike = () => {
     if (!tind3rMembershipContract) return
-    tind3rMembershipContract.like(userProfile.walletAddress)
-      .then(tx => tx.wait())
-      .then(receipt => {
-        if (receipt.status) {
-          openNotificationWithIcon("success", "Success", `You liked ${userProfile.name}`)
-        }
-      })
-      .catch(err => console.log(err))
+    if (userProfile.walletAddress) {
+      tind3rMembershipContract.like(userProfile.walletAddress)
+        .then(tx => tx.wait())
+        .then(receipt => {
+          if (receipt.status) {
+            openNotificationWithIcon("success", "Success", `You liked ${userProfile.name}`)
+          }
+        })
+        .catch(err => console.log(err))
+    }
+
   }
   const handlePass = () => {
     console.log("pass")

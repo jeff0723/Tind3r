@@ -1,10 +1,13 @@
 import ChatApp from 'components/Chat'
 import Conversation from 'components/Conversation'
+import useCeramic from 'hooks/useCeramic'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-
+import config from 'schema/ceramic/model.json'
+import { useWeb3React } from '@web3-react/core'
 
 const Profile = styled.div`
   display: flex;
@@ -94,11 +97,22 @@ const character = {
   avatar: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
   bio: "一堆戴口罩是想表示重視疫情嗎？",
 }
+const UserProfileDefinitionId = config.definitions.Tind3r
 
 const MessagePage: NextPage = () => {
   const router = useRouter()
+  const { chainId } = useWeb3React()
+  const { idx, isAuthenticated } = useCeramic()
   const messageId = router.query.messageId as string
 
+  const [imageUrl, setImageUrl] = useState('')
+  useEffect(() => {
+    if (idx && isAuthenticated && chainId) {
+      idx.get(UserProfileDefinitionId, `${messageId}@eip155:${chainId}`)
+        .then(res => console.log("res:", res))
+        .catch(err => console.log(err))
+    }
+  }, [idx, isAuthenticated, chainId])
   return (
     <div style={{ height: '100vh', display: 'flex' }}>
       <div style={{ width: '25vw', minWidth: '390px', maxWidth: '414px' }}>
@@ -116,7 +130,7 @@ const MessagePage: NextPage = () => {
               <Line active={false} />
             </LineBox>
           </ProfileAvatar>
-          <ProfileInfo style={{ borderBottom: '1px solid #BFBFBF'}}> 
+          <ProfileInfo style={{ borderBottom: '1px solid #BFBFBF' }}>
             <ProfileTitle>
               <Name>{character.name}</Name>
               <Age>{character.age}</Age>

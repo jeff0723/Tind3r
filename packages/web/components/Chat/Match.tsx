@@ -3,13 +3,11 @@ import Router, { useRouter } from 'next/router';
 import React from 'react'
 import styled from 'styled-components';
 import { TabType } from './ChatApp';
+import { MatchProfile } from 'schema/ceramic/user';
 
 type Props = {
-    selectedTab: number,
-    walletAddress: string,
-    name: string,
-    avatar: string,
-    lastMessage: string,
+    match: MatchProfile
+    selectedTab: TabType
 }
 
 interface ImageProps {
@@ -53,27 +51,28 @@ justify-content: flex-start;
 align-items: center;
 color:#595959;
 `
-const Match = (props: Props) => {
+const Match = ({ match, selectedTab }: Props) => {
     const router = useRouter()
     const handleClick = () => {
-        router.push('/app/message/' + props.walletAddress)
+        router.push('/app/message/' + match.walletAddress)
     }
-    if (props.selectedTab === TabType.MATCHES) {
+    if (selectedTab === TabType.MATCHES) {
         return (
-            <MatchCard imageUrl={props.avatar} onClick={handleClick}>
-                {props.name}
+            <MatchCard imageUrl={match.profileBaseUri + match.selectedProfileIndex.toString() + '.png'} onClick={handleClick}>
+                {match.name}
             </MatchCard>
         )
     }
+    console.log("match:", match)
     return (
         <MessageBox onClick={handleClick}>
-            <Avatar src={props.avatar} style={{ width: '74px', height: '74px' }} />
+            <Avatar src={match.profileBaseUri + match.selectedProfileIndex.toString() + '.png'} style={{ width: '74px', height: '74px' }} />
             <div>
                 <MessageUserName>
-                    {props.name}
+                    {match.name}
                 </MessageUserName>
                 <MessageText>
-                    {props.lastMessage}
+                    {match.lastMessage}
                 </MessageText>
             </div>
         </MessageBox>

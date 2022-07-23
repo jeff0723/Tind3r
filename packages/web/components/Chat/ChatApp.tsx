@@ -1,10 +1,11 @@
 import { useWeb3React } from '@web3-react/core';
 import useCeramic from 'hooks/useCeramic';
 import { useTind3rMembershipContract } from 'hooks/useContract';
+import { getLastMessage } from 'hooks/useMessageStore';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaStoreAlt } from "react-icons/fa";
-import { UserProfile } from 'schema/ceramic/user';
+import { MatchProfile, UserProfile } from 'schema/ceramic/user';
 import { useAppSelector } from 'state/hooks';
 import styled from 'styled-components';
 import styles from './ChatApp.module.css';
@@ -113,8 +114,7 @@ interface ContentBoxProps {
 const ContentBox = styled.div<ContentBoxProps>`
   display: flex; 
   flex-direction: ${props => props.selectedTab === TabType.MATCHES ? "row" : "column"};
-  justify-content: ${props => props.selectedTab === TabType.MATCHES ? "space-between" : ""};
-  gap:${props => props.selectedTab === TabType.MATCHES ? "10px" : "24px"};
+  gap:${props => props.selectedTab === TabType.MATCHES ? "16px" : "24px"};
   flex-wrap: ${props => props.selectedTab === TabType.MATCHES ? "wrap" : "nowrap"};
   padding: 10px 16px;
 `
@@ -169,6 +169,7 @@ function ChatApp() {
   const [userName, setUserName] = useState("")
   const [profileImage, setProfileImage] = useState("")
   const [tabSelected, setTabSelected] = useState(TabType.MATCHES)
+  const [matchList, setMatchList] = useState<MatchProfile[]>([])
   //--- Justa-2022-07-23
   const { ceramic } = useCeramic()
   const tind3rMembershipContract = useTind3rMembershipContract()
@@ -197,7 +198,7 @@ function ChatApp() {
     return object.rows
   }
 
-  const getMatchedProfileList = async (): Promise<MatchType[]> => {
+  const getMatchedProfileList = async (): Promise<MatchProfile[]> => {
     if (!ceramic || !tind3rMembershipContract || !account) return []
     // const userIdList = await tind3rMembershipContract.getMatches(account)
     const userIdList = [0, 1]
@@ -210,14 +211,16 @@ function ChatApp() {
     const queryList = streamIdList.map(sid => { return { streamId: sid } })
     const streamRecord = await ceramic.multiQuery(queryList)
     console.log(streamRecord)
-    const matchList: MatchType[] = Object.values(streamRecord).map((stream) => {
+    const _matchList: MatchProfile[] = Object.values(streamRecord).map((stream) => {
       return {
         ...stream.content,
-        walletAddress: userInfoMap.get(stream.id.toString())
+        walletAddress: userInfoMap.get(stream.id.toString()),
+        lastMessage: "hi",
       }
     })
-    console.log("matchList", matchList)
-    return matchList
+    console.log("matchList", _matchList)
+    setMatchList(_matchList)
+    return _matchList
   }
   const handleProfileClick = () => {
     router.push('/app/profile')
@@ -245,10 +248,10 @@ function ChatApp() {
         </Tab>
       </Tabs>
       {
-        matches.length ? (
+        matchList.length ? (
           <ContentBox selectedTab={tabSelected}>
-            {matches.map((match, index) => (
-              <Match selectedTab={tabSelected} key={index} {...match} />
+            {matchList.map((match, index) => (
+              <Match selectedTab={tabSelected} key={index} match={match} />
             ))}
           </ContentBox>
         ) :

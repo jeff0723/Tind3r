@@ -103,6 +103,7 @@ const BackButton = styled(Button)`
   border:none;
   width:45px;
   height:45px;
+  z-index:1;
 `
 const CardInfoBox = styled.div`
   display: flex;
