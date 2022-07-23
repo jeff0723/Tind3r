@@ -16,4 +16,5 @@ export type UserProfile = {
     profileBaseUri?: string;
     profilePictureCounts?: number;
     selectedProfileIndex?: number;
+    walletAddress: string;
 }

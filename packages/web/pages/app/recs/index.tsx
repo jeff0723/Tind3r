@@ -1,21 +1,17 @@
-import { useWeb3React } from '@web3-react/core';
-import Layout from 'components/Layout';
-import { injectedConnection } from 'connection';
-import useCeramic from 'hooks/useCeramic';
-import useXmtp from 'hooks/useXmtp';
-import type { NextPage } from 'next';
-import { useEffect, useState, useRef, createRef, useMemo } from 'react';
-import { useAppDispatch, useAppSelector } from 'state/hooks';
-import { updateIsProfileExists, updateUserName } from 'state/user/reducer';
-import { BasicProfile, UserProfile } from 'schema/ceramic/user';
-import TinderCard from 'react-tinder-card';
-import styled from 'styled-components';
-import { Button, Card } from 'antd';
 import { CloseOutlined, HeartFilled, InfoOutlined, StarFilled } from '@ant-design/icons';
-import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs'
+import { useWeb3React } from '@web3-react/core';
+import { Button } from 'antd';
+import Layout from 'components/Layout';
+import SwiperCard from 'components/SwiperCard';
+import useCeramic from 'hooks/useCeramic';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-
-const { Meta } = Card;
+import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs';
+import TinderCard from 'react-tinder-card';
+import { UserProfile } from 'schema/ceramic/user';
+import { useAppSelector } from 'state/hooks';
+import styled from 'styled-components';
 
 const characters = [
   {
@@ -55,90 +51,7 @@ const Container = styled.div`
   height: 100%;
   padding-top:5vh;
 `
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 375px;
-  border-radius: 16px;
-`
 
-const CardContent = styled.div<({ image: string }) >`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  height: 566px;
-  background: linear-gradient(180.03deg, rgba(0, 0, 0, 0) 72.45%, #000000 99.97%), url(${({ image }) => image});
-  border-radius: 16px 16px 0px 0px;
-  background-size: cover;
-`
-const CardLineBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: space-between;
-  padding: 10px 16px;
-  gap: 10px;
-  width: 100%;
-  height: 47px;
-`
-const CardAction = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 102px;
-  background: #000000;
-  border-radius: 0px 0px 16px 16px;
-  padding: 0px 48px;
-`
-const CardInfoBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 10px 16px;
-  width: 100%;
-`
-const PersionalInfoBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap:10px;
-  color: #ffffff;
-`
-const Name = styled.div`
-  white-space: nowrap;
-  font-weight: 500;
-  font-size: 32px;
-  line-height: 48px;
-  width:75%;
-  height:48px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
-const Age = styled.div`
-  font-weight: 500;
-  font-size: 28px;
-  line-height: 42px;
-`
-const DescriptionBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  color: #ffffff;
-`
-const Description = styled.div`
-  font-size: 24px;
-  max-width: 75%;
-`
-const Line = styled.div<{ active: boolean }>`
-  width: 100%;
-  height: 0px;
-  border: ${({ active }) => active ? "2px solid #FFFFFF" : "2px solid rgba(0, 0, 0, 0.1)"};
-`
 
 const HelperContent = styled.div`
   display: flex;
@@ -165,24 +78,24 @@ const StyledButton = styled(Button)`
 `
 
 const Recommendation: NextPage = () => {
-
+  const { account } = useWeb3React()
   // swiper
   const [currentIndex, setCurrentIndex] = useState(characters.length - 1)
   const [lastDirection, setLastDirection] = useState("")
   const currentIndexRef = useRef(currentIndex)
+  const [recommendProfileList, setRecommendProfileList] = useState<UserProfile[]>()
   const canSwipe = currentIndex >= 0
   //--- Justa-2022-07-23
   const { ceramic } = useCeramic();
   const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+"
   //--- end
-  const childRefs = useMemo<any[]>(
+  const swiperCardRefs = useMemo<any[]>(
     () =>
-      Array(characters.length)
+      Array(recommendProfileList?.length)
         .fill(0)
         .map((i) => createRef()),
-    []
+    [recommendProfileList]
   )
-
   const router = useRouter()
 
   //--- Justa-2022-07-23
@@ -194,7 +107,7 @@ const Recommendation: NextPage = () => {
     return object.rows
   }
 
-  const getRecProfileList = async (): Promise<UserProfile[]> => {
+  const getRecProfileList = useCallback(async (): Promise<UserProfile[]> => {
     if (!ceramic) return []
     const userInfoList = await queryUserInfoFromTableland(0, 10)
     console.log(userInfoList)
@@ -212,8 +125,10 @@ const Recommendation: NextPage = () => {
       }
     })
     console.log(recProfileList)
+    const _recommendProfileList = recProfileList.filter((profile) => profile.walletAddress !== account?.toLocaleLowerCase())
+    setRecommendProfileList(_recommendProfileList)
     return recProfileList
-  }
+  }, [ceramic])
   //--- end
 
 
@@ -223,11 +138,18 @@ const Recommendation: NextPage = () => {
   }
 
 
-  const swipe = async (dir: string) => {
-    if (canSwipe && currentIndex < characters.length) {
-      await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
-    }
+  // const swipe = async (dir: string) => {
+  //   if (canSwipe && currentIndex < characters.length) {
+  //     await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
+  //   }
+  // }
+  // const handleLike = () => {
+  //   console.log(childRefs[currentIndex])
+  // }
+  const handlePass = () => {
+
   }
+
 
   const swiped = (direction: string, nameToDelete: string, index: number) => {
     setLastDirection(direction)
@@ -235,56 +157,30 @@ const Recommendation: NextPage = () => {
   }
   const handleInfoClick = () => {
     router.push('/app/recs/profile')
-    getRecProfileList()
   }
+  useEffect(() => {
+    getRecProfileList()
+  }, [ceramic])
+  console.log(recommendProfileList)
+  console.log("Current Index:", currentIndex)
+  console.log("chileRefs:", swiperCardRefs[0])
+  const isMembership = useAppSelector(state => state.user.isMembershipCreated)
+
+  console.log("Is membership:", isMembership)
   return (
-    <Layout>
-      <Container>
-        {characters.map((character, index) =>
-          // @ts-ignore
-          <TinderCard
-            ref={childRefs[index]}
-            className='swipe'
-            key={index}
-            onSwipe={(dir) => swiped(dir, character.name, index)}
-          >
-            <CardContainer>
-              <CardContent image={character.avatar}>
-                <CardLineBox>
-                  <Line active={true} />
-                  <Line active={false} />
-                  <Line active={false} />
-                </CardLineBox>
-                <CardInfoBox>
-                  <PersionalInfoBox>
-                    <Name>{character.name}</Name>
-                    <Age>{character.age}</Age>
-                  </PersionalInfoBox>
-                  <DescriptionBox>
-                    <Description>{character.bio}</Description>
 
-                    <Button shape='circle' icon={<InfoOutlined />} size='small' onClick={handleInfoClick} />
-                  </DescriptionBox>
-                </CardInfoBox>
+    <Container>
+      {recommendProfileList?.length ? (recommendProfileList.map((userProfile, index) =>
+        <SwiperCard userProfile={userProfile} swiperCardRef={swiperCardRefs[index]} />
+      )) : <div>Loading...</div>}
+    </Container>
+    // <HelperContent>
+    //   <StyledButton>HIDE</StyledButton>
+    //   <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>
+    //   <InstructionBox><BsArrowUpSquare />SUPERLIKE</InstructionBox>
+    //   <InstructionBox><BsArrowRightSquare />LIKE</InstructionBox>
+    // </HelperContent>
 
-              </CardContent>
-              <CardAction>
-                <Button shape='circle' icon={<CloseOutlined style={{ color: "#FF5E51", fontWeight: 'bold', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: "2px solid #FF5E51" }} />
-                <Button shape='circle' icon={<StarFilled style={{ color: '#07A6FF', fontSize: '24px' }} />} style={{ width: '55px', height: '55px', background: 'none', border: '2px solid #07A6FF' }} />
-                <Button shape='circle' icon={<HeartFilled style={{ color: '#00D387', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: ' 2px solid #00D387' }} />
-              </CardAction>
-            </CardContainer>
-          </TinderCard>
-        )}
-
-      </Container>
-      <HelperContent>
-        <StyledButton>HIDE</StyledButton>
-        <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>
-        <InstructionBox><BsArrowUpSquare />SUPERLIKE</InstructionBox>
-        <InstructionBox><BsArrowRightSquare />LIKE</InstructionBox>
-      </HelperContent>
-    </Layout>
   )
 }
 

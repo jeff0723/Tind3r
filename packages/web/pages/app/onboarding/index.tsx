@@ -168,7 +168,8 @@ const OnBoardingPage: NextPage = (props: Props) => {
     importNFT: false,
     addOnChainActivity: false,
     organizations: [],
-    tags: []
+    tags: [],
+    walletAddress: account ? account : ""
   })
 
   const isCeramicProfileExists = useAppSelector(state => state.user.isCeramicProfileExists)
@@ -281,12 +282,12 @@ const OnBoardingPage: NextPage = (props: Props) => {
           }
 
           const tx = await tind3rMembershipContract?.createProfile(_memberShipInput)
+          setUploadingStatus(UploadStatus.finished)
           const receipt = await tx?.wait()
 
           if (receipt.status) {
             setLoading(false)
-            setUploadingStatus(UploadStatus.finished)
-            dispatch(updateMembershipCreated({ isMemberCreated: true }))
+            dispatch(updateMembershipCreated({ isMembershipCreated: true }))
             openNotificationWithIcon("success", "Success", "Profile created successfully")
             setOnBoardingInfo({} as UserProfile);
             // need to redirect to "app/recs"
