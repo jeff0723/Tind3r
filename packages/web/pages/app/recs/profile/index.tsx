@@ -1,6 +1,6 @@
 import { Button } from 'antd'
 import Layout from 'components/Layout'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs'
 import { ArrowDownOutlined, CloseOutlined, HeartFilled, ManOutlined, StarFilled, UserOutlined, WomanOutlined } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import { useAppSelector } from 'state/hooks'
 import { calculateAge, convertGenderToText, GenderType } from 'utils'
 import { UserProfile } from 'schema/ceramic/user'
 import { useTind3rMembershipContract } from 'hooks/useContract'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 
 type Props = {}
@@ -27,6 +28,29 @@ const InstructionBox = styled.div`
   gap: 4px;
   color:#595959;
 `
+const MinusImgIndexBtn = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`
+const AddImgIndexBtn = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`
+
 const StyledButton = styled(Button)`
   background: #595959;
   border-radius: 18px;
@@ -56,6 +80,18 @@ const CardImage = styled.div<({ image: string }) >`
   background: linear-gradient(180.03deg, rgba(0, 0, 0, 0) 72.45%, #000000 99.97%), url(${({ image }) => image});
   border-radius: 16px 16px 0px 0px;
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  &:hover {
+    cursor: pointer;
+  }
+  &:hover ${MinusImgIndexBtn} {
+    display: flex;
+  }
+  &:hover ${AddImgIndexBtn} {
+    display: flex;
+  }
 `
 
 const BackButton = styled(Button)`
@@ -150,6 +186,22 @@ const ProfileCardAction = styled.div`
   bottom:10px;
   
 `
+const CardLineBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: space-between;
+  padding: 10px 16px;
+  gap: 10px;
+  width: 100%;
+  height: 47px;
+`
+const Line = styled.div<{ active: boolean }>`
+  width: 100%;
+  height: 0px;
+  border: ${({ active }) => active ? "2px solid #FFFFFF" : "2px solid rgba(0, 0, 0, 0.1)"};
+`
+
+
 
 const profile = {
   walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
@@ -174,7 +226,10 @@ const GenderIcon = ({ type }: { type: number }): JSX.Element => {
   }
 }
 const RecommendationProfile = (props: Props) => {
+
   const tind3rMembershipContract = useTind3rMembershipContract()
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
+
   const userProfile = useAppSelector(state => state.application.selectedProfile) as UserProfile
   const router = useRouter()
   const handleBack = () => {
@@ -183,12 +238,42 @@ const RecommendationProfile = (props: Props) => {
   const handleReport = () => {
     //todo
   }
+  const handleClickAddImgIndexBtn = () => {
+    if (currentImgIndex === userProfile.profilePictureCounts - 1) {
+      setCurrentImgIndex(0)
+      return
+    }
+
+    setCurrentImgIndex(currentImgIndex + 1)
+  }
+  const handleClickMinusImgIndexBtn = () => {
+    if (currentImgIndex === 0) return
+    setCurrentImgIndex(currentImgIndex - 1)
+  }
   console.log('Selected User Profile', userProfile)
+  console.log("profile picture count", userProfile.profilePictureCounts)
   return (
     <Layout>
       <ProfileCardContainer>
-        <CardImage image={userProfile.profileBaseUri + userProfile.selectedProfileIndex.toString() + '.png'}>
+        <CardImage image={userProfile.profileBaseUri + currentImgIndex.toString() + '.png'}>
+          <CardLineBox>
+
+            {
+              [...Array(userProfile.profilePictureCounts).keys()]
+                .map(index => <Line key={index} active={index === currentImgIndex} />)
+            }
+          </CardLineBox>
           <BackButton shape='circle' icon={<ArrowDownOutlined style={{ fontSize: '24px' }} onClick={handleBack} />}></BackButton>
+          {
+            userProfile.profilePictureCounts > 1 && <>
+              <MinusImgIndexBtn onClick={handleClickMinusImgIndexBtn}>
+                <LeftOutlined style={{ fontSize: 20 }} />
+              </MinusImgIndexBtn>
+              <AddImgIndexBtn onClick={handleClickAddImgIndexBtn}>
+                <RightOutlined style={{ fontSize: 20 }} />
+              </AddImgIndexBtn>
+            </>
+          }
         </CardImage>
         <CardInfoBox>
           <InfoBox>
@@ -225,6 +310,7 @@ const RecommendationProfile = (props: Props) => {
           <Button shape='circle' icon={<StarFilled style={{ color: '#07A6FF', fontSize: '24px' }} />} style={{ width: '55px', height: '55px', background: '#ffffff', border: "none", boxShadow: '0 1px 2px 0 rgba(0,0,0,0.2)' }} />
           <Button shape='circle' icon={<HeartFilled style={{ color: '#00D387', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: '#ffffff', border: "none", boxShadow: '0 1px 2px 0 rgba(0,0,0,0.2)' }} />
         </ProfileCardAction>
+
       </ProfileCardContainer>
       <HelperContent>
         <StyledButton>HIDE</StyledButton>
@@ -232,6 +318,7 @@ const RecommendationProfile = (props: Props) => {
         <InstructionBox><BsArrowUpSquare />SUPERLIKE</InstructionBox>
         <InstructionBox><BsArrowRightSquare />LIKE</InstructionBox>
       </HelperContent>
+
     </Layout>
   )
 }

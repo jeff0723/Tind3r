@@ -207,7 +207,7 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
         <CardContent image={userProfile.profileBaseUri + currentImgIndex.toString() + '.png'}>
           <CardLineBox>
             {
-              userProfile.profilePictureCounts > 1 && [...Array(userProfile.profilePictureCounts).keys()]
+              [...Array(userProfile.profilePictureCounts).keys()]
                 .map(index => <Line key={index} active={index === currentImgIndex} />)
             }
           </CardLineBox>
@@ -219,7 +219,7 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
             <DescriptionBox>
               <Description>{userProfile.bio}</Description>
 
-              <Button shape='circle' icon={<InfoOutlined />} size='small' onClick={handleInfoClick} />
+              <Button shape='circle' icon={<InfoOutlined />} size='small' onClick={handleInfoClick} style={{ zIndex: 1 }} />
             </DescriptionBox>
           </CardInfoBox>
 

@@ -1,17 +1,14 @@
-import styles from './ChatApp.module.css'
-import Link from 'next/link'
-import { useAppDispatch, useAppSelector } from 'state/hooks';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
-import { AppstoreFilled } from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FaStoreAlt } from "react-icons/fa";
-import Match from './Match';
-import { UserProfile } from 'schema/ceramic/user';
+import { useWeb3React } from '@web3-react/core';
 import useCeramic from 'hooks/useCeramic';
 import { useTind3rMembershipContract } from 'hooks/useContract';
-import { useWeb3React } from '@web3-react/core';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { FaStoreAlt } from "react-icons/fa";
+import { UserProfile } from 'schema/ceramic/user';
+import { useAppSelector } from 'state/hooks';
+import styled from 'styled-components';
+import styles from './ChatApp.module.css';
+import Match from './Match';
 
 type Props = {}
 export enum TabType {
@@ -24,13 +21,13 @@ type MatchType = {
   avatar: string,
   lastMessage: string,
 }
-// const matches: MatchType[] = [
-//   {
-//     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
-//     name: "Jessica Lin",
-//     avatar: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-//     lastMessage: "Hello"
-//   },
+const matches: MatchType[] = [
+  {
+    walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
+    name: "Jessica Lin",
+    avatar: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+    lastMessage: "Hello"
+  }]
 //   {
 //     walletAddress: "0x8dA0F34A0819fE8dbD130050a4059859241dFEfd",
 //     name: "Cheasea",
@@ -51,7 +48,7 @@ type MatchType = {
 //   },
 // ]
 
-const matches: MatchType[] = []
+// const matches: MatchType[] = []
 
 const Header = styled.div`
   display: flex;
@@ -168,6 +165,7 @@ const Avatar = ({ imageUrl }: { imageUrl?: string }) => {
 
 function ChatApp() {
   const userProfile = useAppSelector(state => state.user.userProfile) as UserProfile
+  const router = useRouter()
   const [userName, setUserName] = useState("")
   const [profileImage, setProfileImage] = useState("")
   const [tabSelected, setTabSelected] = useState(TabType.MATCHES)
@@ -218,15 +216,20 @@ function ChatApp() {
         walletAddress: userInfoMap.get(stream.id.toString())
       }
     })
-    console.log(matchList)
+    console.log("matchList", matchList)
     return matchList
+  }
+  const handleProfileClick = () => {
+    router.push('/app/profile')
   }
   //--- end
   console.log("User profile", userProfile)
   return (
     <div>
       <Header>
-        <Avatar imageUrl={profileImage} />
+        <div onClick={handleProfileClick}>
+          <Avatar imageUrl={profileImage} />
+        </div>
         <div className={styles.name}>{userName}</div>
         <IconBox>
           <FaStoreAlt style={{ color: "#fff", width: '22px', height: '20px' }} />
