@@ -1,25 +1,23 @@
-import { Checkbox, Col, Row, Input, Radio, Button, Select, Spin } from 'antd'
-import NextImage from 'next/image'
-import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { Upload } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import ImgCrop from 'antd-img-crop';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-import { UserProfile } from 'schema/ceramic/user';
-import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { constants } from 'buffer';
-import { useTind3rMembershipContract } from 'hooks/useContract';
-import { openNotificationWithIcon } from 'utils/notification';
-import useCeramic from 'hooks/useCeramic';
+import { LoadingOutlined } from '@ant-design/icons';
 import { useWeb3React } from '@web3-react/core';
-import { useRouter } from 'next/router';
-import config from 'schema/ceramic/model.json';
-import { updateIsCeramicProfileExists, updateMembershipCreated, updateUserProfile } from 'state/user/reducer';
-import { useAppSelector, useAppDispatch } from 'state/hooks';
-import { makeStorageClient } from 'utils/web3-storage';
-import { NextPage } from 'next'
+import { Button, Checkbox, Col, Input, Radio, Row, Select, Spin, Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { ORGANIZATION_OPTIONS, PASSION_OPTIONS } from 'constants/options';
+import useCeramic from 'hooks/useCeramic';
+import { useTind3rMembershipContract } from 'hooks/useContract';
+import { NextPage } from 'next';
+import NextImage from 'next/image';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import config from 'schema/ceramic/model.json';
+import { UserProfile } from 'schema/ceramic/user';
+import { useAppDispatch, useAppSelector } from 'state/hooks';
+import { updateMembershipCreated, updateUserProfile } from 'state/user/reducer';
+import styled from 'styled-components';
+import { openNotificationWithIcon } from 'utils/notification';
+import { makeStorageClient } from 'utils/web3-storage';
 
 
 const { Option } = Select
@@ -158,19 +156,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
     // },
   ]);
 
-  const [onBoardingInfo, setOnBoardingInfo] = useState<UserProfile>({
-    name: "",
-    birthday: "",
-    bio: "",
-    gender: 0, //0 women 1 men 2 everyone
-    showMe: 0, //0 women 1 men 2 everyone 
-    showMyGenderOnProfile: false,
-    importNFT: false,
-    addOnChainActivity: false,
-    organizations: [],
-    tags: [],
-    walletAddress: account ? account : ""
-  })
+  const [onBoardingInfo, setOnBoardingInfo] = useState<UserProfile>()
 
   const isCeramicProfileExists = useAppSelector(state => state.user.isCeramicProfileExists)
   const isMemberCreated = useAppSelector(state => state.user.isMembershipCreated)
@@ -236,11 +222,12 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
     }
   }, [isAuthenticated, idx])
-  const validateInput = (input: UserProfile) => {
-    if (!input.name || !input.birthday || !photoList.length) return false
+  const validateInput = (input?: UserProfile) => {
+    if (!input?.name || !input.birthday || !photoList.length) return false
     return true
   }
   const handleConfirm = async () => {
+    if (!onBoardingInfo) return
     if (!photoList.length) {
       openNotificationWithIcon("info", "Please upload at least one profile photo", "")
       return

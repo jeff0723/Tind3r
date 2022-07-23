@@ -22,7 +22,6 @@ export const initialState: ApplicationState = {
         profileBaseUri: "",
         profilePictureCounts: 0,
         selectedProfileIndex: 0,
-        walletAddress: ""
     },
 
 }
