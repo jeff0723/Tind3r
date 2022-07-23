@@ -17,9 +17,10 @@ const MinusImgIndexBtn = styled.div`
   left: 0;
   top: 0;
   height: 100%;
-  width: 40px;
+  width: 200px;
+  padding: 0 10px;
   display: none;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   color: #fff;
 `
@@ -28,9 +29,10 @@ const AddImgIndexBtn = styled.div`
   right: 0;
   top: 0;
   height: 100%;
-  width: 40px;
+  width: 200px;
+  padding: 0 10px;
   display: none;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   color: #fff;
 `

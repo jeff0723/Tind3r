@@ -3,7 +3,7 @@ import useCeramic from 'hooks/useCeramic';
 import { useTind3rMembershipContract } from 'hooks/useContract';
 import { getLastMessage } from 'hooks/useMessageStore';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FaStoreAlt } from "react-icons/fa";
 import { MatchProfile, UserProfile } from 'schema/ceramic/user';
 import { useAppSelector } from 'state/hooks';
@@ -176,16 +176,7 @@ function ChatApp() {
   const { account } = useWeb3React()
   const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+id+in+"
   //--- end
-  useEffect(() => {
-    if (userProfile.name) {
-      setUserName(userProfile.name)
-    }
-    if (userProfile.profileBaseUri) {
-      const index = userProfile.selectedProfileIndex
-      setProfileImage(userProfile.profileBaseUri + index?.toString() + '.png')
-    }
-    getMatchedProfileList()
-  }, [userProfile])
+
   const handleTabClick = (tab: number) => {
     setTabSelected(tab)
   }
@@ -198,12 +189,15 @@ function ChatApp() {
     return object.rows
   }
 
-  const getMatchedProfileList = async (): Promise<MatchProfile[]> => {
+  const getMatchedProfileList = useCallback(async (): Promise<MatchProfile[]> => {
+    console.log("get matched profile list")
     if (!ceramic || !tind3rMembershipContract || !account) return []
-    // const userIdList = await tind3rMembershipContract.getMatches(account)
-    //   .then(res => { return res })
-    //   .catch(err => console.log(err))
-    const userIdList = [0, 1]
+    const userIdList = await tind3rMembershipContract.getMatches(account)
+    // .then(res => { return res })
+    // .catch(err => console.log(err))
+    console.log("get matched profile list 2")
+
+    // const userIdList = [0, 1]
     const userInfoList = await queryUserInfoFromTableland(userIdList)
     console.log(userInfoList)
     // @ts-ignore
@@ -223,12 +217,24 @@ function ChatApp() {
     console.log("matchList", _matchList)
     setMatchList(_matchList)
     return _matchList
-  }
+  }, [ceramic, tind3rMembershipContract, account])
+
+  useEffect(() => {
+    if (userProfile.name) {
+      setUserName(userProfile.name)
+    }
+    if (userProfile.profileBaseUri) {
+      const index = userProfile.selectedProfileIndex
+      setProfileImage(userProfile.profileBaseUri + index?.toString() + '.png')
+    }
+    getMatchedProfileList()
+  }, [userProfile, getMatchedProfileList])
   const handleProfileClick = () => {
     router.push('/app/profile')
   }
   //--- end
   console.log("User profile", userProfile)
+  console.log('Match list', matchList)
   return (
     <div>
       <Header>

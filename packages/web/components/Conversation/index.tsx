@@ -62,8 +62,9 @@ const MyMessage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    padding: 10px 10px;
+    align-items: center;
+    padding: 0px 10px;
+    height: 41px;
     color:#fff;
     background: #07A6FF;
     border-radius: 14px 4px 4px 14px;
@@ -84,7 +85,7 @@ const MessageSendContainer = styled.div`
     align-items: center;
     padding: 16px;
     width: 100%;
-    height: 69px;
+    height: 10vh;
     border-top: 1px solid #D9D9D9;
 `
 
@@ -131,6 +132,8 @@ type ConversationProps = {
 }
 type Props = {
     peerAddress: string
+    imageUrl: string
+    name?: string
 }
 const formatDate = (date?: Date) => {
     return date?.toLocaleDateString('en-US') + ',' + date?.toLocaleTimeString('en-US', {
@@ -143,7 +146,7 @@ const isThirtyMinutesDifference = (lastSent: Date, msgSent: Date) => {
     return Math.abs(msgSent.getTime() - lastSent.getTime()) > 1800000
 }
 const AvatarUrl = "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-const Conversation = ({ peerAddress }: Props) => {
+const Conversation = ({ peerAddress, imageUrl, name }: Props) => {
     const { messages, sendMessage, loading } = useConversation(peerAddress)
     const { account } = useWeb3React()
     const [message, setMessage] = useState("")
@@ -178,8 +181,8 @@ const Conversation = ({ peerAddress }: Props) => {
         <ConversationBox>
             <ConversationHeader>
                 <ConversationHeaderInfo>
-                    <Avatar src="https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80" />
-                    You Matched with Hi on 7/15/2022
+                    <Avatar src={imageUrl} />
+                    You Matched with {name} on 7/15/2022
                 </ConversationHeaderInfo>
                 <Button shape='circle' icon={<CloseOutlined />} style={{ color: '#BFBFBF' }} onClick={handleExit} />
             </ConversationHeader>
@@ -199,7 +202,7 @@ const Conversation = ({ peerAddress }: Props) => {
                         </div>
                         return (
                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                <Avatar src={AvatarUrl} />
+                                <Avatar src={imageUrl} />
                                 <PeerMessage>{message.content}</PeerMessage>
                             </div>
 

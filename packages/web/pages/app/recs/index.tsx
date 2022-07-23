@@ -123,7 +123,6 @@ const Recommendation: NextPage = () => {
         walletAddress: userInfoMap.get(stream.id.toString())
       }
     })
-    console.log(recProfileList)
     const _recommendProfileList = recProfileList.filter((profile) => profile.walletAddress !== account?.toLocaleLowerCase())
     dispatch(updateRecommedationList({ recommendationList: _recommendProfileList }))
     setRecommendProfileList(_recommendProfileList)
@@ -134,11 +133,6 @@ const Recommendation: NextPage = () => {
   useEffect(() => {
     getRecProfileList()
   }, [ceramic])
-  console.log(recommendProfileList)
-  console.log("chileRefs:", swiperCardRefs[0])
-  const isMembership = useAppSelector(state => state.user.isMembershipCreated)
-
-  console.log("Is membership:", isMembership)
 
   return (
     <Layout>
