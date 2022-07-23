@@ -34,8 +34,10 @@ export default function Updater(): null {
     }, [account, idx, isAuthenticated])
     const checkMembershipExists = useCallback(async () => {
         if (account && provider && tind3rMembershipContract) {
-            const isExists = await tind3rMembershipContract.isTind3rMember(account)
-            dispatch(updateMembershipCreated({ isMembershipCreated: isExists }))
+            tind3rMembershipContract.isTind3rMember(account)
+                .then(isExists =>
+                    dispatch(updateMembershipCreated({ isMembershipCreated: isExists })))
+                .catch(err => console.log(err))
         }
     }, [account, tind3rMembershipContract, provider])
 
