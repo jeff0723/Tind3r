@@ -30,7 +30,6 @@ export const XmtpProvider: FunctionComponent<{
       if (newConvos === undefined) {
         return []
       }
-      console.log("new convos: ", newConvos)
       newConvos = newConvos.filter(
         (convo) =>
           state.findIndex((otherConvo) => {
@@ -50,7 +49,6 @@ export const XmtpProvider: FunctionComponent<{
   }, [isAuthenticated, provider, account])
   const listConversations = useCallback(async () => {
     if (!client) return
-    console.log('Listing conversations')
     setLoadingConversations(true)
     const convos = await client.conversations.list()
     convos.forEach((convo: Conversation) => {

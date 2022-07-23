@@ -63,7 +63,6 @@ const Match = ({ match, selectedTab }: Props) => {
             </MatchCard>
         )
     }
-    console.log("match:", match)
     return (
         <MessageBox onClick={handleClick}>
             <Avatar src={match.profileBaseUri + match.selectedProfileIndex.toString() + '.png'} style={{ width: '74px', height: '74px' }} />

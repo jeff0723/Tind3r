@@ -2,8 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 
 import { SupportedChainId } from './chains'
 
-const INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY || "23b68fe0bc88452aa30a76fc5eca3d55"
-console.log('INFURA_KEY', INFURA_KEY)
+const INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY || "6e53d89460dd447b857b07b8c173f230"
 if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`NEXT_PUBLIC_INFURA_KEY must be a defined environment variable`)
 }

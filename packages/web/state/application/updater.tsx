@@ -13,7 +13,6 @@ import config from 'schema/ceramic/model.json';
 const queryUserInfoListFromTableland = async (startId: number, endId: number): Promise<string[][]> => {
     const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+"
     const queryURL = TABLELAND_PREFIX + `id>=${startId}+and+id<${endId}`;
-    console.log(queryURL)
     const content = await fetch(queryURL)
     const object = await content.json()
     return object.rows
@@ -21,7 +20,6 @@ const queryUserInfoListFromTableland = async (startId: number, endId: number): P
 const queryUserInfoFromTableland = async (userIdList: number[]): Promise<string[][]> => {
     const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+id+in+"
     const queryURL = TABLELAND_PREFIX + `(${userIdList.join(',')})`;
-    console.log(queryURL)
     const content = await fetch(queryURL)
     const object = await content.json()
     return object.rows
@@ -39,11 +37,9 @@ export default function Updater(): null {
         const userInfoList = await queryUserInfoListFromTableland(0, 10)
         // @ts-ignore
         const userInfoMap = new Map<string, string>(userInfoList)
-        console.log(userInfoMap)
         const streamIdList = Array(...userInfoMap.keys())
         const queryList = streamIdList.map(sid => { return { streamId: sid } })
         const streamRecord = await ceramic.multiQuery(queryList)
-        console.log(streamRecord)
         const recProfileList: UserProfile[] = Object.values(streamRecord).map((stream) => {
             return {
                 ...stream.content,
@@ -57,8 +53,8 @@ export default function Updater(): null {
     const getMatchedProfileList = useCallback(async () => {
         if (!ceramic || !tind3rMembershipContract || !account) return
 
-        // const userIdList = await tind3rMembershipContract.getMatches(account)
-        const userIdList = [0, 1]
+        const userIdList = await tind3rMembershipContract.getMatches(account)
+        // const userIdList = [0, 1]
         const userInfoList = await queryUserInfoFromTableland(userIdList)
         // @ts-ignore
         const userInfoMap = new Map<string, string>(userInfoList)

@@ -183,13 +183,11 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[], name?: string) => {
     if (!Array.isArray(e)) {
-      console.log('set here 1')
       setOnBoardingInfo({
         ...onBoardingInfo,
         [e.target.name as string]: e.target.value
       } as UserProfile);
     } else {
-      console.log('set here 2')
 
       setOnBoardingInfo({
         ...onBoardingInfo,
@@ -252,7 +250,6 @@ const OnBoardingPage: NextPage = (props: Props) => {
 
     if (isAuthenticated) {
       try {
-        console.log("start to set profile on ceramic")
         const streamId = await idx?.set(UserProfileDefinitionId, {
           ...onBoardingInfo,
           profileBaseUri: `https://ipfs.io/ipfs/${cid}/`,

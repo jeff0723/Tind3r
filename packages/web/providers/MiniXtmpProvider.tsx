@@ -17,10 +17,8 @@ const MiniXtmpProvider = ({ children }: Props) => {
     useEffect(() => {
         const initClient = async () => {
             if (!wallet) {
-                console.log("Haven't collect wallet yet!")
                 return
             }
-            console.log("Wallet collected, init client")
             setClient(await Client.create(wallet))
         }
         initClient()

@@ -194,8 +194,7 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
     if (currentImgIndex === 0) return
     setCurrentImgIndex(currentImgIndex - 1)
   }
-  console.log("swiper card ref:", swiperCardRef)
-  console.log("profile list:", profileList)
+
   const swipe = async (dir: string) => {
 
     swiperCardRef.current.swipe(dir) // Swipe the card!

@@ -76,7 +76,6 @@ const Home: NextPage = () => {
     const userName = useAppSelector(state => state.user.userName)
     const userProfile = useAppSelector(state => state.user.userProfile)
     const handleConnect = async () => {
-        console.log('connect clicked')
 
         await injectedConnection.connector.activate()
     }
@@ -95,18 +94,14 @@ const Home: NextPage = () => {
     }, [idx, account, isAuthenticated, getProfile])
 
     const handleUpdateName = async () => {
-        console.log('button clicked')
         console.log(name)
         if (!name || !isAuthenticated || !idx || !idx.authenticated) return
-        console.log('start to update')
         const res = await idx?.set("basicProfile", { name })
 
-        console.log("respones", res)
         getProfile()
 
     }
-    console.log(idx?.authenticated)
-    console.log("User Profile:", userProfile)
+
 
     return (
 

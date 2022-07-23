@@ -23,7 +23,6 @@ const CeramicProvider = ({ children }: Props) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
-    console.log('set ceramic and idx')
     const _ceramic = new CeramicClient(apiHost)
     //@ts-ignore
     const _idx = new IDX({ ceramic: _ceramic, aliases: aliases })
@@ -36,10 +35,7 @@ const CeramicProvider = ({ children }: Props) => {
 
   }, [])
   const signIn = useCallback(async () => {
-    console.log("signing in")
-    console.log("provider and address: ", provider, account)
     if (provider && account && ceramic) {
-      console.log("provider and address detected")
       const threeIdConnect = new ThreeIdConnect()
       const ethProvider = new EthereumAuthProvider(window.ethereum, account)
 
@@ -55,11 +51,7 @@ const CeramicProvider = ({ children }: Props) => {
       await ceramic.did?.authenticate()
       if (idx?.authenticated) {
         setIsAuthenticated(true)
-        console.log("idx: ", idx)
         setIdx(idx)
-        console.log("idx authenticated: ", idx.authenticated)
-        console.log("Sign in success")
-
       }
 
     }

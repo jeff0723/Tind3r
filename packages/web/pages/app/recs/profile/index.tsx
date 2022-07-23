@@ -216,7 +216,6 @@ const profile = {
 }
 
 const GenderIcon = ({ type }: { type: number }): JSX.Element => {
-  console.log('gender:', type)
   switch (type) {
     case 0:
       return <WomanOutlined />
