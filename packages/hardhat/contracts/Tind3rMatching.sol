@@ -9,14 +9,7 @@ import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
-
-interface T3M {
-    function prefixURI() external view returns (string memory);
-
-    function getUserId(address user) external view returns (uint256);
-
-    function ownerOf(uint256 tokenId) external view returns (address);
-}
+import "./ITind3rMembership.sol";
 
 error NotCallByMembershipContract();
 
@@ -28,7 +21,7 @@ contract Tind3rMatching is
 {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.UintSet;
 
-    T3M private _t3mContract;
+    ITind3rMembership private _t3mContract;
 
     event Match(uint256 aUserId, uint256 bUserId);
 
@@ -39,7 +32,7 @@ contract Tind3rMatching is
     /**
      * @dev initialization function for upgradeable contract
      */
-    function initialize(T3M t3mContract) public initializer {
+    function initialize(ITind3rMembership t3mContract) public initializer {
         __ERC1155Supply_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
