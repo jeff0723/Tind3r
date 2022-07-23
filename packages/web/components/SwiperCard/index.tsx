@@ -10,12 +10,46 @@ import { useAppDispatch, useAppSelector } from 'state/hooks';
 import styled from 'styled-components';
 import { calculateAge } from 'utils';
 import { openNotificationWithIcon } from 'utils/notification';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
+const MinusImgIndexBtn = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`
+const AddImgIndexBtn = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`
 
 const CardContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 375px;
   border-radius: 16px;
+  &:hover {
+    cursor: pointer;
+  }
+  &:hover ${MinusImgIndexBtn} {
+    display: flex;
+  }
+  &:hover ${AddImgIndexBtn} {
+    display: flex;
+  }
 `
 
 const CardContent = styled.div<({ image: string }) >`
@@ -106,7 +140,7 @@ type Props = {
 
 const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
   const tind3rMembershipContract = useTind3rMembershipContract()
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const profileList = useAppSelector(state => state.application.recommendationList);
   const dipatch = useAppDispatch();
   const router = useRouter()
@@ -143,6 +177,18 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
       handlePass()
     }
   }
+  const handleClickAddImgIndexBtn = () => {
+    if (currentImgIndex === userProfile.profilePictureCounts - 1) {
+      setCurrentImgIndex(0)
+      return
+    }
+
+    setCurrentImgIndex(currentImgIndex + 1)
+  }
+  const handleClickMinusImgIndexBtn = () => {
+    if (currentImgIndex === 0) return
+    setCurrentImgIndex(currentImgIndex - 1)
+  }
   console.log("swiper card ref:", swiperCardRef)
   console.log("profile list:", profileList)
   const swipe = async (dir: string) => {
@@ -158,11 +204,12 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
       preventSwipe={['up', 'down']}
     >
       <CardContainer>
-        <CardContent image={userProfile.profileBaseUri + currentIndex.toString() + '.png'}>
+        <CardContent image={userProfile.profileBaseUri + currentImgIndex.toString() + '.png'}>
           <CardLineBox>
-            <Line active={true} />
-            <Line active={false} />
-            <Line active={false} />
+            {
+              userProfile.profilePictureCounts > 1 && [...Array(userProfile.profilePictureCounts).keys()]
+                .map(index => <Line key={index} active={index === currentImgIndex} />)
+            }
           </CardLineBox>
           <CardInfoBox>
             <PersionalInfoBox>
@@ -182,6 +229,16 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
           <Button shape='circle' icon={<StarFilled style={{ color: '#07A6FF', fontSize: '24px' }} />} style={{ width: '55px', height: '55px', background: 'none', border: '2px solid #07A6FF' }} />
           <Button shape='circle' icon={<HeartFilled style={{ color: '#00D387', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: 'none', border: ' 2px solid #00D387' }} onClick={() => { swipe("right") }} />
         </CardAction>
+        {
+          userProfile.profilePictureCounts > 1 && <>
+            <MinusImgIndexBtn onClick={handleClickMinusImgIndexBtn}>
+              <LeftOutlined style={{ fontSize: 20 }} />
+            </MinusImgIndexBtn>
+            <AddImgIndexBtn onClick={handleClickAddImgIndexBtn}>
+              <RightOutlined style={{ fontSize: 20 }} />
+            </AddImgIndexBtn>
+          </>
+        }
       </CardContainer>
     </TinderCard>
   )
