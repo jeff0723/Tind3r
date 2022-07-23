@@ -11,7 +11,13 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  justify-content: center;
+  padding:32px 0px;
   align-items: center;
   background-color: #F0F0F0;
+}
+
+@media (min-width: 1600px) {
+  .content {
+    padding:64px 0px;
+  }
 }

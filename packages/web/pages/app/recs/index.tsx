@@ -99,6 +99,7 @@ const Recommendation: NextPage = () => {
       {recommendProfileList?.length ? (recommendProfileList.map((userProfile, index) =>
         <SwiperCard key={index} userProfile={userProfile} swiperCardRef={swiperCardRefs[index]} index={index} />
       )) : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />}
+
       <HelperContent>
         <StyledButton>HIDE</StyledButton>
         <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>
