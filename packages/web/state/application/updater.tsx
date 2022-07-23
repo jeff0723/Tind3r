@@ -35,6 +35,7 @@ export default function Updater(): null {
     const getRecProfileList = useCallback(async () => {
         if (!ceramic || !account) return
         const userInfoList = await queryUserInfoListFromTableland(0, 10)
+        if (userInfoList.length == 0) return
         // @ts-ignore
         const userInfoMap = new Map<string, string>(userInfoList)
         const streamIdList = Array(...userInfoMap.keys())
@@ -52,9 +53,8 @@ export default function Updater(): null {
 
     const getMatchedProfileList = useCallback(async () => {
         if (!ceramic || !tind3rMembershipContract || !account) return
-
         const userIdList = await tind3rMembershipContract.getMatches(account)
-        // const userIdList = [0, 1]
+        if (userIdList.length == 0) return
         const userInfoList = await queryUserInfoFromTableland(userIdList)
         // @ts-ignore
         const userInfoMap = new Map<string, string>(userInfoList)

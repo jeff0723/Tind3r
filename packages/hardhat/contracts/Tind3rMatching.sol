@@ -18,7 +18,7 @@ contract Tind3rMatching is
 {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.UintSet;
 
-    ITind3rMembership private _membershipContract;
+    ITind3rMembership private _t3mContract;
 
     mapping(address => EnumerableSetUpgradeable.UintSet) _userMatches;
 
@@ -32,14 +32,14 @@ contract Tind3rMatching is
         __ERC1155Supply_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
-        _membershipContract = initMembershipContract;
+        _t3mContract = initMembershipContract;
     }
 
     /**
      * @dev Override ERC1155-uri
      */
     function uri(uint256) public view virtual override returns (string memory) {
-        return string.concat(_membershipContract.prefixURI(), "{id}");
+        return string.concat(_t3mContract.prefixURI(), "{id}");
     }
 
     /**
@@ -59,17 +59,36 @@ contract Tind3rMatching is
     }
 
     /**
+     * @dev Burn token
+     */
+    function burn(
+        address account,
+        uint256 id,
+        uint256 value
+    ) public {
+        if (
+            address(_t3mContract) == _msgSender() ||
+            account == _msgSender() ||
+            isApprovedForAll(account, _msgSender())
+        ) {
+            _burn(account, id, value);
+        } else {
+            revert CallerIsOwnerNorApproved();
+        }
+    }
+
+    /**
      * @dev Show membership contract
      */
     function membershipContract() public view returns (address) {
-        return address(_membershipContract);
+        return address(_t3mContract);
     }
 
     /**
      * @dev Only Tind3eMembership contract can call
      */
     modifier onlyT3M() {
-        if (msg.sender != address(_membershipContract))
+        if (msg.sender != address(_t3mContract))
             revert NotCallByMembershipContract();
         _;
     }
@@ -84,11 +103,11 @@ contract Tind3rMatching is
     ) internal override {
         if (from == address(0) || to == address(0)) return;
         uint256 size = ids.length;
-        uint256 fromId = _membershipContract.getUserId(from);
-        uint256 toId = _membershipContract.getUserId(to);
+        uint256 fromId = _t3mContract.getUserId(from);
+        uint256 toId = _t3mContract.getUserId(to);
         for (uint256 i = 0; i < size; ++i) {
             uint256 targetId = ids[i];
-            address targetUser = _membershipContract.ownerOf(targetId);
+            address targetUser = _t3mContract.ownerOf(targetId);
             if (balanceOf(from, targetId) == 0) {
                 emit Block(fromId, targetId);
                 _userMatches[from].remove(targetId);
