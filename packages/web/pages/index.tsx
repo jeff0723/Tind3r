@@ -13,7 +13,9 @@ const ImageBackground = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url(https://tinder.com/static/build/379766df6d9620c8f7e0bcc39c6905e2.webp);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url(https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2971&q=80);
+    background-size: cover;
+    background-position: center;
 `
 const Header = styled.div`
     display: flex;
