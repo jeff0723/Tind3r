@@ -374,14 +374,14 @@ const OnBoardingPage: NextPage = (props: Props) => {
           <Col span={24}>
             <OptionalTitle>Optional</OptionalTitle>
             <FormField>
-              <FormLabel>My Organization</FormLabel>
+              <FormLabel>Your Web3 role</FormLabel>
               {/* @ts-ignore */}
               <Select mode="tags" style={{ width: '100%' }} onChange={(e) => handleChange(e, 'organizations')}>
                 {ORGANIZATION_OPTIONS.map(option => <Option name="organizations" key={option} value={option}>{option}</Option>)}
               </Select>
             </FormField>
             <FormField>
-              <FormLabel>Passion</FormLabel>
+              <FormLabel>What kind of people you want to meet</FormLabel>
               {/* @ts-ignore */}
               <Select mode="tags" style={{ width: '100%' }} onChange={(e) => handleChange(e, 'tags')}>
                 {PASSION_OPTIONS.map(option => <Option name="tags" key={option} value={option}>{option}</Option>)}

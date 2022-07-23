@@ -85,11 +85,21 @@ const Home: NextPage = () => {
         openNotificationWithIcon('success', 'Connected', 'You are now connected to the blockchain')
         router.push('/app/onboarding')
     }
+    const handleLoginButtonClick = async () => {
+        if (!window.ethereum) {
+            // This should be change to a modal
+            openNotificationWithIcon('info', 'Wallet not installed', 'Please install MetaMask')
+            return
+        }
+        await injectedConnection.connector.activate()
+        openNotificationWithIcon('success', 'Connected', 'You are now connected to the blockchain')
+        router.push('/app/recs')
+    }
     return (
         <ImageBackground>
             <Header>
                 <Image src='/images/logo-with-word-white.png' width={293} height={92} alt='background' />
-                <LoginButton>Log In</LoginButton>
+                <LoginButton onClick={handleLoginButtonClick}>Log In</LoginButton>
             </Header>
             <Content>
                 <Title>Tinder for web3</Title>

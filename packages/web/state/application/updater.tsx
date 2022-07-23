@@ -9,6 +9,7 @@ import { UserProfile, MatchProfile } from 'schema/ceramic/user'
 import { updateRecommedationList, updateSelectedProfile, updateMatchList } from './reducer'
 import config from 'schema/ceramic/model.json';
 import { openNotificationWithIcon } from 'utils/notification'
+import { useRouter } from 'next/router'
 
 
 const queryUserInfoListFromTableland = async (startId: number, endId: number): Promise<string[][]> => {
@@ -30,6 +31,8 @@ export default function Updater(): null {
     const { account } = useWeb3React()
     const { ceramic } = useCeramic();
     const dispatch = useAppDispatch()
+    const router = useRouter()
+    const isMembershipCreated = useAppSelector(state => state.user.isMembershipCreated)
     const tind3rMembershipContract = useTind3rMembershipContract()
 
 
@@ -83,6 +86,10 @@ export default function Updater(): null {
 
     }, [dispatch, account, ceramic, tind3rMembershipContract])
 
-
+    useEffect(() => {
+        if (!isMembershipCreated) {
+            router.push('/app/onboarding')
+        }
+    }, [isMembershipCreated])
     return null
 }
