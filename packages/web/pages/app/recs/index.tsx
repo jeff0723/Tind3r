@@ -142,11 +142,9 @@ const Recommendation: NextPage = () => {
 
   return (
     <Layout>
-      <Container>
         {recommendProfileList?.length ? (recommendProfileList.map((userProfile, index) =>
           <SwiperCard userProfile={userProfile} swiperCardRef={swiperCardRefs[index]} index={index} />
         )) : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />}
-      </Container>
       <HelperContent>
         <StyledButton>HIDE</StyledButton>
         <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>

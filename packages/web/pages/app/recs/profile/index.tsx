@@ -36,10 +36,8 @@ const StyledButton = styled(Button)`
   color: #FFFFFF;
 `
 const ProfileCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   width:375px;
-  height:668px;
+  height:690px;
   background: #FFFFFF;
   overflow-y:scroll;
   border-radius: 16px;
@@ -53,7 +51,8 @@ const CardImage = styled.div<({ image: string }) >`
   justify-content: space-between;
   align-items: flex-start;
   width:100%;
-  min-height:450px;
+  height:475px;
+  flex-shrink: 0;
   background: linear-gradient(180.03deg, rgba(0, 0, 0, 0) 72.45%, #000000 99.97%), url(${({ image }) => image});
   border-radius: 16px 16px 0px 0px;
   background-size: cover;

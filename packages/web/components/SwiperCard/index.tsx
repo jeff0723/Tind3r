@@ -46,7 +46,7 @@ const CardAction = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 102px;
+  height: 124px;
   background: #000000;
   border-radius: 0px 0px 16px 16px;
   padding: 0px 48px;
