@@ -2,7 +2,34 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
+export enum GenderType {
+    WOMEN,
+    MEN,
+    NON_BINARY
+}
 
+export const convertGenderToText = (type: GenderType) => {
+    switch (type) {
+        case GenderType.WOMEN:
+            return "Women"
+        case GenderType.MEN:
+            return "Men"
+        case GenderType.NON_BINARY:
+            return "Non-binary"
+
+
+    }
+}
+export const calculateAge = (birthday: string) => {
+    const today = new Date();
+    const birthDate = new Date(birthday);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
     try {

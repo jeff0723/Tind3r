@@ -1,13 +1,15 @@
 import { CloseOutlined, HeartFilled, InfoOutlined, StarFilled } from '@ant-design/icons';
 import { Button } from 'antd';
-import styled from 'styled-components';
-import { UserProfile } from 'schema/ceramic/user';
-import { createRef, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
 import { useTind3rMembershipContract } from 'hooks/useContract';
-import { openNotificationWithIcon } from 'utils/notification';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import TinderCard from 'react-tinder-card';
-import { useAppSelector } from 'state/hooks';
+import { UserProfile } from 'schema/ceramic/user';
+import { updateSelectedProfile } from 'state/application/reducer';
+import { useAppDispatch, useAppSelector } from 'state/hooks';
+import styled from 'styled-components';
+import { calculateAge } from 'utils';
+import { openNotificationWithIcon } from 'utils/notification';
 
 const CardContainer = styled.div`
   display: flex;
@@ -98,22 +100,15 @@ const Line = styled.div<{ active: boolean }>`
 type Props = {
   userProfile: UserProfile
   swiperCardRef: any
-}
-const calculateAge = (birthday: string) => {
-  const today = new Date();
-  const birthDate = new Date(birthday);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const month = today.getMonth() - birthDate.getMonth();
-  if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
+  index: number
 }
 
-const SwiperCard = ({ userProfile, swiperCardRef }: Props) => {
+
+const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
   const tind3rMembershipContract = useTind3rMembershipContract()
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const profileList = useAppSelector(state => state.application.recommendationList);
+  const dipatch = useAppDispatch();
   const router = useRouter()
   useEffect(() => {
 
@@ -134,17 +129,22 @@ const SwiperCard = ({ userProfile, swiperCardRef }: Props) => {
     console.log("pass")
   }
   const handleInfoClick = () => {
+    if (profileList) {
+      dipatch(updateSelectedProfile({ selectedProfile: profileList[index] }))
+    }
     router.push('/app/recs/profile')
+
   }
   const handleSwipe = async (dir: string) => {
     if (dir == "right") {
       handleLike()
     }
     else {
-      console.log("pass")
+      handlePass()
     }
   }
   console.log("swiper card ref:", swiperCardRef)
+  console.log("profile list:", profileList)
   const swipe = async (dir: string) => {
 
     swiperCardRef.current.swipe(dir) // Swipe the card!
@@ -154,7 +154,6 @@ const SwiperCard = ({ userProfile, swiperCardRef }: Props) => {
     <TinderCard
       ref={swiperCardRef}
       className='swipe'
-      // key={index}
       onSwipe={handleSwipe}
       preventSwipe={['up', 'down']}
     >

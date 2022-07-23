@@ -29,7 +29,8 @@ export const initialState: UserState = {
         tags: [],
         profileBaseUri: "",
         profilePictureCounts: 0,
-        selectedProfileIndex: 0
+        selectedProfileIndex: 0,
+        walletAddress: ""
     },
     selectedWallet: undefined,
     isProfileExists: false,

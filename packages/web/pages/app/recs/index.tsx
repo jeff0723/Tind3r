@@ -10,8 +10,11 @@ import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs';
 import TinderCard from 'react-tinder-card';
 import { UserProfile } from 'schema/ceramic/user';
-import { useAppSelector } from 'state/hooks';
+import { useAppDispatch, useAppSelector } from 'state/hooks';
 import styled from 'styled-components';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
+import { updateRecommedationList } from 'state/application/reducer';
 
 const characters = [
   {
@@ -79,12 +82,9 @@ const StyledButton = styled(Button)`
 
 const Recommendation: NextPage = () => {
   const { account } = useWeb3React()
+  const dispatch = useAppDispatch()
   // swiper
-  const [currentIndex, setCurrentIndex] = useState(characters.length - 1)
-  const [lastDirection, setLastDirection] = useState("")
-  const currentIndexRef = useRef(currentIndex)
   const [recommendProfileList, setRecommendProfileList] = useState<UserProfile[]>()
-  const canSwipe = currentIndex >= 0
   //--- Justa-2022-07-23
   const { ceramic } = useCeramic();
   const TABLELAND_PREFIX = "https://testnet.tableland.network/query?s=SELECT+description,owner+FROM+tind3r_membership_80001_452+where+"
@@ -96,7 +96,6 @@ const Recommendation: NextPage = () => {
         .map((i) => createRef()),
     [recommendProfileList]
   )
-  const router = useRouter()
 
   //--- Justa-2022-07-23
   const queryUserInfoFromTableland = async (startId: number, endId: number): Promise<string[][]> => {
@@ -126,61 +125,35 @@ const Recommendation: NextPage = () => {
     })
     console.log(recProfileList)
     const _recommendProfileList = recProfileList.filter((profile) => profile.walletAddress !== account?.toLocaleLowerCase())
+    dispatch(updateRecommedationList({ recommendationList: _recommendProfileList }))
     setRecommendProfileList(_recommendProfileList)
     return recProfileList
   }, [ceramic])
   //--- end
 
-
-  const updateCurrentIndex = (val: number) => {
-    setCurrentIndex(val)
-    currentIndexRef.current = val
-  }
-
-
-  // const swipe = async (dir: string) => {
-  //   if (canSwipe && currentIndex < characters.length) {
-  //     await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
-  //   }
-  // }
-  // const handleLike = () => {
-  //   console.log(childRefs[currentIndex])
-  // }
-  const handlePass = () => {
-
-  }
-
-
-  const swiped = (direction: string, nameToDelete: string, index: number) => {
-    setLastDirection(direction)
-    updateCurrentIndex(index - 1)
-  }
-  const handleInfoClick = () => {
-    router.push('/app/recs/profile')
-  }
   useEffect(() => {
     getRecProfileList()
   }, [ceramic])
   console.log(recommendProfileList)
-  console.log("Current Index:", currentIndex)
   console.log("chileRefs:", swiperCardRefs[0])
   const isMembership = useAppSelector(state => state.user.isMembershipCreated)
 
   console.log("Is membership:", isMembership)
+
   return (
-
-    <Container>
-      {recommendProfileList?.length ? (recommendProfileList.map((userProfile, index) =>
-        <SwiperCard userProfile={userProfile} swiperCardRef={swiperCardRefs[index]} />
-      )) : <div>Loading...</div>}
-    </Container>
-    // <HelperContent>
-    //   <StyledButton>HIDE</StyledButton>
-    //   <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>
-    //   <InstructionBox><BsArrowUpSquare />SUPERLIKE</InstructionBox>
-    //   <InstructionBox><BsArrowRightSquare />LIKE</InstructionBox>
-    // </HelperContent>
-
+    <Layout>
+      <Container>
+        {recommendProfileList?.length ? (recommendProfileList.map((userProfile, index) =>
+          <SwiperCard userProfile={userProfile} swiperCardRef={swiperCardRefs[index]} index={index} />
+        )) : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />}
+      </Container>
+      <HelperContent>
+        <StyledButton>HIDE</StyledButton>
+        <InstructionBox><BsArrowLeftSquare />PASS</InstructionBox>
+        <InstructionBox><BsArrowUpSquare />SUPERLIKE</InstructionBox>
+        <InstructionBox><BsArrowRightSquare />LIKE</InstructionBox>
+      </HelperContent>
+    </Layout>
   )
 }
 

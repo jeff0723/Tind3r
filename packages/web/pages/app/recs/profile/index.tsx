@@ -3,8 +3,12 @@ import Layout from 'components/Layout'
 import React from 'react'
 import styled from 'styled-components'
 import { BsArrowLeftSquare, BsArrowRightSquare, BsArrowUpSquare } from 'react-icons/bs'
-import { ArrowDownOutlined, CloseOutlined, HeartFilled, StarFilled, WomanOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, CloseOutlined, HeartFilled, ManOutlined, StarFilled, UserOutlined, WomanOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router'
+import { useAppSelector } from 'state/hooks'
+import { calculateAge, convertGenderToText, GenderType } from 'utils'
+import { UserProfile } from 'schema/ceramic/user'
+import { useTind3rMembershipContract } from 'hooks/useContract'
 
 
 type Props = {}
@@ -35,7 +39,7 @@ const ProfileCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   width:375px;
-  height:645px;
+  height:668px;
   background: #FFFFFF;
   overflow-y:scroll;
   border-radius: 16px;
@@ -49,7 +53,7 @@ const CardImage = styled.div<({ image: string }) >`
   justify-content: space-between;
   align-items: flex-start;
   width:100%;
-  height:450px;
+  min-height:450px;
   background: linear-gradient(180.03deg, rgba(0, 0, 0, 0) 72.45%, #000000 99.97%), url(${({ image }) => image});
   border-radius: 16px 16px 0px 0px;
   background-size: cover;
@@ -72,12 +76,14 @@ const CardInfoBox = styled.div`
   padding: 10px 16px;
   width: 100%;
   border-bottom: 1px solid #f0f0f0;
+  gap: 10px;
 `
 const InfoBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   gap:10px;
+  font-size:18px;
 `
 const Name = styled.div`
   white-space: nowrap;
@@ -94,14 +100,43 @@ const Age = styled.div`
   font-size: 28px;
   line-height: 42px;
 `
+const Text = styled.div`
+font-weight: 400;
+font-size: 18px;
+line-height: 27px;
+display: flex;
+align-items: center;
+`
+const Subtitle = styled.div`
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 27px;
+  display: flex;
+  align-items: center;
+`
+const Tags = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap:10px;
+`
+const Tag = styled.div`
+  display: flex;
+  padding: 4px 8px;
+  border: 1px solid #8C8C8C;
+  border-radius: 24px;
+  color: #8C8C8C;
+  font-size: 12px;
+`
+
 
 const ReportBox = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 20px 0px;
-width: 100%;
-border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px;
+  width: 100%;
+  border-bottom: 1px solid #f0f0f0;
 `
 const ProfileCardAction = styled.div`
   display: flex;
@@ -112,7 +147,7 @@ const ProfileCardAction = styled.div`
   height: 102px;
   border-radius: 0px 0px 16px 16px;
   padding: 0px 48px;
-  position:absolute;
+  position:sticky;
   bottom:10px;
   
 `
@@ -125,36 +160,66 @@ const profile = {
   bio: "一堆戴口罩是想表示重視疫情嗎？",
   gender: 'Woman'
 }
+
+const GenderIcon = ({ type }: { type: number }): JSX.Element => {
+  console.log('gender:', type)
+  switch (type) {
+    case 0:
+      return <WomanOutlined />
+    case 1:
+      return <ManOutlined />
+    case 2:
+      return <UserOutlined />
+    default:
+      return <UserOutlined />
+  }
+}
 const RecommendationProfile = (props: Props) => {
+  const tind3rMembershipContract = useTind3rMembershipContract()
+  const userProfile = useAppSelector(state => state.application.selectedProfile) as UserProfile
   const router = useRouter()
   const handleBack = () => {
     router.back()
   }
+  const handleReport = () => {
+    //todo
+  }
+  console.log('Selected User Profile', userProfile)
   return (
     <Layout>
       <ProfileCardContainer>
-        <CardImage image={profile.avatar}>
+        <CardImage image={userProfile.profileBaseUri + userProfile.selectedProfileIndex.toString() + '.png'}>
           <BackButton shape='circle' icon={<ArrowDownOutlined style={{ fontSize: '24px' }} onClick={handleBack} />}></BackButton>
         </CardImage>
         <CardInfoBox>
           <InfoBox>
-            <Name>Rong </Name>
-            <Age>26</Age>
+            <Name>{userProfile.name}</Name>
+            <Age>{calculateAge(userProfile.birthday)}</Age>
           </InfoBox>
           <InfoBox>
-            <WomanOutlined />
-            <div>Woman</div>
+
+            <GenderIcon type={userProfile.gender} />
+            <div>{convertGenderToText(userProfile.gender)}</div>
           </InfoBox>
 
         </CardInfoBox>
         <CardInfoBox>
-          {profile.bio}
+          <Subtitle>About Me</Subtitle>
+
+          {userProfile.bio}
         </CardInfoBox>
         <CardInfoBox>
-          <div style={{ fontSize: '16px' }}>Passions</div>
+          <Subtitle >My Interests</Subtitle>
+          <Tags>
+            {userProfile?.tags?.map((tag, index) => (
+              <Tag>
+                Tennis
+              </Tag>
+            ))}
+          </Tags>
         </CardInfoBox>
-        <ReportBox>
-          <div style={{ fontSize: '16px' }}>REPORT {profile.name}</div>
+        <ReportBox onClick={handleReport}>
+          <div style={{ fontSize: '16px' }}>REPORT {userProfile.name}</div>
         </ReportBox>
         <ProfileCardAction>
           <Button shape='circle' icon={<CloseOutlined style={{ color: "#FF5E51", fontWeight: 'bold', fontSize: '32px' }} />} style={{ width: '80px', height: '80px', background: '#ffffff', border: "none", boxShadow: '0 1px 2px 0 rgba(0,0,0,0.2)' }} />
