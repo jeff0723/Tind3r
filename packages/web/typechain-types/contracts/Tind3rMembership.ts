@@ -28,7 +28,7 @@ import type {
   PromiseOrValue,
 } from "../common";
 
-export declare namespace Tind3rMembership {
+export declare namespace ITind3rMembership {
   export type Tind3rProfileStruct = {
     name: PromiseOrValue<string>;
     description: PromiseOrValue<string>;
@@ -132,7 +132,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createProfile",
-    values: [Tind3rMembership.Tind3rProfileStruct]
+    values: [ITind3rMembership.Tind3rProfileStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -253,7 +253,7 @@ export interface Tind3rMembershipInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateProfile",
-    values: [Tind3rMembership.Tind3rProfileStruct]
+    values: [ITind3rMembership.Tind3rProfileStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "upgradeTo",
@@ -554,7 +554,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<[BigNumber]>;
 
     createProfile(
-      userProfile: Tind3rMembership.Tind3rProfileStruct,
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -690,7 +690,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<ContractTransaction>;
 
     updateProfile(
-      newProfile: Tind3rMembership.Tind3rProfileStruct,
+      newProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -724,7 +724,7 @@ export interface Tind3rMembership extends BaseContract {
   ): Promise<BigNumber>;
 
   createProfile(
-    userProfile: Tind3rMembership.Tind3rProfileStruct,
+    userProfile: ITind3rMembership.Tind3rProfileStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -860,7 +860,7 @@ export interface Tind3rMembership extends BaseContract {
   ): Promise<ContractTransaction>;
 
   updateProfile(
-    newProfile: Tind3rMembership.Tind3rProfileStruct,
+    newProfile: ITind3rMembership.Tind3rProfileStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -894,7 +894,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<BigNumber>;
 
     createProfile(
-      userProfile: Tind3rMembership.Tind3rProfileStruct,
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1028,7 +1028,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<void>;
 
     updateProfile(
-      newProfile: Tind3rMembership.Tind3rProfileStruct,
+      newProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1172,7 +1172,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<BigNumber>;
 
     createProfile(
-      userProfile: Tind3rMembership.Tind3rProfileStruct,
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1308,7 +1308,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<BigNumber>;
 
     updateProfile(
-      newProfile: Tind3rMembership.Tind3rProfileStruct,
+      newProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1343,7 +1343,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     createProfile(
-      userProfile: Tind3rMembership.Tind3rProfileStruct,
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1479,7 +1479,7 @@ export interface Tind3rMembership extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     updateProfile(
-      newProfile: Tind3rMembership.Tind3rProfileStruct,
+      newProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

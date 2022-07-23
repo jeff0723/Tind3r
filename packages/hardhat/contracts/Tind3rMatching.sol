@@ -5,45 +5,41 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155Supp
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
-import "@tableland/evm/contracts/ITablelandTables.sol";
-import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
+import "./ITind3rMatching.sol";
 import "./ITind3rMembership.sol";
-
-error NotCallByMembershipContract();
 
 contract Tind3rMatching is
     Initializable,
     UUPSUpgradeable,
     ERC1155SupplyUpgradeable,
-    OwnableUpgradeable
+    OwnableUpgradeable,
+    ITind3rMatching
 {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.UintSet;
 
-    ITind3rMembership private _t3mContract;
-
-    event Match(uint256 aUserId, uint256 bUserId);
-
-    event Block(uint256 aUserId, uint256 bUserId);
+    ITind3rMembership private _membershipContract;
 
     mapping(address => EnumerableSetUpgradeable.UintSet) _userMatches;
 
     /**
      * @dev initialization function for upgradeable contract
      */
-    function initialize(ITind3rMembership t3mContract) public initializer {
+    function initialize(ITind3rMembership initMembershipContract)
+        public
+        initializer
+    {
         __ERC1155Supply_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
-        _t3mContract = t3mContract;
+        _membershipContract = initMembershipContract;
     }
 
     /**
      * @dev Override ERC1155-uri
      */
     function uri(uint256) public view virtual override returns (string memory) {
-        return string.concat(_t3mContract.prefixURI(), "{id}");
+        return string.concat(_membershipContract.prefixURI(), "{id}");
     }
 
     /**
@@ -66,14 +62,14 @@ contract Tind3rMatching is
      * @dev Show membership contract
      */
     function membershipContract() public view returns (address) {
-        return address(_t3mContract);
+        return address(_membershipContract);
     }
 
     /**
      * @dev Only Tind3eMembership contract can call
      */
     modifier onlyT3M() {
-        if (msg.sender != address(_t3mContract))
+        if (msg.sender != address(_membershipContract))
             revert NotCallByMembershipContract();
         _;
     }
@@ -88,11 +84,11 @@ contract Tind3rMatching is
     ) internal override {
         if (from == address(0) || to == address(0)) return;
         uint256 size = ids.length;
-        uint256 fromId = _t3mContract.getUserId(from);
-        uint256 toId = _t3mContract.getUserId(to);
+        uint256 fromId = _membershipContract.getUserId(from);
+        uint256 toId = _membershipContract.getUserId(to);
         for (uint256 i = 0; i < size; ++i) {
             uint256 targetId = ids[i];
-            address targetUser = _t3mContract.ownerOf(targetId);
+            address targetUser = _membershipContract.ownerOf(targetId);
             if (balanceOf(from, targetId) == 0) {
                 emit Block(fromId, targetId);
                 _userMatches[from].remove(targetId);
