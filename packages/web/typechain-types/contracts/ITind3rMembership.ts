@@ -47,10 +47,17 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "createProfile((string,string,string))": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getMatches(address)": FunctionFragment;
     "getUserId(address)": FunctionFragment;
+    "ifLike(address,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isMatched(address,address)": FunctionFragment;
+    "isTind3rMember(address)": FunctionFragment;
+    "like(address)": FunctionFragment;
+    "metadataURI()": FunctionFragment;
     "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
+    "prefixURI()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
@@ -59,6 +66,8 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "updateProfile((string,string,string))": FunctionFragment;
+    "userStreamIdList(uint256,uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -67,10 +76,17 @@ export interface ITind3rMembershipInterface extends utils.Interface {
       | "balanceOf"
       | "createProfile"
       | "getApproved"
+      | "getMatches"
       | "getUserId"
+      | "ifLike"
       | "isApprovedForAll"
+      | "isMatched"
+      | "isTind3rMember"
+      | "like"
+      | "metadataURI"
       | "name"
       | "ownerOf"
+      | "prefixURI"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -79,6 +95,8 @@ export interface ITind3rMembershipInterface extends utils.Interface {
       | "tokenURI"
       | "totalSupply"
       | "transferFrom"
+      | "updateProfile"
+      | "userStreamIdList"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -98,18 +116,43 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getMatches",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getUserId",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "ifLike",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isMatched",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isTind3rMember",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "like",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "metadataURI",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "prefixURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
@@ -152,6 +195,14 @@ export interface ITind3rMembershipInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "updateProfile",
+    values: [ITind3rMembership.Tind3rProfileStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "userStreamIdList",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -163,13 +214,26 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getMatches", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getUserId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ifLike", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isMatched", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isTind3rMember",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "like", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "metadataURI",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "prefixURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -196,18 +260,30 @@ export interface ITind3rMembershipInterface extends utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateProfile",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "userStreamIdList",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "ConsecutiveTransfer(uint256,uint256,address,address)": EventFragment;
+    "NewProfile(uint256,string,string,string)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "UpdateProfile(uint256,string,string,string)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ConsecutiveTransfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewProfile"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UpdateProfile"): EventFragment;
 }
 
 export interface ApprovalEventObject {
@@ -248,6 +324,19 @@ export type ConsecutiveTransferEvent = TypedEvent<
 export type ConsecutiveTransferEventFilter =
   TypedEventFilter<ConsecutiveTransferEvent>;
 
+export interface NewProfileEventObject {
+  tokenId: BigNumber;
+  name: string;
+  description: string;
+  image: string;
+}
+export type NewProfileEvent = TypedEvent<
+  [BigNumber, string, string, string],
+  NewProfileEventObject
+>;
+
+export type NewProfileEventFilter = TypedEventFilter<NewProfileEvent>;
+
 export interface TransferEventObject {
   from: string;
   to: string;
@@ -259,6 +348,19 @@ export type TransferEvent = TypedEvent<
 >;
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+
+export interface UpdateProfileEventObject {
+  tokenId: BigNumber;
+  name: string;
+  description: string;
+  image: string;
+}
+export type UpdateProfileEvent = TypedEvent<
+  [BigNumber, string, string, string],
+  UpdateProfileEventObject
+>;
+
+export type UpdateProfileEventFilter = TypedEventFilter<UpdateProfileEvent>;
 
 export interface ITind3rMembership extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -308,10 +410,21 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { operator: string }>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[number[]]>;
+
     getUserId(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { userId: BigNumber }>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -319,12 +432,32 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    like(
+      user: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    metadataURI(overrides?: CallOverrides): Promise<[string]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string] & { owner: string }>;
+
+    prefixURI(overrides?: CallOverrides): Promise<[string]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -367,6 +500,17 @@ export interface ITind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    updateProfile(
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    userStreamIdList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
   };
 
   approve(
@@ -390,10 +534,21 @@ export interface ITind3rMembership extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getMatches(
+    user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<number[]>;
+
   getUserId(
     user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  ifLike(
+    userA: PromiseOrValue<string>,
+    userB: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -401,12 +556,32 @@ export interface ITind3rMembership extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  isMatched(
+    userA: PromiseOrValue<string>,
+    userB: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isTind3rMember(
+    user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  like(
+    user: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  metadataURI(overrides?: CallOverrides): Promise<string>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  prefixURI(overrides?: CallOverrides): Promise<string>;
 
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
@@ -450,6 +625,17 @@ export interface ITind3rMembership extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  updateProfile(
+    userProfile: ITind3rMembership.Tind3rProfileStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  userStreamIdList(
+    startId: PromiseOrValue<BigNumberish>,
+    endId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   callStatic: {
     approve(
       to: PromiseOrValue<string>,
@@ -465,17 +651,28 @@ export interface ITind3rMembership extends BaseContract {
     createProfile(
       userProfile: ITind3rMembership.Tind3rProfileStruct,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<number[]>;
+
     getUserId(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -483,12 +680,32 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    like(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    metadataURI(overrides?: CallOverrides): Promise<string>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    prefixURI(overrides?: CallOverrides): Promise<string>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -531,6 +748,17 @@ export interface ITind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    updateProfile(
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    userStreamIdList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
   };
 
   filters: {
@@ -569,6 +797,19 @@ export interface ITind3rMembership extends BaseContract {
       to?: PromiseOrValue<string> | null
     ): ConsecutiveTransferEventFilter;
 
+    "NewProfile(uint256,string,string,string)"(
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      name?: null,
+      description?: null,
+      image?: null
+    ): NewProfileEventFilter;
+    NewProfile(
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      name?: null,
+      description?: null,
+      image?: null
+    ): NewProfileEventFilter;
+
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
@@ -579,6 +820,19 @@ export interface ITind3rMembership extends BaseContract {
       to?: PromiseOrValue<string> | null,
       tokenId?: PromiseOrValue<BigNumberish> | null
     ): TransferEventFilter;
+
+    "UpdateProfile(uint256,string,string,string)"(
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      name?: null,
+      description?: null,
+      image?: null
+    ): UpdateProfileEventFilter;
+    UpdateProfile(
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      name?: null,
+      description?: null,
+      image?: null
+    ): UpdateProfileEventFilter;
   };
 
   estimateGas: {
@@ -603,8 +857,19 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getUserId(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -614,12 +879,32 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    like(
+      user: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    metadataURI(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    prefixURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -662,6 +947,17 @@ export interface ITind3rMembership extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    updateProfile(
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    userStreamIdList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -686,8 +982,19 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getMatches(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getUserId(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    ifLike(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -697,12 +1004,32 @@ export interface ITind3rMembership extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isMatched(
+      userA: PromiseOrValue<string>,
+      userB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isTind3rMember(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    like(
+      user: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    metadataURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    prefixURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -744,6 +1071,17 @@ export interface ITind3rMembership extends BaseContract {
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateProfile(
+      userProfile: ITind3rMembership.Tind3rProfileStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    userStreamIdList(
+      startId: PromiseOrValue<BigNumberish>,
+      endId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -2,25 +2,22 @@
 pragma solidity ^0.8.12;
 
 import "erc721a-upgradeable/contracts/ERC721AUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
-import "./Tind3rMatching.sol";
+import "./ITind3rMembership.sol";
+import "./ITind3rMatching.sol";
 
 contract Tind3rMembership is
     Initializable,
     UUPSUpgradeable,
     ERC721AUpgradeable,
-    OwnableUpgradeable
+    OwnableUpgradeable,
+    ITind3rMembership
 {
-    error ExistentProfile(uint64);
-    error NonExistentProfile();
-    error CanNotTransfer();
-    error AlreadyLike();
-
     using StringsUpgradeable for uint256;
     using StringsUpgradeable for address;
 
@@ -32,32 +29,9 @@ contract Tind3rMembership is
 
     string private _baseURIString;
 
-    Tind3rMatching public matchingContract;
+    ITind3rMatching public matchingContract;
 
     mapping(uint256 => uint256) private _likeMap;
-
-    // Profile data struct
-    struct Tind3rProfile {
-        string name;
-        string description;
-        string image;
-    }
-
-    // Emit profile data (to be caught by TheGraph indexers)
-    event NewProfile(
-        uint256 indexed tokenId,
-        string name,
-        string description,
-        string image
-    );
-
-    // Emit profile data (to be caught by TheGraph indexers)
-    event UpdateProfile(
-        uint256 indexed tokenId,
-        string name,
-        string description,
-        string image
-    );
 
     /**
      * @dev initialization function for upgradeable contract
@@ -111,12 +85,11 @@ contract Tind3rMembership is
      * @dev create Tind3r profile with name and image
      */
     function createProfile(Tind3rProfile calldata userProfile)
-        public
+        external
         returns (uint256)
     {
         address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) > 0)
-            revert ExistentProfile(_getAux(msgSender));
+        if (balanceOf(msgSender) > 0) revert ExistentUser(_getAux(msgSender));
         uint256 newTokenId = _nextTokenId();
         _tableland.runSQL(
             address(this),
@@ -152,11 +125,11 @@ contract Tind3rMembership is
      * @dev update Tind3r profile with name and image
      */
     function updateProfile(Tind3rProfile calldata newProfile)
-        public
+        external
         returns (uint256)
     {
         address msgSender = _msgSenderERC721A();
-        if (balanceOf(msgSender) < 1) revert NonExistentProfile();
+        if (balanceOf(msgSender) < 1) revert NonExistentUser();
         uint256 ownerTokenId = _getAux(msgSender);
 
         _tableland.runSQL(
@@ -222,7 +195,7 @@ contract Tind3rMembership is
     /**
      * @dev Set matching contract
      */
-    function setMatchingContract(Tind3rMatching _matchingContract)
+    function setMatchingContract(ITind3rMatching _matchingContract)
         external
         onlyOwner
     {
@@ -233,7 +206,7 @@ contract Tind3rMembership is
      * @dev Get tokenId own by certain user
      */
     function getUserId(address user) public view returns (uint256) {
-        if (balanceOf(user) == 0) revert NonExistentProfile();
+        if (balanceOf(user) == 0) revert NonExistentUser();
         return _getAux(user);
     }
 
@@ -253,7 +226,7 @@ contract Tind3rMembership is
         public
         view
         virtual
-        override
+        override(IERC721AUpgradeable, ERC721AUpgradeable)
         returns (string memory)
     {
         if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
@@ -383,7 +356,7 @@ contract Tind3rMembership is
         uint256 startTokenId,
         uint256 quantity
     ) internal override {
-        if (from != address(0) && to != address(0)) revert CanNotTransfer();
+        if (from != address(0)) revert CanNotTransferOrBurn();
         super._beforeTokenTransfers(from, to, startTokenId, quantity);
     }
 

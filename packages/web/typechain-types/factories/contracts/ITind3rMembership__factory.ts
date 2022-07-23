@@ -12,6 +12,11 @@ import type {
 const _abi = [
   {
     inputs: [],
+    name: "AlreadyLike",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "ApprovalCallerNotOwnerNorApproved",
     type: "error",
   },
@@ -32,6 +37,22 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "CanNotTransferOrBurn",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    name: "ExistentUser",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "MintERC2309QuantityExceedsLimit",
     type: "error",
   },
@@ -43,6 +64,11 @@ const _abi = [
   {
     inputs: [],
     name: "MintZeroQuantity",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NonExistentUser",
     type: "error",
   },
   {
@@ -166,6 +192,37 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "description",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "image",
+        type: "string",
+      },
+    ],
+    name: "NewProfile",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: "address",
         name: "from",
         type: "address",
@@ -184,6 +241,37 @@ const _abi = [
       },
     ],
     name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "description",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "image",
+        type: "string",
+      },
+    ],
+    name: "UpdateProfile",
     type: "event",
   },
   {
@@ -249,7 +337,13 @@ const _abi = [
       },
     ],
     name: "createProfile",
-    outputs: [],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -280,12 +374,55 @@ const _abi = [
         type: "address",
       },
     ],
+    name: "getMatches",
+    outputs: [
+      {
+        internalType: "uint32[]",
+        name: "",
+        type: "uint32[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
     name: "getUserId",
     outputs: [
       {
         internalType: "uint256",
         name: "userId",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "userA",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "userB",
+        type: "address",
+      },
+    ],
+    name: "ifLike",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -310,6 +447,75 @@ const _abi = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "userA",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "userB",
+        type: "address",
+      },
+    ],
+    name: "isMatched",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "isTind3rMember",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "like",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "metadataURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -342,6 +548,19 @@ const _abi = [
         internalType: "address",
         name: "owner",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "prefixURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -501,6 +720,66 @@ const _abi = [
     name: "transferFrom",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "description",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "image",
+            type: "string",
+          },
+        ],
+        internalType: "struct ITind3rMembership.Tind3rProfile",
+        name: "userProfile",
+        type: "tuple",
+      },
+    ],
+    name: "updateProfile",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "startId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "endId",
+        type: "uint256",
+      },
+    ],
+    name: "userStreamIdList",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];
