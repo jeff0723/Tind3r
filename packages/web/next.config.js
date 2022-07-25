@@ -2,6 +2,7 @@
 
 
 const nextConfig = {
+
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config, { isServer }) => {
@@ -15,7 +16,10 @@ const nextConfig = {
   images: {
     disableStaticImages: true,
     domains: ['ipfs.io'],
-  }
+    loader: 'akamai',
+    path: '',
+  },
+  distDir: 'build'
 }
 
 module.exports = nextConfig
