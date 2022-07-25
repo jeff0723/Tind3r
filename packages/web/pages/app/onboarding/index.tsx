@@ -272,9 +272,9 @@ const OnBoardingPage: NextPage = (props: Props) => {
             await tind3rMembershipContract?.updateProfile(_memberShipInput) :
             await tind3rMembershipContract?.createProfile(_memberShipInput)
 
-          setUploadingStatus(UploadStatus.finished)
           const receipt = await tx?.wait()
           if (receipt.status) {
+            setUploadingStatus(UploadStatus.finished)
             setLoading(false)
             isTind3rMember ?
               openNotificationWithIcon("success", "Success", "Profile updated successfully") :
