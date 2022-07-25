@@ -20,7 +20,7 @@ const MinusImgIndexBtn = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 100%;
+  height: 70%;
   width: 200px;
   padding: 0 10px;
   display: none;
@@ -32,7 +32,7 @@ const AddImgIndexBtn = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  height: 100%;
+  height: 70%;
   width: 200px;
   padding: 0 10px;
   display: none;
@@ -266,7 +266,7 @@ const SwiperCard = ({ userProfile, swiperCardRef, index }: Props) => {
             <DescriptionBox>
               <Description>{userProfile.bio}</Description>
 
-              <Button shape='circle' icon={<InfoOutlined />} size='small' onClick={handleInfoClick} style={{ zIndex: 1 }} />
+              <Button shape='circle' icon={<InfoOutlined />} size='small' onClick={handleInfoClick} />
             </DescriptionBox>
           </CardInfoBox>
 
