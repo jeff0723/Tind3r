@@ -182,7 +182,7 @@ const OnBoardingPage: NextPage = (props: Props) => {
   };
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[] | ChangeEvent<HTMLTextAreaElement>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | string[] | React.ChangeEvent<HTMLTextAreaElement>
     , name?: string) => {
     if (!Array.isArray(e)) {
       setOnBoardingInfo({
