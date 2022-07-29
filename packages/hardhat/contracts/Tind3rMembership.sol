@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "erc721a-upgradeable/contracts/ERC721AUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -11,13 +10,14 @@ import "@tableland/evm/contracts/ITablelandTables.sol";
 import "@tableland/evm/contracts/utils/TablelandDeployments.sol";
 import "./ITind3rMembership.sol";
 import "./ITind3rMatching.sol";
+import "./ERC4907.sol";
 
 contract Tind3rMembership is
     Initializable,
     UUPSUpgradeable,
-    ERC721AUpgradeable,
     OwnableUpgradeable,
-    ITind3rMembership
+    ITind3rMembership,
+    ERC4907
 {
     using StringsUpgradeable for uint256;
     using StringsUpgradeable for address;
